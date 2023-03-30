@@ -35,4 +35,10 @@ public class PlayerController {
 	public void registerNewPlayer(@RequestBody PlayerConfidentialDTO playerConfidentialDTO) {
 		playerService.addNewPlayer(playerConfidentialDTO);
 	}
+
+	@PutMapping(value = "/password/{playerId}")
+	public void updatePassword(@RequestBody Password password,
+							   @PathVariable("playerId") Long playerId) {
+		playerService.updatePassword(password, playerId);
+	}
 }

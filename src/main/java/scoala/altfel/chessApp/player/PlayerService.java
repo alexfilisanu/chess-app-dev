@@ -1,12 +1,10 @@
 package scoala.altfel.chessApp.player;
 
 import lombok.AllArgsConstructor;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 import static java.util.stream.Collectors.toList;
 
 @AllArgsConstructor
@@ -69,5 +67,20 @@ public class PlayerService {
 				0,
 				false);
 		playerRepository.save(player);
+	}
+
+	@Transactional
+	public void updatePassword(Password password, Long playerId) {
+		Player player = playerRepository
+				.findById(playerId)
+				.orElseThrow(
+						() -> new IllegalStateException(
+								"Player with id " + playerId + "doesn't exist.\n"
+						)
+				);
+		if (player.getPassword().equals(password.oldPassword())
+				&& password.newPassword().length() >= Password.DIGITS) {
+			player.setPassword(password.newPassword());
+		}
 	}
 }
