@@ -3,6 +3,7 @@ package scoala.altfel.chessApp.player;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import scoala.altfel.chessApp.Constants.PasswordConstraints;
 
 import java.util.List;
 import static java.util.stream.Collectors.toList;
@@ -59,18 +60,20 @@ public class PlayerService {
 					"Player with name " + playerConfidentialDTO.username() + "already exists.\n"
 			);
 		}
-		Player player = new Player(
-				playerConfidentialDTO.id(),
-				playerConfidentialDTO.username(),
-				playerConfidentialDTO.email(),
-				playerConfidentialDTO.password(),
-				0,
-				false);
+
+		Player player = Player.builder()
+				.username(playerConfidentialDTO.username())
+				.email(playerConfidentialDTO.email())
+				.password(playerConfidentialDTO.password())
+				.score(0)
+				.deleted(Boolean.FALSE)
+				.build();
+
 		playerRepository.save(player);
 	}
 
 	@Transactional
-	public void updatePassword(Password password, Long playerId) {
+	public void updatePassword(PasswordForm passwordForm, Long playerId) {
 		Player player = playerRepository
 				.findById(playerId)
 				.orElseThrow(
@@ -78,9 +81,39 @@ public class PlayerService {
 								"Player with id " + playerId + "doesn't exist.\n"
 						)
 				);
-		if (player.getPassword().equals(password.oldPassword())
-				&& password.newPassword().length() >= Password.DIGITS) {
-			player.setPassword(password.newPassword());
+
+		if (player.getPassword().equals(passwordForm.password())
+				&& passwordForm.newPassword().length() >= PasswordConstraints.MIN_LENGTH) {
+			player.setPassword(passwordForm.newPassword());
 		}
+	}
+
+	@Transactional
+	public void updateEmail(EmailForm emailForm, Long playerId) {
+		Player player = playerRepository
+				.findById(playerId)
+				.orElseThrow(
+						() -> new IllegalStateException(
+								"Player with id " + playerId + "doesn't exist.\n"
+						)
+				);
+
+		if (player.getPassword().equals(emailForm.password()))
+			player.setEmail(emailForm.newEmail());
+	}
+
+	@Transactional
+	public void updateUsername(UsernameForm usernameForm, Long playerId) {
+		Player player = playerRepository
+				.findById(playerId)
+				.orElseThrow(
+						() -> new IllegalStateException(
+								"Player with id " + playerId + "doesn't exist.\n"
+						)
+				);
+
+		if (player.getPassword().equals(usernameForm.password()))
+			player.setUsername(usernameForm.newUsername());
+
 	}
 }
