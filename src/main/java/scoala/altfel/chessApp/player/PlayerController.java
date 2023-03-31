@@ -1,16 +1,12 @@
 package scoala.altfel.chessApp.player;
 
 import lombok.AllArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/chess-app")
 @AllArgsConstructor
-@Validated
 public class PlayerController {
 	PlayerService playerService;
 
@@ -35,19 +31,19 @@ public class PlayerController {
 	}
 
 	@PostMapping(value = "/register")
-	public void registerNewPlayer(@Valid @RequestBody PlayerConfidentialDTO playerConfidentialDTO) {
+	public void registerNewPlayer(@RequestBody PlayerConfidentialDTO playerConfidentialDTO) {
 		playerService.addNewPlayer(playerConfidentialDTO);
 	}
 
 	@PutMapping(value = "/password/{playerId}")
-	public void updatePassword(@Valid @RequestBody PasswordForm passwordForm,
+	public void updatePassword(@RequestBody PasswordForm passwordForm,
 							   @PathVariable("playerId") Long playerId) {
 		playerService.updatePassword(passwordForm, playerId);
 	}
 
 	@PutMapping(value = "/email/{playerId}")
 	public void updateEmail(@RequestBody EmailForm emailForm,
-							   @PathVariable("playerId") Long playerId) {
+							@PathVariable("playerId") Long playerId) {
 		playerService.updateEmail(emailForm, playerId);
 	}
 
