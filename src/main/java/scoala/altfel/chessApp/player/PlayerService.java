@@ -3,8 +3,6 @@ package scoala.altfel.chessApp.player;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import scoala.altfel.chessApp.Constants.PasswordConstraints;
-
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 
@@ -28,7 +26,7 @@ public class PlayerService {
 				.map(p -> playerToPlayerDTOMapper.apply(p))
 				.orElseThrow(
 						() -> new IllegalStateException(
-								"Player with id " + playerId + "doesn't exist.\n"
+								"Player with id " + playerId + " doesn't exist."
 						)
 				);
 	}
@@ -38,26 +36,40 @@ public class PlayerService {
 				.findPlayerByName(playerName)
 				.orElseThrow(
 						() -> new IllegalStateException(
-								"Player with name " + playerName + "doesn't exist.\n"
+								"Player with name " + playerName + " doesn't exist."
 						)
 				);
+
 		return playerToPlayerDTOMapper.apply(player);
 	}
 
 	public void deletePlayerById(Long playerId) {
-		if (playerRepository.findById(playerId).isPresent()) {
-			playerRepository.deleteById(playerId);
-		} else {
+		if (!playerRepository.findById(playerId).isPresent()) {
 			throw new IllegalStateException(
-					"Player with id " + playerId + "doesn't exist.\n"
+					"Player with id " + playerId + " doesn't exist."
 			);
 		}
+
+		playerRepository.deleteById(playerId);
 	}
 
+	@Transactional
 	public void addNewPlayer(PlayerConfidentialDTO playerConfidentialDTO) {
 		if (playerRepository.findPlayerByName(playerConfidentialDTO.username()).isPresent()) {
 			throw new IllegalStateException(
-					"Player with name " + playerConfidentialDTO.username() + "already exists.\n"
+					"Player with name " + playerConfidentialDTO.username() + " already exists."
+			);
+		}
+
+		if (!EmailValidator.isValid(playerConfidentialDTO.email())) {
+			throw new IllegalStateException(
+					"Email inserted is not valid."
+			);
+		}
+
+		if (!PasswordValidator.isValid(playerConfidentialDTO.password())) {
+			throw new IllegalStateException(
+					"Password inserted is not valid. Password must contain..."
 			);
 		}
 
@@ -78,14 +90,23 @@ public class PlayerService {
 				.findById(playerId)
 				.orElseThrow(
 						() -> new IllegalStateException(
-								"Player with id " + playerId + "doesn't exist.\n"
+								"Player with id " + playerId + " does not exist."
 						)
 				);
 
-		if (player.getPassword().equals(passwordForm.password())
-				&& passwordForm.newPassword().length() >= PasswordConstraints.MIN_LENGTH) {
-			player.setPassword(passwordForm.newPassword());
+		if (!player.getPassword().equals(passwordForm.password())) {
+			throw new IllegalStateException(
+					"Password inserted is not correct."
+			);
 		}
+
+		if (!PasswordValidator.isValid(passwordForm.newPassword())) {
+			throw new IllegalStateException(
+					"Password inserted is not valid. Password must contain..."
+			);
+		}
+
+		player.setPassword(passwordForm.newPassword());
 	}
 
 	@Transactional
@@ -94,12 +115,19 @@ public class PlayerService {
 				.findById(playerId)
 				.orElseThrow(
 						() -> new IllegalStateException(
-								"Player with id " + playerId + "doesn't exist.\n"
+								"Player with id " + playerId + " doesn't exist."
 						)
 				);
 
-		if (player.getPassword().equals(emailForm.password()))
+		if (!EmailValidator.isValid(emailForm.newEmail())) {
+			throw new IllegalStateException(
+					"Email inserted is not valid."
+			);
+		}
+
+		if (player.getPassword().equals(emailForm.password())) {
 			player.setEmail(emailForm.newEmail());
+		}
 	}
 
 	@Transactional
@@ -108,12 +136,12 @@ public class PlayerService {
 				.findById(playerId)
 				.orElseThrow(
 						() -> new IllegalStateException(
-								"Player with id " + playerId + "doesn't exist.\n"
+								"Player with id " + playerId + " doesn't exist."
 						)
 				);
 
-		if (player.getPassword().equals(usernameForm.password()))
+		if (player.getPassword().equals(usernameForm.password())) {
 			player.setUsername(usernameForm.newUsername());
-
+		}
 	}
 }

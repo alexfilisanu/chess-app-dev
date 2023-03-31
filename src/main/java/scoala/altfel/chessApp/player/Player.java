@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import javax.validation.constraints.Pattern;
+
 
 @Data
 @Entity
@@ -30,8 +30,6 @@ public class Player {
 	private String email;
 
 	@Column(name = "password")
-	@Pattern(regexp = "^((?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])){4,12}$",
-		message = "nu e pattern la scoala")
 	private String password;
 
 	@Column(name = "score")
