@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Long> {
-
 	@Query("SELECT p FROM Player p WHERE p.username = :name")
 	Optional<Player> findPlayerByName(@Param("name") String name);
 }
