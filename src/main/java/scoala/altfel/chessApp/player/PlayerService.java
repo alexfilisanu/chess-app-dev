@@ -3,7 +3,6 @@ package scoala.altfel.chessApp.player;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 
@@ -27,7 +26,7 @@ public class PlayerService {
 				.map(p -> playerToPlayerDTOMapper.apply(p))
 				.orElseThrow(
 						() -> new IllegalStateException(
-								"Player with id " + playerId + "doesn't exist.\n"
+								"Player with id " + playerId + " doesn't exist."
 						)
 				);
 	}
@@ -37,50 +36,112 @@ public class PlayerService {
 				.findPlayerByName(playerName)
 				.orElseThrow(
 						() -> new IllegalStateException(
-								"Player with name " + playerName + "doesn't exist.\n"
+								"Player with name " + playerName + " doesn't exist."
 						)
 				);
+
 		return playerToPlayerDTOMapper.apply(player);
 	}
 
 	public void deletePlayerById(Long playerId) {
-		if (playerRepository.findById(playerId).isPresent()) {
-			playerRepository.deleteById(playerId);
-		} else {
+		if (!playerRepository.findById(playerId).isPresent()) {
 			throw new IllegalStateException(
-					"Player with id " + playerId + "doesn't exist.\n"
+					"Player with id " + playerId + " doesn't exist."
 			);
 		}
+
+		playerRepository.deleteById(playerId);
 	}
 
+	@Transactional
 	public void addNewPlayer(PlayerConfidentialDTO playerConfidentialDTO) {
 		if (playerRepository.findPlayerByName(playerConfidentialDTO.username()).isPresent()) {
 			throw new IllegalStateException(
-					"Player with name " + playerConfidentialDTO.username() + "already exists.\n"
+					"Player with name " + playerConfidentialDTO.username() + " already exists."
 			);
 		}
-		Player player = new Player(
-				playerConfidentialDTO.id(),
-				playerConfidentialDTO.username(),
-				playerConfidentialDTO.email(),
-				playerConfidentialDTO.password(),
-				0,
-				false);
+
+		if (!EmailValidator.isValid(playerConfidentialDTO.email())) {
+			throw new IllegalStateException(
+					"Email inserted is not valid."
+			);
+		}
+
+		if (!PasswordValidator.isValid(playerConfidentialDTO.password())) {
+			throw new IllegalStateException(
+					"Password inserted is not valid. Password must contain..."
+			);
+		}
+
+		Player player = Player.builder()
+				.username(playerConfidentialDTO.username())
+				.email(playerConfidentialDTO.email())
+				.password(playerConfidentialDTO.password())
+				.score(0)
+				.deleted(Boolean.FALSE)
+				.build();
+
 		playerRepository.save(player);
 	}
 
 	@Transactional
-	public void updatePassword(Password password, Long playerId) {
+	public void updatePassword(PasswordForm passwordForm, Long playerId) {
 		Player player = playerRepository
 				.findById(playerId)
 				.orElseThrow(
 						() -> new IllegalStateException(
-								"Player with id " + playerId + "doesn't exist.\n"
+								"Player with id " + playerId + " does not exist."
 						)
 				);
-		if (player.getPassword().equals(password.oldPassword())
-				&& password.newPassword().length() >= Password.DIGITS) {
-			player.setPassword(password.newPassword());
+
+		if (!player.getPassword().equals(passwordForm.password())) {
+			throw new IllegalStateException(
+					"Password inserted is not correct."
+			);
+		}
+
+		if (!PasswordValidator.isValid(passwordForm.newPassword())) {
+			throw new IllegalStateException(
+					"Password inserted is not valid. Password must contain..."
+			);
+		}
+
+		player.setPassword(passwordForm.newPassword());
+	}
+
+	@Transactional
+	public void updateEmail(EmailForm emailForm, Long playerId) {
+		Player player = playerRepository
+				.findById(playerId)
+				.orElseThrow(
+						() -> new IllegalStateException(
+								"Player with id " + playerId + " doesn't exist."
+						)
+				);
+
+		if (!EmailValidator.isValid(emailForm.newEmail())) {
+			throw new IllegalStateException(
+					"Email inserted is not valid."
+			);
+		}
+
+		if (player.getPassword().equals(emailForm.password())) {
+			player.setEmail(emailForm.newEmail());
+		}
+	}
+
+	@Transactional
+	public void updateUsername(UsernameForm usernameForm, Long playerId) {
+		Player player = playerRepository
+				.findById(playerId)
+				.orElseThrow(
+						() -> new IllegalStateException(
+								"Player with id " + playerId + " doesn't exist."
+						)
+				);
+
+		if (player.getPassword().equals(usernameForm.password())) {
+			player.setUsername(usernameForm.newUsername());
 		}
 	}
 }

@@ -2,6 +2,7 @@ package scoala.altfel.chessApp.player;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
@@ -13,8 +14,9 @@ import org.hibernate.annotations.Where;
 @Table(name = "player")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @SQLDelete(sql = "UPDATE player SET deleted = true WHERE id = ?")
-@Where(clause = "deleted=false")
+@Where(clause = "deleted = false")
 public class Player {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Id
@@ -34,5 +36,5 @@ public class Player {
 	private Integer score;
 
 	@Column(name = "deleted")
-	private boolean deleted = Boolean.FALSE;
+	private Boolean deleted;
 }
