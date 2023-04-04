@@ -3,7 +3,7 @@
     <div class="card card-5">
 
       <div class="card-heading bg-dark">
-        <h2 class="title">Player Register</h2>
+        <h2 class="title">Scoala Altfel Chess Register</h2>
       </div>
 
       <div class="card-body">
@@ -13,7 +13,7 @@
             <div class="name">Username</div>
             <div class="value">
               <div class="input-group">
-                <input class="input--style-5" type="text" name="company">
+                <input class="input--style-5" type="text" name="username">
               </div>
             </div>
           </div>
@@ -22,7 +22,7 @@
             <div class="name">Email</div>
             <div class="value">
               <div class="input-group">
-                <input class="input--style-5" type="text" name="company">
+                <input class="input--style-5" type="email" name="email">
               </div>
             </div>
           </div>
@@ -31,7 +31,11 @@
             <div class="name">Password</div>
             <div class="value">
               <div class="input-group">
-                <input class="input--style-5" type="email" name="email">
+                <input class="input--style-5" type="{{ isVisiblePassword ? 'text' : 'password' }}" name="password" >
+                <span class="focus-input100"></span>
+                <span class="toggle-password" (click)="togglePassword()">
+                  <i class="fa" [ngClass]="isVisiblePassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+                </span>
               </div>
             </div>
           </div>
@@ -40,10 +44,27 @@
             <div class="name">Confirm Password</div>
             <div class="value">
               <div class="input-group">
-                <input class="input--style-5" type="email" name="email">
+                <input class="input--style-5" type="{{ isVisibleConfirmPasssword ? 'text' : 'password' }}" name="password" >
+                <span class="focus-input100"></span>
+                <span class="toggle-password" (click)="toggleConfirmPassword()">
+                  <i class="fa" [ngClass]="isVisibleConfirmPasssword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+                </span>
               </div>
             </div>
           </div>
+
+          <style>
+            .wrap-input100 {
+              position: relative;
+            }
+            .toggle-password {
+              position: absolute;
+              top: 50%;
+              right: 20px;
+              transform: translateY(-50%);
+              cursor: pointer;
+            }
+          </style>
 
           <div class="container-login100-form-btn">
             <a routerLink="/login" class="nav-link" routerLinkActive="active">
