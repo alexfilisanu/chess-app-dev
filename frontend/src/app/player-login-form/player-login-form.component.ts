@@ -24,9 +24,13 @@ export class PlayerLoginFormComponent {
     this.animateZoomIn = true;
   }
 
-
   @HostListener('mouseleave')
   public onMouseLeave(): void {
     this.animateZoomIn = false;
+  }
+
+  isVisible: Boolean = false;
+  togglePassword(): void {
+    this.isVisible = !this.isVisible;
   }
 }
