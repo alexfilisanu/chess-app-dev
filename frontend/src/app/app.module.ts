@@ -9,7 +9,7 @@ import { PlayerLoginFormComponent } from './player-login-form/player-login-form.
 import { PlayerRegisterFormComponent } from './player-register-form/player-register-form.component';
 import { PlayerListComponent } from './player-list/player-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -23,7 +23,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

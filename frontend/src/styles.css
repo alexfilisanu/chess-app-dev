@@ -1,15 +1,8 @@
-@import "css/main.css";
-@import "css/util.css";
+@import "css/login-form/main.css";
+@import "css/login-form/util.css";
+@import "css/register-form/main.css";
+@import "css/register-form/main.min.css";
 @import "vendor/bootstrap/css/bootstrap.css";
 @import "vendor/bootstrap/css/bootstrap.min.css";
-@import "vendor/css-hamburgers/hamburgers.css";
-@import "vendor/css-hamburgers/hamburgers.min.css";
-@import "vendor/animate/animate.css";
-@import "vendor/select2/select2.css";
-@import "vendor/select2/select2.min.css";
 @import "fonts/font-awesome-4.7.0/css/font-awesome.css";
 @import "fonts/font-awesome-4.7.0/css/font-awesome.min.css";
-
-@import "css1/main.css";
-@import "css1/main.min.css";
-
