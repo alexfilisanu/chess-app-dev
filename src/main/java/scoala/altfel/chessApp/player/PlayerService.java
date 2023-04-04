@@ -73,10 +73,17 @@ public class PlayerService {
 			);
 		}
 
+		if (!playerConfidentialDTO.confirmPassword().equals(playerConfidentialDTO.password())) {
+			throw new IllegalStateException(
+					"Password and confirm password does not match"
+			);
+		}
+
 		Player player = Player.builder()
 				.username(playerConfidentialDTO.username())
 				.email(playerConfidentialDTO.email())
 				.password(playerConfidentialDTO.password())
+				.confirmPassword(playerConfidentialDTO.confirmPassword())
 				.score(0)
 				.deleted(Boolean.FALSE)
 				.build();

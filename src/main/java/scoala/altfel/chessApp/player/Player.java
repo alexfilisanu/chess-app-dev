@@ -32,6 +32,9 @@ public class Player {
 	@Column(name = "password")
 	private String password;
 
+	@Column(name = "confirmPassword")
+	private String confirmPassword;
+
 	@Column(name = "score")
 	private Integer score;
 
