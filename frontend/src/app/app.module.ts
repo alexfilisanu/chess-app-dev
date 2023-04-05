@@ -9,14 +9,18 @@ import { PlayerRegisterFormComponent } from './player-register-form/player-regis
 import { PlayerListComponent } from './player-list/player-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PlayerServiceService } from './player-service/player-service.service'
+import { PlayerServiceService } from './player-service/player-service.service';
+import { RegisterSuccessfulComponent } from './register-successful/register-successful.component';
+import { ClientHomepageComponent } from './client-homepage/client-homepage.component'
 
 @NgModule({
     declarations: [
         AppComponent,
         PlayerLoginFormComponent,
         PlayerRegisterFormComponent,
-        PlayerListComponent
+        PlayerListComponent,
+        RegisterSuccessfulComponent,
+        ClientHomepageComponent
     ],
     imports: [
         BrowserModule,

@@ -33,11 +33,11 @@ export class PlayerRegisterFormComponent {
     onSubmit(): void {
         this.playerService
             .registerNewPlayer(this.player)
-            .subscribe(result => this.gotoLogin(),
+            .subscribe(result => this.gotoRegisterSuccessful(),
                        error => this.backendError = error.message);
     }
 
-    gotoLogin(): void {
-        this.router.navigate(['/login']);
-    }
+    gotoRegisterSuccessful(): void {
+            this.router.navigate(['/register-successful']);
+        }
 }
