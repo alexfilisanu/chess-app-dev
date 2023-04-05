@@ -7,6 +7,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/chess-app")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class PlayerController {
 	PlayerService playerService;
 
