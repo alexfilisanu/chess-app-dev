@@ -90,11 +90,11 @@
                         || playerForm.controls['email'].errors?.['required']
                         || playerForm.controls['password'].errors?.['required']
                         || playerForm.controls['confirmPassword'].errors?.['required']"
-               class="alert alert-danger">
+               class="alert alert-danger text-center">
             All fields are required.
           </div>
 
-          <div *ngIf="backendError" class="alert alert-danger">
+          <div *ngIf="backendError" class="alert alert-danger text-center">
             {{ backendError }}
           </div>
 
