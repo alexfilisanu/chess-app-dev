@@ -1,23 +1,25 @@
 <div class="card my-5">
   <div class="card-body">
+
     <table class="table table-bordered table-striped">
       <thead class="thead-dark">
-      <tr>
-        <th scope="col">Id</th>
-        <th scope="col">Username</th>
-        <th scope="col">Email</th>
-        <th scope="col">Password</th>
-      </tr>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Username</th>
+          <th scope="col">Email</th>
+          <th scope="col">Password</th>
+        </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let player of players">
-        <td>{{ player.id }}</td>
-        <td>{{ player.username }}</td>
-        <td>{{ player.email }}</td>
-        <td>{{ player.password }}</td>
-      </tr>
+        <tr *ngFor="let player of players">
+          <td>{{ player.id }}</td>
+          <td>{{ player.username }}</td>
+          <td>{{ player.email }}</td>
+          <td>{{ player.password }}</td>
+        </tr>
       </tbody>
     </table>
+
   </div>
 </div>
 

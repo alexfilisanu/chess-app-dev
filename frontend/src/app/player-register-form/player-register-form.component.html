@@ -3,7 +3,7 @@
     <div class="card card-5">
 
       <div class="card-heading bg-dark">
-        <h2 class="title">Scoala Altfel Chess Register</h2>
+        <h2 class="title"> Scoala Altfel Chess Register </h2>
       </div>
 
       <div class="card-body">
@@ -13,7 +13,12 @@
             <div class="name">Username</div>
             <div class="value">
               <div class="input-group">
-                <input class="input--style-5" type="text" name="username" [(ngModel)]="player.username" required>
+                <input class="input--style-5"
+                       type="text"
+                       name="username"
+                       [(ngModel)]="player.username"
+                       required
+                       placeholder="Enter your username">
               </div>
             </div>
           </div>
@@ -22,7 +27,12 @@
             <div class="name">Email</div>
             <div class="value">
               <div class="input-group">
-                <input class="input--style-5" type="email" name="email" [(ngModel)]="player.email" required>
+                <input class="input--style-5"
+                       type="email" name="email"
+                       [(ngModel)]="player.email"
+                       placeholder="Enter your email"
+                       required
+                       #email="ngModel">
               </div>
             </div>
           </div>
@@ -31,8 +41,12 @@
             <div class="name">Password</div>
             <div class="value">
               <div class="input-group">
-                <input class="input--style-5" type="{{ isVisiblePassword ? 'text' : 'password' }}" name="password"
-                       [(ngModel)]="player.password" required>
+                <input class="input--style-5"
+                       type="{{ isVisiblePassword ? 'text' : 'password' }}"
+                       name="password"
+                       [(ngModel)]="player.password"
+                       required
+                       placeholder="Enter your password">
                 <span class="focus-input100"></span>
                 <span class="toggle-password" (click)="togglePassword()">
                   <i class="fa" [ngClass]="isVisiblePassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
@@ -42,11 +56,15 @@
           </div>
 
           <div class="form-row">
-            <div class="name">Confirm Password</div>
+            <div class="name"> Confirm Password </div>
             <div class="value">
               <div class="input-group">
-                <input class="input--style-5" type="{{ isVisibleConfirmPassword ? 'text' : 'password' }}" name="confirmPassword"
-                       [(ngModel)]="player.confirmPassword" required >
+                <input class="input--style-5"
+                       type="{{ isVisibleConfirmPassword ? 'text' : 'password' }}"
+                       name="confirmPassword"
+                       [(ngModel)]="player.confirmPassword"
+                       required
+                       placeholder="Confirm your password">
                 <span class="focus-input100"></span>
                 <span class="toggle-password" (click)="toggleConfirmPassword()">
                   <i class="fa" [ngClass]="isVisibleConfirmPassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
@@ -68,9 +86,23 @@
             }
           </style>
 
+          <div *ngIf="playerForm.controls['username'].errors?.['required']
+                        || playerForm.controls['email'].errors?.['required']
+                        || playerForm.controls['password'].errors?.['required']
+                        || playerForm.controls['confirmPassword'].errors?.['required']"
+               class="alert alert-danger">
+            All fields are required.
+          </div>
+
+          <div *ngIf="backendError" class="alert alert-danger">
+            {{ backendError }}
+          </div>
+
           <div class="container-login100-form-btn">
             <a>
-              <button class="login100-form-btn" type="submit" [disabled]="!playerForm.form.valid">
+              <button class="login100-form-btn"
+                      type="submit"
+                      [disabled]="playerForm.invalid">
                 Register
               </button>
             </a>

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PlayerLoginFormComponent } from './player-login-form/player-login-form.component';
@@ -13,21 +12,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlayerServiceService } from './player-service/player-service.service'
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    PlayerLoginFormComponent,
-    PlayerRegisterFormComponent,
-    PlayerListComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    FormsModule,
-    HttpClientModule,
-    NgbModule,
-    BrowserAnimationsModule
-  ],
-  providers: [PlayerServiceService],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        PlayerLoginFormComponent,
+        PlayerRegisterFormComponent,
+        PlayerListComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        FormsModule,
+        HttpClientModule,
+        NgbModule,
+        BrowserAnimationsModule
+    ],
+    providers: [PlayerServiceService],
+    bootstrap: [AppComponent]
 })
+
 export class AppModule { }
