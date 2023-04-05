@@ -4,34 +4,40 @@ import { Player } from '../player';
 import { PlayerServiceService } from '../player-service/player-service.service';
 
 @Component({
-  selector: 'app-player-register-form',
-  templateUrl: './player-register-form.component.html',
-  styleUrls: ['./player-register-form.component.css']
+    selector: 'app-player-register-form',
+    templateUrl: './player-register-form.component.html',
+    styleUrls: ['./player-register-form.component.css']
 })
-export class PlayerRegisterFormComponent {
-  player: Player;
 
-   constructor( private route: ActivatedRoute,
+export class PlayerRegisterFormComponent {
+    player: Player;
+    isVisiblePassword: Boolean = false;
+    isVisibleConfirmPassword: Boolean = false;
+    registerButtonPressed: Boolean = true;
+    backendError: string = '';
+
+    constructor(private route: ActivatedRoute,
                 private router: Router,
                 private playerService: PlayerServiceService) {
       this.player = new Player();
     }
 
-  isVisiblePassword: Boolean = false;
-  togglePassword(): void {
-    this.isVisiblePassword = !this.isVisiblePassword;
-  }
-
-  isVisibleConfirmPassword: Boolean = false;
-  toggleConfirmPassword(): void {
-      this.isVisibleConfirmPassword = !this.isVisibleConfirmPassword;
+    togglePassword(): void {
+        this.isVisiblePassword = !this.isVisiblePassword;
     }
 
-  onSubmit() {
-      this.playerService.save(this.player).subscribe(result => this.gotoLogin());
+    toggleConfirmPassword(): void {
+        this.isVisibleConfirmPassword = !this.isVisibleConfirmPassword;
     }
 
-  gotoLogin() {
-      this.router.navigate(['/login']);
+    onSubmit(): void {
+        this.playerService
+            .registerNewPlayer(this.player)
+            .subscribe(result => this.gotoLogin(),
+                       error => this.backendError = error.message);
+    }
+
+    gotoLogin(): void {
+        this.router.navigate(['/login']);
     }
 }

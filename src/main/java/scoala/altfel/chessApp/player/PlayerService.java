@@ -69,13 +69,14 @@ public class PlayerService {
 
 		if (!PasswordValidator.isValid(playerConfidentialDTO.password())) {
 			throw new IllegalStateException(
-					"Password inserted is not valid. Password must contain..."
+					"Password inserted is not valid. Password must contain at least " +
+							"1 special character, 1 digit, 1 lowercase letter and 1 upercase letter."
 			);
 		}
 
 		if (!playerConfidentialDTO.confirmPassword().equals(playerConfidentialDTO.password())) {
 			throw new IllegalStateException(
-					"Password and confirm password does not match"
+					"Password and confirm password does not match."
 			);
 		}
 
