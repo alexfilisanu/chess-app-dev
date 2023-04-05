@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Player } from '../player';
+import { PlayerServiceService } from '../player-service/player-service.service';
 
 @Component({
   selector: 'app-player-register-form',
@@ -7,20 +9,29 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./player-register-form.component.css']
 })
 export class PlayerRegisterFormComponent {
+  player: Player;
 
-  constructor(private router: Router) { }
-
-  btnRegister(): void {
-     this.router.navigate(['/login']);
-  }
+   constructor( private route: ActivatedRoute,
+                private router: Router,
+                private playerService: PlayerServiceService) {
+      this.player = new Player();
+    }
 
   isVisiblePassword: Boolean = false;
   togglePassword(): void {
     this.isVisiblePassword = !this.isVisiblePassword;
   }
 
-  isVisibleConfirmPasssword: Boolean = false;
+  isVisibleConfirmPassword: Boolean = false;
   toggleConfirmPassword(): void {
-      this.isVisibleConfirmPasssword = !this.isVisibleConfirmPasssword;
+      this.isVisibleConfirmPassword = !this.isVisibleConfirmPassword;
+    }
+
+  onSubmit() {
+      this.playerService.save(this.player).subscribe(result => this.gotoLogin());
+    }
+
+  gotoLogin() {
+      this.router.navigate(['/login']);
     }
 }

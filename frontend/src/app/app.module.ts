@@ -10,6 +10,7 @@ import { PlayerRegisterFormComponent } from './player-register-form/player-regis
 import { PlayerListComponent } from './player-list/player-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { PlayerServiceService } from './player-service/player-service.service'
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NgbModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [PlayerServiceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
