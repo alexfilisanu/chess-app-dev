@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HostBinding, HostListener } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-player-login-form',
@@ -17,6 +18,8 @@ import { trigger, transition, style, animate } from '@angular/animations';
 })
 
 export class PlayerLoginFormComponent {
+  constructor(private route: ActivatedRoute, private router: Router) { }
+
   @HostBinding('@animateZoomIn') public animateZoomIn = true;
 
   @HostListener('mouseenter')
@@ -33,4 +36,8 @@ export class PlayerLoginFormComponent {
   togglePassword(): void {
     this.isVisible = !this.isVisible;
   }
+
+  gotoClientHomepage(): void {
+                  this.router.navigate(['/client-homepage']);
+              }
 }
