@@ -86,16 +86,20 @@
             }
           </style>
 
-          <div *ngIf="playerForm.controls['username'].errors?.['required']
-                        || playerForm.controls['email'].errors?.['required']
-                        || playerForm.controls['password'].errors?.['required']
-                        || playerForm.controls['confirmPassword'].errors?.['required']"
-               class="alert alert-danger text-center">
-            All fields are required.
+          <div class="error-container">
+            <div *ngIf="playerForm.controls['username'].errors?.['required']
+                          || playerForm.controls['email'].errors?.['required']
+                          || playerForm.controls['password'].errors?.['required']
+                          || playerForm.controls['confirmPassword'].errors?.['required']"
+                 class="alert alert-danger text-center">
+              All fields are required.
+            </div>
           </div>
 
-          <div *ngIf="backendError" class="alert alert-danger text-center">
-            {{ backendError }}
+          <div class="error-container">
+            <div *ngIf="backendError" class="alert alert-danger text-center">
+              {{ backendError }}
+            </div>
           </div>
 
           <div class="container-login100-form-btn">
