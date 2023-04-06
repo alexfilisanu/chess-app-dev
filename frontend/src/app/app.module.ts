@@ -12,7 +12,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlayerServiceService } from './player-service/player-service.service';
 import { RegisterSuccessfulComponent } from './register-successful/register-successful.component';
 import { ClientHomepageComponent } from './client-homepage/client-homepage.component';
-import { AccountDetailsComponent } from './account-details/account-details.component';
 
 @NgModule({
     declarations: [
@@ -21,8 +20,7 @@ import { AccountDetailsComponent } from './account-details/account-details.compo
         PlayerRegisterFormComponent,
         PlayerListComponent,
         RegisterSuccessfulComponent,
-        ClientHomepageComponent,
-        AccountDetailsComponent
+        ClientHomepageComponent
     ],
     imports: [
         BrowserModule,

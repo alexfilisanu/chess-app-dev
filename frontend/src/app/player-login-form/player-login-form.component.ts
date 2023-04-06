@@ -20,7 +20,7 @@ import { PlayerServiceService } from '../player-service/player-service.service';
 })
 
 export class PlayerLoginFormComponent {
-  player: Player;
+   player: Player;
    backendError: string = '';
 
   constructor(private route: ActivatedRoute,
@@ -56,7 +56,12 @@ export class PlayerLoginFormComponent {
 
     this.playerService
         .checkLoginCredentials(username, password)
-        .subscribe(result => this.gotoClientHomepage(),
+        .subscribe(result => {
+                                this.gotoClientHomepage();
+                                localStorage.setItem('isLoggedIn', 'true');
+                                localStorage.setItem('username', username);
+                             }
+                                ,
                    error => this.backendError = error.message);
   }
 }
