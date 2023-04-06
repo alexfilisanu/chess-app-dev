@@ -10,7 +10,6 @@ import { catchError } from 'rxjs/operators';
 export class PlayerServiceService {
 		baseUrl: string;
 		players: Player[] = [];
-		authenticated: Boolean = false;
 
     constructor(private http: HttpClient) {
         this.baseUrl = 'http://localhost:8090/api/v1/chess-app';
