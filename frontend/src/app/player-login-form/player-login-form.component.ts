@@ -49,17 +49,14 @@ export class PlayerLoginFormComponent {
   gotoClientHomepage(): void {
                   this.router.navigate(['/client-homepage']);
               }
+
   login(): void {
     const username = this.player['username'] ?? '';
     const password = this.player['password'] ?? '';
 
     this.playerService
-      .checkLoginCredentials(username, password)
-      .subscribe(
-        result => { console.log(result);
-                    this.gotoClientHomepage();
-                   },
-        error => this.backendError = error.message
-      );
+        .checkLoginCredentials(username, password)
+        .subscribe(result => this.gotoClientHomepage(),
+                   error => this.backendError = error.message);
   }
 }

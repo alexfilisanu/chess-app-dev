@@ -9,3 +9,7 @@
   width: 100%;
   padding: 5% 25%;
 }
+
+.error-container {
+  height: 50px;
+}

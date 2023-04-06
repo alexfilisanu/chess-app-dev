@@ -77,7 +77,13 @@
           <a class="txt1" href="#">Forgot your password?</a>
         </div>
 
-        <div class="text-center p-t-136 text-black-50">
+        <div class="error-container p-t-20">
+          <div *ngIf="backendError" class="alert alert-danger text-center">
+            {{ backendError }}
+          </div>
+        </div>
+
+        <div class="text-center p-t-100 text-black-50">
           <a class="txt2" href="#" routerLink="/register" class="nav-link" routerLinkActive="active">
             Don't have an account? Sign up here
             <i class="fa fa-long-arrow-right m-l-5" aria-hidden="true"></i>
