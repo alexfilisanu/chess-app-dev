@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { HostBinding, HostListener } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Player } from '../player';
+import { PlayerServiceService } from '../player-service/player-service.service';
 
 @Component({
   selector: 'app-player-login-form',
@@ -18,7 +20,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 
 export class PlayerLoginFormComponent {
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  player: Player;
+   backendError: string = '';
+
+  constructor(private route: ActivatedRoute,
+                  private router: Router,
+                  private playerService: PlayerServiceService) {
+        this.player = new Player();
+      }
 
   @HostBinding('@animateZoomIn') public animateZoomIn = true;
 
@@ -40,4 +49,17 @@ export class PlayerLoginFormComponent {
   gotoClientHomepage(): void {
                   this.router.navigate(['/client-homepage']);
               }
+  login(): void {
+    const username = this.player['username'] ?? '';
+    const password = this.player['password'] ?? '';
+
+    this.playerService
+      .checkLoginCredentials(username, password)
+      .subscribe(
+        result => { console.log(result);
+                    this.gotoClientHomepage();
+                   },
+        error => this.backendError = error.message
+      );
+  }
 }

@@ -5,13 +5,15 @@ import { PlayerLoginFormComponent } from './player-login-form/player-login-form.
 import { PlayerRegisterFormComponent } from './player-register-form/player-register-form.component';
 import { RegisterSuccessfulComponent } from './register-successful/register-successful.component';
 import { ClientHomepageComponent } from './client-homepage/client-homepage.component';
+import { AccountDetailsComponent } from './account-details/account-details.component';
 
 const routes: Routes = [
     { path: '', component: PlayerListComponent },
     { path: 'login', component: PlayerLoginFormComponent },
     { path: 'register', component: PlayerRegisterFormComponent },
     { path: 'register-successful', component: RegisterSuccessfulComponent },
-    { path: 'client-homepage', component: ClientHomepageComponent}
+    { path: 'client-homepage', component: ClientHomepageComponent},
+    { path: 'account-details', component: AccountDetailsComponent}
 ];
 
 @NgModule({

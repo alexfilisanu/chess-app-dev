@@ -13,7 +13,6 @@ export class PlayerRegisterFormComponent {
     player: Player;
     isVisiblePassword: Boolean = false;
     isVisibleConfirmPassword: Boolean = false;
-    registerButtonPressed: Boolean = true;
     backendError: string = '';
 
     constructor(private route: ActivatedRoute,

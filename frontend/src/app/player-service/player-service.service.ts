@@ -10,6 +10,7 @@ import { catchError } from 'rxjs/operators';
 export class PlayerServiceService {
 		baseUrl: string;
 		players: Player[] = [];
+		authenticated: Boolean = false;
 
     constructor(private http: HttpClient) {
         this.baseUrl = 'http://localhost:8090/api/v1/chess-app';
@@ -22,6 +23,10 @@ export class PlayerServiceService {
 	  public getPlayerById(playerId: number): Observable<Player> {
 			  return this.http.get<Player>(`${this.baseUrl}/player-by-id/${playerId}`);
 		}
+
+		public checkLoginCredentials(playerName: string, playerPassword: string): Observable<Player> {
+    			  return this.http.get<Player>(`${this.baseUrl}/player-by-name/${playerName}?playerPassword=${playerPassword}`);
+    		}
 
     public registerNewPlayer(newPlayer: Player) {
         const url = `${this.baseUrl}/register`;

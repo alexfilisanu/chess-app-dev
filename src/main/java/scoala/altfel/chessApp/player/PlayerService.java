@@ -31,7 +31,7 @@ public class PlayerService {
 				);
 	}
 
-	public PlayerDTO getPlayerByName(String playerName) {
+	public PlayerDTO checkLoginCredentials(String playerName, String playerPassword) {
 		Player player = playerRepository
 				.findPlayerByName(playerName)
 				.orElseThrow(
@@ -39,6 +39,12 @@ public class PlayerService {
 								"Player with name " + playerName + " doesn't exist."
 						)
 				);
+
+		if(!player.getPassword().equals(playerPassword)) {
+			throw new IllegalStateException(
+					"Username and password don't match."
+			);
+		}
 
 		return playerToPlayerDTOMapper.apply(player);
 	}

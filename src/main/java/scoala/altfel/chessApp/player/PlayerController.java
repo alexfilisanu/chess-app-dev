@@ -22,8 +22,8 @@ public class PlayerController {
 	}
 
 	@GetMapping("/player-by-name/{playerName}")
-	public PlayerDTO getPlayerByName(@PathVariable("playerName") String playerName) {
-		return playerService.getPlayerByName(playerName);
+	public PlayerDTO checkLoginCredentials(@PathVariable("playerName") String playerName, @RequestParam("playerPassword") String playerPassword) {
+		return playerService.checkLoginCredentials(playerName, playerPassword);
 	}
 
 	@DeleteMapping("/player/{playerId}")

@@ -2,6 +2,12 @@
 @import "css/login-form/util.css";
 @import "css/register-form/main.css";
 @import "css/register-form/main.min.css";
+@import "css/client-homepage/bootstrap.min.css";
+@import "css/client-homepage/style.css";
+@import "css/client-homepage/bootstrap/mixins/_border-radius.css";
+@import "css/client-homepage/bootstrap/mixins/_screen-reader.css";
+@import "css/client-homepage/bootstrap/mixins/_visibility.css";
+@import "css/client-homepage/bootstrap/utilities/_stretched-link.css";
 @import "vendor/bootstrap/css/bootstrap.css";
 @import "vendor/bootstrap/css/bootstrap.min.css";
 @import "fonts/font-awesome-4.7.0/css/font-awesome.css";
