@@ -4,4 +4,5 @@ export class Player {
    email ?: string;
    password ?: string;
    confirmPassword ?: string;
+   score ?: number;
 }

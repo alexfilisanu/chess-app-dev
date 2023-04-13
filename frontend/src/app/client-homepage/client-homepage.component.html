@@ -18,41 +18,19 @@
       <h2 class="mb-4 text-center">Hello, {{ usernameAuthenticated }}!</h2>
       <ul class="list-unstyled components mb-5">
         <li class="active">
-          <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a>
-          <ul class="collapse list-unstyled" id="homeSubmenu">
-            <li>
-              <a href="#">Home 1</a>
-            </li>
-            <li>
-              <a href="#">Home 2</a>
-            </li>
-            <li>
-              <a href="#">Home 3</a>
-            </li>
-          </ul>
+          <a (click)="toogleHome()">Home</a>
         </li>
         <li>
-          <a href="#">About</a>
+          <a (click)="toogleScoalaAltfel()">About Scoala Altfel</a>
         </li>
         <li>
-          <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle ">Pages</a>
-          <ul class="collapse list-unstyled" id="pageSubmenu">
-            <li>
-              <a href="#">Page 1</a>
-            </li>
-            <li>
-              <a href="#">Page 2</a>
-            </li>
-            <li>
-              <a href="#">Page 3</a>
-            </li>
-          </ul>
+          <a (click)="toogleViewAccountDetails()">View account details</a>
         </li>
         <li>
-          <a href="#">View account details</a>
+          <a (click)="toogleEditAccountDetails()">Edit account details</a>
         </li>
         <li>
-          <a href="#">Contact</a>
+          <a (click)="toogleSearchPlayers()">Search players</a>
         </li>
         <li>
           <a (click)="logout()">Logout</a>
@@ -64,40 +42,140 @@
 
   <!-- Page Content  -->
   <div id="content" class="p-4 p-md-5 ">
+    <ng-container *ngIf="isViewAccountInfoBtnClicked">
+    <h2 class="text-center mb-4 p-t-100">Player Account Information</h2>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-
-        <button type="button" id="sidebarCollapse" class="btn btn-primary">
-          <i class="fa fa-bars"></i>
-          <span class="sr-only">Toggle Menu</span>
-        </button>
-        <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <i class="fa fa-bars"></i>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="nav navbar-nav ml-auto">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Portfolio</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
-            </li>
-          </ul>
+        <div class="row d-flex justify-content-center align-items-center p-t-100">
+          <div class="col col-lg-6 mb-4 mb-lg-0">
+            <div class="card mb-3" style="border-radius: .5rem;">
+              <div class="row g-0">
+                <div class="col-md-4 gradient-custom text-center text-white"
+                     style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+                       alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
+                  <h2>{{ usernameAuthenticated }}</h2>
+                  <h5>Chess player</h5>
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body p-4">
+                    <h6>Account Information</h6>
+                    <hr class="mt-0 mb-4">
+                    <div class="row pt-1">
+                      <div class="col-6 mb-3">
+                        <h6>Email</h6>
+                        <p class="text-muted">{{ player.email }}</p>
+                      </div>
+                      <div class="col-6 mb-3">
+                        <h6>Score</h6>
+                        <p class="text-muted">{{ player.score }}</p>
+                      </div>
+                    </div>
+                    <h6>Matches History</h6>
+                    <hr class="mt-0 mb-4">
+                    <div class="row pt-1">
+                      <div class="col-6 mb-3">
+                        <h6>Victory</h6>
+                        <p class="text-muted">Lorem ipsum</p>
+                      </div>
+                      <div class="col-6 mb-3">
+                        <h6>Draw</h6>
+                        <p class="text-muted">Dolor sit amet</p>
+                      </div>
+                      <div class="col-6 mb-3">
+                        <h6>Defeat</h6>
+                        <p class="text-muted">Dolor sit amet</p>
+                      </div>
+                      <div class="col-6 mb-3">
+                        <h6>Id</h6>
+                        <p class="text-muted">{{ player.id }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </nav>
+    </ng-container>
 
-    <h2 class="mb-4">What do you want to play today?</h2>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+    <ng-container *ngIf="isHomeBtnClicked">
+      <h2 class="text-center mb-4 p-t-100">What do you want to play today?</h2>
+      <div class="text-center p-t-100">
+      <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg">Local game</button>
+      <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-success btn-lg p-t-100">Online game</button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="isEditAccountInfoBtnClicked">
+      <h2 class="text-center mb-4 p-t-100">Player's account settings</h2>
+      <div class="text-center p-t-100">
+        <form class="login100-form validate-form" (ngSubmit)="updateUsername()" #playerForm="ngForm">
+        <span class="login100-form-title text-black-50">
+          Update username
+        </span>
+
+          <div class="wrap-input100 validate-input" data-validate="This username does not exist.">
+            <input class="input100"
+                   type="text"
+                   name="newUsername"
+                   placeholder="newUsername"
+                   [(ngModel)]="newUsername"
+                   required>
+            <span class="focus-input100"></span>
+            <span class="symbol-input100">
+							<i class="fa fa-user" aria-hidden="true"></i>
+						</span>
+          </div>
+
+          <div class="wrap-input100 validate-input" data-validate="Password is required">
+            <input class="input100"
+                   type="{{ isVisible ? 'text' : 'password' }}"
+                   name="passwordToConfirm"
+                   [(ngModel)]="passwordToConfirm"
+                   required
+                   placeholder="passwordToConfirm">
+            <span class="focus-input100"></span>
+            <span class="symbol-input100">
+            <i class="fa fa-lock" aria-hidden="true"></i>
+          </span>
+            <span class="toggle-password" (click)="togglePassword()">
+            <i class="fa" [ngClass]="isVisible ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+          </span>
+          </div>
+
+          <style>
+          .wrap-input100 {
+            position: relative;
+          }
+          .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            cursor: pointer;
+          }
+        </style>
+
+          <div class="container-login100-form-btn">
+            <button
+              class="login100-form-btn"
+              type="submit"
+              [disabled]="playerForm.invalid">
+              Login
+            </button>
+          </div>
+
+          <div class="error-container p-t-20">
+            <div *ngIf="backendError" class="alert alert-danger text-center">
+              {{ backendError }}
+            </div>
+          </div>
+
+        </form>
+      </div>
+      </ng-container>
+
   </div>
 </div>
 
