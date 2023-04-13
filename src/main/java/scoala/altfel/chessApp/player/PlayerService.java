@@ -31,6 +31,17 @@ public class PlayerService {
 				);
 	}
 
+	public PlayerDTO getPlayerByName(String playerName) {
+		return playerRepository
+				.findPlayerByName(playerName)
+				.map(p -> playerToPlayerDTOMapper.apply(p))
+				.orElseThrow(
+						() -> new IllegalStateException(
+								"Player with username " + playerName + " doesn't exist."
+						)
+				);
+	}
+
 	public PlayerDTO checkLoginCredentials(String playerName, String playerPassword) {
 		Player player = playerRepository
 				.findPlayerByName(playerName)

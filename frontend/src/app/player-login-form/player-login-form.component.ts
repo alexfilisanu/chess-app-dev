@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { HostBinding, HostListener } from '@angular/core';
+import { Component, AfterViewInit, HostBinding, HostListener } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Player } from '../player';
 import { PlayerServiceService } from '../player-service/player-service.service';
+
 
 @Component({
   selector: 'app-player-login-form',
@@ -14,22 +14,23 @@ import { PlayerServiceService } from '../player-service/player-service.service';
       transition(':enter', [
         style({ opacity: 0, transform: 'scale(0.5)' }),
         animate('0.3s ease-out', style({ opacity: 1, transform: 'scale(1)' })),
+      ]),
     ]),
-   ]),
-  ]
+  ],
 })
-
 export class PlayerLoginFormComponent {
-   player: Player;
-   backendError: string = '';
+  player: Player;
+  backendError: string = '';
 
-  constructor(private route: ActivatedRoute,
-                  private router: Router,
-                  private playerService: PlayerServiceService) {
-        this.player = new Player();
-      }
+  constructor(
+    private router: Router,
+    private playerService: PlayerServiceService
+  ) {
+    this.player = new Player();
+  }
 
-  @HostBinding('@animateZoomIn') public animateZoomIn = true;
+  @HostBinding('@animateZoomIn')
+  public animateZoomIn = true;
 
   @HostListener('mouseenter')
   public onMouseEnter(): void {
@@ -47,21 +48,23 @@ export class PlayerLoginFormComponent {
   }
 
   gotoClientHomepage(): void {
-                  this.router.navigate(['/client-homepage']);
-              }
+    this.router.navigate(['/client-homepage']);
+  }
 
   login(): void {
     const username = this.player['username'] ?? '';
     const password = this.player['password'] ?? '';
 
-    this.playerService
-        .checkLoginCredentials(username, password)
-        .subscribe(result => {
-                                this.gotoClientHomepage();
-                                localStorage.setItem('isLoggedIn', 'true');
-                                localStorage.setItem('username', username);
-                             }
-                                ,
-                   error => this.backendError = error.message);
+    this.playerService.checkLoginCredentials(username, password).subscribe(
+      (result) => {
+        this.gotoClientHomepage();
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('username', username);
+      },
+      (error) => (this.backendError = error.message)
+    );
+  }
+
+  signInWithGoogle(): void {
   }
 }

@@ -13,6 +13,7 @@ import { PlayerServiceService } from './player-service/player-service.service';
 import { RegisterSuccessfulComponent } from './register-successful/register-successful.component';
 import { ClientHomepageComponent } from './client-homepage/client-homepage.component';
 
+
 @NgModule({
     declarations: [
         AppComponent,
@@ -34,4 +35,5 @@ import { ClientHomepageComponent } from './client-homepage/client-homepage.compo
     bootstrap: [AppComponent]
 })
 
-export class AppModule { }
+export class AppModule {
+}

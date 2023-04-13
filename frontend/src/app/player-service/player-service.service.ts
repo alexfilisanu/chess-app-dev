@@ -23,8 +23,12 @@ export class PlayerServiceService {
 			  return this.http.get<Player>(`${this.baseUrl}/player-by-id/${playerId}`);
 		}
 
+		public getPlayerByName(playerName: string): Observable<Player> {
+    			  return this.http.get<Player>(`${this.baseUrl}/player-by-name/${playerName}`);
+    }
+
 		public checkLoginCredentials(playerName: string, playerPassword: string): Observable<Player> {
-        const url = `${this.baseUrl}/player-by-name/${playerName}?playerPassword=${playerPassword}`;
+        const url = `${this.baseUrl}/login-credentials/${playerName}?playerPassword=${playerPassword}`;
         return this.http.get<Player>(url).pipe(
         				    catchError((error: HttpErrorResponse, caught: Observable<any>) => {
         						    if (!(error.error instanceof ErrorEvent)) {
@@ -46,4 +50,20 @@ export class PlayerServiceService {
 					  })
 				);
 	  }
+
+	  public updateUsername(password: string, username: string, playerId: number) {
+        const body = {
+          username,
+          password
+        };
+        const url = `${this.baseUrl}/username/${playerId}`;
+        return this.http.put<Player>(url, body).pipe(
+        				    catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+        						    if (!(error.error instanceof ErrorEvent)) {
+        										return throwError(error.error);
+        						    }
+        						    return caught;
+        					  })
+        				);
+      }
 }
