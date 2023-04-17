@@ -165,6 +165,12 @@ public class PlayerService {
 						)
 				);
 
+		if (playerRepository.findPlayerByName(usernameForm.newUsername()).isPresent()) {
+			throw new IllegalStateException(
+					"Player with name " + usernameForm.newUsername() + " already exists."
+			);
+		}
+
 		if (player.getPassword().equals(usernameForm.password())) {
 			player.setUsername(usernameForm.newUsername());
 		}
