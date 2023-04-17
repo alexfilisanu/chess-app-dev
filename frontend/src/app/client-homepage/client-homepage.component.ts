@@ -90,9 +90,14 @@ export class ClientHomepageComponent implements OnInit {
     }
 
     updateUsername(): void {
-       const playerId = this.player['id'] ?? 1;
-       const username = this.newUsername ?? '';
+       const playerId = this.player.id ?? 0;
+       const newUsername = this.newUsername ?? '';
        const password = this.passwordToConfirm ?? '';
-      this.playerService.updateUsername(password, username, playerId).subscribe(data => this.player = data);
+       this.playerService.updateUsername(password, newUsername, playerId).subscribe(data => {
+          this.player = data
+          localStorage.setItem("username", newUsername);
+          this.ngOnInit();
+       },
+       error => (this.backendError = error.message));
     }
 }

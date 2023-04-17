@@ -51,10 +51,10 @@ export class PlayerServiceService {
 				);
 	  }
 
-	  public updateUsername(password: string, username: string, playerId: number) {
+	  public updateUsername(password: string, newUsername: string, playerId: number) {
         const body = {
-          username,
-          password
+          password,
+          newUsername
         };
         const url = `${this.baseUrl}/username/${playerId}`;
         return this.http.put<Player>(url, body).pipe(
