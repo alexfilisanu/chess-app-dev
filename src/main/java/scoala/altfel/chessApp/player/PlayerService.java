@@ -3,7 +3,9 @@ package scoala.altfel.chessApp.player;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
+
 import static java.util.stream.Collectors.toList;
 
 @AllArgsConstructor
@@ -51,7 +53,7 @@ public class PlayerService {
 						)
 				);
 
-		if(!player.getPassword().equals(playerPassword)) {
+		if (!player.getPassword().equals(playerPassword)) {
 			throw new IllegalStateException(
 					"Username and password don't match."
 			);
@@ -119,19 +121,27 @@ public class PlayerService {
 						)
 				);
 
-		if (!player.getPassword().equals(passwordForm.password())) {
+		if (!PasswordValidator.isValid(passwordForm.newPassword())) {
+			throw new IllegalStateException(
+					"Password inserted is not valid. Password must contain at least " +
+							"1 special character, 1 digit, 1 lowercase letter and 1 upercase letter."
+			);
+		}
+
+		if (!passwordForm.newPassword().equals(passwordForm.confirmNewPassword())) {
+			throw new IllegalStateException(
+					"New password and confirm new password does not match."
+			);
+		}
+
+		if (player.getPassword().equals(passwordForm.password())) {
+			player.setPassword(passwordForm.newPassword());
+			player.setConfirmPassword(passwordForm.confirmNewPassword());
+		} else {
 			throw new IllegalStateException(
 					"Password inserted is not correct."
 			);
 		}
-
-		if (!PasswordValidator.isValid(passwordForm.newPassword())) {
-			throw new IllegalStateException(
-					"Password inserted is not valid. Password must contain..."
-			);
-		}
-
-		player.setPassword(passwordForm.newPassword());
 	}
 
 	@Transactional
@@ -152,6 +162,10 @@ public class PlayerService {
 
 		if (player.getPassword().equals(emailForm.password())) {
 			player.setEmail(emailForm.newEmail());
+		} else {
+			throw new IllegalStateException(
+					"Password inserted is not correct."
+			);
 		}
 	}
 
@@ -173,6 +187,10 @@ public class PlayerService {
 
 		if (player.getPassword().equals(usernameForm.password())) {
 			player.setUsername(usernameForm.newUsername());
+		} else {
+			throw new IllegalStateException(
+					"Password inserted is not correct."
+			);
 		}
 	}
 }
