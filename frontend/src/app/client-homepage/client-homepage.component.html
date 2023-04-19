@@ -14,7 +14,8 @@
 <div class="wrapper d-flex align-items-stretch">
   <nav id="sidebar" class="sidebar">
     <div class="p-4 pt-5">
-      <a href="#" class="img logo rounded-circle mb-5" style="background-image: url(assets/images/logos/knight-logo.png);"></a>
+      <a href="#" class="img logo rounded-circle mb-5"
+         style="background-image: url(assets/images/logos/knight-logo.png);"></a>
       <h2 class="mb-4 text-center">Hello, {{ usernameAuthenticated }}!</h2>
       <ul class="list-unstyled components mb-5">
         <li class="active">
@@ -43,52 +44,51 @@
   <!-- Page Content  -->
   <div id="content" class="p-4 p-md-5 ">
     <ng-container *ngIf="isViewAccountInfoBtnClicked">
-    <h2 class="text-center mb-4 p-t-100">Player Account Information</h2>
+      <h2 class="text-center mb-4 p-t-100">Player Account Information</h2>
 
-        <div class="row d-flex justify-content-center align-items-center p-t-100">
-          <div class="col col-lg-6 mb-4 mb-lg-0">
-            <div class="card mb-3" style="border-radius: .5rem;">
-              <div class="row g-0">
-                <div class="col-md-4 gradient-custom text-center text-white"
-                     style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                       alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
-                  <h2>{{ usernameAuthenticated }}</h2>
-                  <h5>Chess player</h5>
-                </div>
-                <div class="col-md-8">
-                  <div class="card-body p-4">
-                    <h6>Account Information</h6>
-                    <hr class="mt-0 mb-4">
-                    <div class="row pt-1">
-                      <div class="col-6 mb-3">
-                        <h6>Email</h6>
-                        <p class="text-muted">{{ player.email }}</p>
-                      </div>
-                      <div class="col-6 mb-3">
-                        <h6>Score</h6>
-                        <p class="text-muted">{{ player.score }}</p>
-                      </div>
+      <div class="row d-flex justify-content-center align-items-center p-t-100">
+        <div class="col col-lg-6 mb-4 mb-lg-0">
+          <div class="card mb-3" style="border-radius: .5rem;">
+            <div class="row g-0">
+              <div class="col-md-4 gradient-custom text-center text-white"
+                   style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+                     alt="Avatar" class="img-fluid my-5" style="width: 80px;"/>
+                <h2>{{ usernameAuthenticated }}</h2>
+                <h5>Chess player</h5>
+              </div>
+              <div class="col-md-8">
+                <div class="card-body p-4">
+                  <h6>Account Information</h6>
+                  <hr class="mt-0 mb-4">
+                  <div class="row pt-1">
+                    <div class="col-6 mb-3">
+                      <h6>Email</h6>
+                      <p class="text-muted">{{ player.email }}</p>
                     </div>
-                    <h6>Matches History</h6>
-                    <hr class="mt-0 mb-4">
-                    <div class="row pt-1">
-                      <div class="col-6 mb-3">
-                        <h6>Victory</h6>
-                        <p class="text-muted">Lorem ipsum</p>
-                      </div>
-                      <div class="col-6 mb-3">
-                        <h6>Draw</h6>
-                        <p class="text-muted">Dolor sit amet</p>
-                      </div>
-                      <div class="col-6 mb-3">
-                        <h6>Defeat</h6>
-                        <p class="text-muted">Dolor sit amet</p>
-                      </div>
-                      <div class="col-6 mb-3">
-                        <h6>Id</h6>
-                        <p class="text-muted">{{ player.id }}</p>
-                      </div>
+                    <div class="col-6 mb-3">
+                      <h6>Score</h6>
+                      <p class="text-muted">{{ player.score }}</p>
+                    </div>
+                  </div>
+                  <h6>Matches History</h6>
+                  <hr class="mt-0 mb-4">
+                  <div class="row pt-1">
+                    <div class="col-6 mb-3">
+                      <h6>Victory</h6>
+                      <p class="text-muted">Lorem ipsum</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <h6>Draw</h6>
+                      <p class="text-muted">Dolor sit amet</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <h6>Defeat</h6>
+                      <p class="text-muted">Dolor sit amet</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <h6>Id</h6>
+                      <p class="text-muted">{{ player.id }}</p>
                     </div>
                   </div>
                 </div>
@@ -96,85 +96,191 @@
             </div>
           </div>
         </div>
+      </div>
     </ng-container>
-
 
     <ng-container *ngIf="isHomeBtnClicked">
       <h2 class="text-center mb-4 p-t-100">What do you want to play today?</h2>
       <div class="text-center p-t-100">
-      <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg">Local game</button>
-      <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-success btn-lg p-t-100">Online game</button>
+        <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg">Local game</button>
+        <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-success btn-lg p-t-100">Online game</button>
       </div>
     </ng-container>
 
     <ng-container *ngIf="isEditAccountInfoBtnClicked">
       <h2 class="text-center mb-4 p-t-100">Player's account settings</h2>
+
       <div class="text-center p-t-100">
-        <form class="login100-form validate-form" (ngSubmit)="updateUsername()" #playerForm="ngForm">
+        <form class="login100-form validate-form" (ngSubmit)="updateUsername()" #usernameForm="ngForm">
         <span class="login100-form-title text-black-50">
           Update username
         </span>
-
-          <div class="wrap-input100 validate-input" data-validate="This username does not exist.">
-            <input class="input100"
-                   type="text"
-                   name="newUsername"
-                   placeholder="newUsername"
-                   [(ngModel)]="newUsername"
-                   required>
-            <span class="focus-input100"></span>
-            <span class="symbol-input100">
-							<i class="fa fa-user" aria-hidden="true"></i>
-						</span>
+          <div class="form-row">
+            <div class="value">
+              <div class="input-group" style="width: 200%;">
+                <input class="input--style-5"
+                       type="text"
+                       name="newUsername"
+                       placeholder="Enter your new username"
+                       [(ngModel)]="newUsername"
+                       required>
+              </div>
+            </div>
           </div>
 
-          <div class="wrap-input100 validate-input" data-validate="Password is required">
-            <input class="input100"
-                   type="{{ isVisible ? 'text' : 'password' }}"
-                   name="passwordToConfirm"
-                   [(ngModel)]="passwordToConfirm"
-                   required
-                   placeholder="passwordToConfirm">
-            <span class="focus-input100"></span>
-            <span class="symbol-input100">
-            <i class="fa fa-lock" aria-hidden="true"></i>
-          </span>
-            <span class="toggle-password" (click)="togglePassword()">
-            <i class="fa" [ngClass]="isVisible ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
-          </span>
+          <div class="form-row">
+            <div class="value">
+              <div class="input-group" style="width: 200%;">
+                <input class="input--style-5"
+                       type="{{ isVisiblePasswordUsername ? 'text' : 'password' }}"
+                       name="passwordToConfirmUsername"
+                       placeholder="Enter your current password to confirm"
+                       [(ngModel)]="passwordToConfirmUsername"
+                       required>
+                <span class="toggle-password" (click)="toggleUsernamePassword()">
+                <i class="fa" [ngClass]="isVisiblePasswordUsername ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+              </span>
+              </div>
+            </div>
           </div>
-
-          <style>
-          .wrap-input100 {
-            position: relative;
-          }
-          .toggle-password {
-            position: absolute;
-            top: 50%;
-            right: 20px;
-            transform: translateY(-50%);
-            cursor: pointer;
-          }
-        </style>
 
           <div class="container-login100-form-btn">
-            <button
-              class="login100-form-btn"
-              type="submit"
-              [disabled]="playerForm.invalid">
-              Login
+            <button class="login100-form-btn"
+                    type="submit"
+                    [disabled]="usernameForm.invalid">
+              Update username
             </button>
           </div>
 
           <div class="error-container p-t-20">
-            <div *ngIf="backendError" class="alert alert-danger text-center">
-              {{ backendError }}
+            <div *ngIf="backendErrorUsername" class="alert alert-danger text-center">
+              {{ backendErrorUsername }}
+            </div>
+          </div>
+        </form>
+
+      </div>
+      <div class="text-center p-t-100">
+        <form class="login100-form validate-form" (ngSubmit)="updateEmail()" #emailForm="ngForm">
+        <span class="login100-form-title text-black-50">
+          Update email
+        </span>
+
+          <div class="form-row">
+            <div class="value">
+              <div class="input-group" style="width: 200%;">
+                <input class="input--style-5"
+                       type="text"
+                       name="newEmail"
+                       placeholder="Enter your new email"
+                       [(ngModel)]="newEmail"
+                       required>
+              </div>
             </div>
           </div>
 
+          <div class="form-row">
+            <div class="value">
+              <div class="input-group" style="width: 200%;">
+                <input class="input--style-5"
+                       type="{{ isVisiblePasswordEmail ? 'text' : 'password' }}"
+                       name="passwordToConfirmEmail"
+                       placeholder="Enter your current password to confirm"
+                       [(ngModel)]="passwordToConfirmEmail"
+                       required>
+                <span class="toggle-password" (click)="toggleEmailPassword()">
+                <i class="fa" [ngClass]="isVisiblePasswordEmail ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+              </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="container-login100-form-btn">
+            <button class="login100-form-btn"
+                    type="submit"
+                    [disabled]="emailForm.invalid">
+              Update email
+            </button>
+          </div>
+
+          <div class="error-container p-t-20">
+            <div *ngIf="backendErrorEmail" class="alert alert-danger text-center">
+              {{ backendErrorEmail }}
+            </div>
+          </div>
         </form>
       </div>
-      </ng-container>
+
+      <div class="text-center p-t-100">
+        <form class="login100-form validate-form" (ngSubmit)="updatePassword()" #passwordForm="ngForm">
+        <span class="login100-form-title text-black-50">
+          Update password
+        </span>
+          <div class="form-row">
+            <div class="value">
+              <div class="input-group" style="width: 200%;">
+                <input class="input--style-5"
+                       type="{{ isVisibleNewPassword ? 'text' : 'password' }}"
+                       name="newPassword"
+                       placeholder="Enter your new password"
+                       [(ngModel)]="newPassword"
+                       required>
+                <span class="toggle-password" (click)="toggleNewPassword()">
+                <i class="fa" [ngClass]="isVisibleNewPassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+              </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="value">
+              <div class="input-group" style="width: 200%;">
+                <input class="input--style-5"
+                       type="{{ isVisibleConfirmNewPassword ? 'text' : 'password' }}"
+                       name="confirmNewPassword"
+                       placeholder="Confirm your new password"
+                       [(ngModel)]="confirmNewPassword"
+                       required>
+                <span class="toggle-password" (click)="toggleConfirmNewPassword()">
+                <i class="fa" [ngClass]="isVisibleConfirmNewPassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+              </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="value">
+              <div class="input-group" style="width: 200%;">
+                <input class="input--style-5"
+                       type="{{ isVisiblePasswordPassword ? 'text' : 'password' }}"
+                       name="passwordToConfirm"
+                       placeholder="Enter your current password to confirm"
+                       [(ngModel)]="passwordToConfirmPassword"
+                       required>
+                <span class="toggle-password" (click)="togglePasswordPassword()">
+                <i class="fa" [ngClass]="isVisiblePasswordPassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+              </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="container-login100-form-btn">
+            <button class="login100-form-btn"
+                    type="submit"
+                    [disabled]="passwordForm.invalid">
+              Update password
+            </button>
+          </div>
+
+          <div class="error-container p-t-20">
+            <div *ngIf="backendErrorPassword" class="alert alert-danger text-center">
+              {{ backendErrorPassword }}
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </ng-container>
 
   </div>
 </div>

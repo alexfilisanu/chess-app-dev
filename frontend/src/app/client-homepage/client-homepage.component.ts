@@ -18,15 +18,25 @@ export class ClientHomepageComponent implements OnInit {
   isEditAccountInfoBtnClicked = false;
   isSearchPlayersBtnClicked = false;
   isScoalaAltfelInfoBtnClicked = false;
-  isVisible: Boolean = false;
-  backendError: string = '';
+  isVisiblePasswordUsername: Boolean = false;
+  isVisiblePasswordEmail: Boolean = false;
+  isVisiblePasswordPassword: Boolean = false;
+  isVisibleNewPassword: Boolean = false;
+  isVisibleConfirmNewPassword: Boolean = false;
+  backendErrorUsername: string = '';
+  backendErrorEmail: string = '';
+  backendErrorPassword: string = '';
   newUsername: string = '';
-  passwordToConfirm: string = '';
+  newEmail: string = '';
+  newPassword: string = '';
+  confirmNewPassword: string = '';
+  passwordToConfirmUsername: string = '';
+  passwordToConfirmEmail: string = '';
+  passwordToConfirmPassword: string = '';
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private playerService: PlayerServiceService) {
-      }
+              private playerService: PlayerServiceService) { }
 
   ngOnInit(): void {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -45,59 +55,86 @@ export class ClientHomepageComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  toggleButton(button: string): void {
+    this.isViewAccountInfoBtnClicked = button === 'viewAccount';
+    this.isEditAccountInfoBtnClicked = button === 'editAccount';
+    this.isSearchPlayersBtnClicked = button === 'searchPlayers';
+    this.isScoalaAltfelInfoBtnClicked = button === 'scoalaAltfel';
+    this.isHomeBtnClicked = button === 'home';
+  }
+
   toogleViewAccountDetails(): void {
-    this.isViewAccountInfoBtnClicked = !this.isViewAccountInfoBtnClicked;
-    this.isEditAccountInfoBtnClicked = false;
-    this.isSearchPlayersBtnClicked = false;
-    this.isScoalaAltfelInfoBtnClicked = false;
-    this.isHomeBtnClicked = false;
+    this.toggleButton('viewAccount');
   }
 
   toogleEditAccountDetails(): void {
-    this.isEditAccountInfoBtnClicked = !this.isEditAccountInfoBtnClicked;
-    this.isViewAccountInfoBtnClicked = false;
-    this.isSearchPlayersBtnClicked = false;
-    this.isScoalaAltfelInfoBtnClicked = false;
-    this.isHomeBtnClicked = false;
+    this.toggleButton('editAccount');
   }
 
   toogleScoalaAltfel(): void {
-      this.isScoalaAltfelInfoBtnClicked = !this.isViewAccountInfoBtnClicked;
-      this.isViewAccountInfoBtnClicked = false;
-      this.isEditAccountInfoBtnClicked = false;
-      this.isSearchPlayersBtnClicked = false;
-      this.isHomeBtnClicked = false;
+    this.toggleButton('scoalaAltfel');
   }
 
   toogleSearchPlayers(): void {
-      this.isSearchPlayersBtnClicked = !this.isViewAccountInfoBtnClicked;
-      this.isViewAccountInfoBtnClicked = false;
-      this.isEditAccountInfoBtnClicked = false;
-      this.isScoalaAltfelInfoBtnClicked = false;
-      this.isHomeBtnClicked = false;
+    this.toggleButton('searchPlayers');
   }
 
   toogleHome(): void {
-        this.isHomeBtnClicked = !this.isHomeBtnClicked;
-        this.isSearchPlayersBtnClicked = false;
-        this.isViewAccountInfoBtnClicked = false;
-        this.isEditAccountInfoBtnClicked = false;
-        this.isScoalaAltfelInfoBtnClicked = false;
+    this.toggleButton('home');
+  }
+
+  toggleUsernamePassword(): void {
+    this.isVisiblePasswordUsername = !this.isVisiblePasswordUsername;
+  }
+
+  toggleEmailPassword(): void {
+    this.isVisiblePasswordEmail = !this.isVisiblePasswordEmail;
+  }
+
+  togglePasswordPassword(): void {
+    this.isVisiblePasswordPassword = !this.isVisiblePasswordPassword;
+  }
+
+  toggleNewPassword(): void {
+    this.isVisibleNewPassword = !this.isVisibleNewPassword;
+  }
+
+  toggleConfirmNewPassword(): void {
+    this.isVisibleConfirmNewPassword = !this.isVisibleConfirmNewPassword;
+  }
+
+  updateUsername(): void {
+    const playerId = this.player.id ?? 0;
+    const newUsername = this.newUsername ?? '';
+    const password = this.passwordToConfirmUsername ?? '';
+    this.playerService.updateUsername(password, newUsername, playerId).subscribe(data => {
+      this.player = data
+      localStorage.setItem("username", newUsername);
+      this.ngOnInit();
+      },
+      error => (this.backendErrorUsername = error.message));
     }
 
-    togglePassword(): void {
-      this.isVisible = !this.isVisible;
-    }
+  updateEmail(): void {
+    const playerId = this.player.id ?? 0;
+    const newEmail = this.newEmail ?? '';
+    const password = this.passwordToConfirmEmail ?? '';
+    this.playerService.updateEmail(password, newEmail, playerId).subscribe(data => {
+      this.player = data
+      this.ngOnInit();
+    },
+    error => (this.backendErrorEmail = error.message));
+  }
 
-    updateUsername(): void {
-       const playerId = this.player.id ?? 0;
-       const newUsername = this.newUsername ?? '';
-       const password = this.passwordToConfirm ?? '';
-       this.playerService.updateUsername(password, newUsername, playerId).subscribe(data => {
-          this.player = data
-          localStorage.setItem("username", newUsername);
-          this.ngOnInit();
-       },
-       error => (this.backendError = error.message));
-    }
+  updatePassword(): void {
+    const playerId = this.player.id ?? 0;
+    const newPassword = this.newPassword ?? '';
+    const confirmNewPassword = this.newPassword ?? '';
+    const password = this.passwordToConfirmPassword ?? '';
+    this.playerService.updatePassword(password, newPassword, confirmNewPassword, playerId).subscribe(data => {
+      this.player = data
+      this.ngOnInit();
+    },
+      error => (this.backendErrorPassword = error.message));
+  }
 }

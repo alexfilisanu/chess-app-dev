@@ -53,8 +53,8 @@ export class PlayerServiceService {
 
 	  public updateUsername(password: string, newUsername: string, playerId: number) {
         const body = {
-          password,
-          newUsername
+            password,
+            newUsername
         };
         const url = `${this.baseUrl}/username/${playerId}`;
         return this.http.put<Player>(url, body).pipe(
@@ -65,5 +65,38 @@ export class PlayerServiceService {
         						    return caught;
         					  })
         				);
-      }
+    }
+
+    public updateEmail(password: string, newEmail: string, playerId: number) {
+        const body = {
+            password,
+            newEmail
+        };
+        const url = `${this.baseUrl}/email/${playerId}`;
+        return this.http.put<Player>(url, body).pipe(
+            				catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+            						if (!(error.error instanceof ErrorEvent)) {
+            								return throwError(error.error);
+            						}
+            						return caught;
+            			  })
+            	  );
+    }
+
+    public updatePassword(password: string, newPassword: string, confirmNewPassword: string, playerId: number) {
+        const body = {
+            password,
+            newPassword,
+            confirmNewPassword
+        };
+        const url = `${this.baseUrl}/password/${playerId}`;
+        return this.http.put<Player>(url, body).pipe(
+                    catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                		    if (!(error.error instanceof ErrorEvent)) {
+                				    return throwError(error.error);
+                				}
+                			  return caught;
+                		})
+                );
+    }
 }

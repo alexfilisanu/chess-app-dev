@@ -9,3 +9,15 @@
 .error-container {
   height: 50px;
 }
+
+.wrap-input100 {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
