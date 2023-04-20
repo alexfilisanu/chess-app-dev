@@ -62,10 +62,18 @@ public class PlayerService {
 		return playerToPlayerDTOMapper.apply(player);
 	}
 
-	public void deletePlayerById(Long playerId) {
-		if (!playerRepository.findById(playerId).isPresent()) {
+	public void deletePlayerById(Long playerId, String password) {
+		Player player = playerRepository
+				.findById(playerId)
+				.orElseThrow(
+						() -> new IllegalStateException(
+								"Player with id " + playerId + " doesn't exist."
+						)
+				);
+
+		if (!player.getPassword().equals(password)) {
 			throw new IllegalStateException(
-					"Player with id " + playerId + " doesn't exist."
+					"Password inserted is not correct."
 			);
 		}
 
@@ -134,14 +142,14 @@ public class PlayerService {
 			);
 		}
 
-		if (player.getPassword().equals(passwordForm.password())) {
-			player.setPassword(passwordForm.newPassword());
-			player.setConfirmPassword(passwordForm.confirmNewPassword());
-		} else {
+		if (!player.getPassword().equals(passwordForm.password())) {
 			throw new IllegalStateException(
 					"Password inserted is not correct."
 			);
 		}
+
+		player.setPassword(passwordForm.newPassword());
+		player.setConfirmPassword(passwordForm.confirmNewPassword());
 	}
 
 	@Transactional
@@ -160,13 +168,13 @@ public class PlayerService {
 			);
 		}
 
-		if (player.getPassword().equals(emailForm.password())) {
-			player.setEmail(emailForm.newEmail());
-		} else {
+		if (!player.getPassword().equals(emailForm.password())) {
 			throw new IllegalStateException(
 					"Password inserted is not correct."
 			);
 		}
+
+		player.setEmail(emailForm.newEmail());
 	}
 
 	@Transactional
@@ -185,12 +193,12 @@ public class PlayerService {
 			);
 		}
 
-		if (player.getPassword().equals(usernameForm.password())) {
-			player.setUsername(usernameForm.newUsername());
-		} else {
+		if (!player.getPassword().equals(usernameForm.password())) {
 			throw new IllegalStateException(
 					"Password inserted is not correct."
 			);
 		}
+
+		player.setUsername(usernameForm.newUsername());
 	}
 }

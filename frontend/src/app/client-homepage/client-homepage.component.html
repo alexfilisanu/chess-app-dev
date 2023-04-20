@@ -156,6 +156,9 @@
             <div *ngIf="backendErrorUsername" class="alert alert-danger text-center">
               {{ backendErrorUsername }}
             </div>
+            <div *ngIf="successMessageUsername" class="alert alert-success text-center">
+              {{ successMessageUsername }}
+            </div>
           </div>
         </form>
 
@@ -207,6 +210,9 @@
             <div *ngIf="backendErrorEmail" class="alert alert-danger text-center">
               {{ backendErrorEmail }}
             </div>
+            <div *ngIf="successMessageEmail" class="alert alert-success text-center">
+              {{ successMessageEmail }}
+            </div>
           </div>
         </form>
       </div>
@@ -242,7 +248,8 @@
                        [(ngModel)]="confirmNewPassword"
                        required>
                 <span class="toggle-password" (click)="toggleConfirmNewPassword()">
-                <i class="fa" [ngClass]="isVisibleConfirmNewPassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+                <i class="fa" [ngClass]="isVisibleConfirmNewPassword ? 'fa-eye' : 'fa-eye-slash'"
+                   aria-hidden="true"></i>
               </span>
               </div>
             </div>
@@ -276,10 +283,50 @@
             <div *ngIf="backendErrorPassword" class="alert alert-danger text-center">
               {{ backendErrorPassword }}
             </div>
+            <div *ngIf="successMessagePassword" class="alert alert-success text-center">
+              {{ successMessagePassword }}
+            </div>
           </div>
         </form>
-
       </div>
+
+      <div class="text-center p-t-100">
+        <form class="login100-form validate-form" (ngSubmit)="deletePlayer()" #deleteForm="ngForm">
+        <span class="login100-form-title text-black-50">
+          Delete account
+        </span>
+          <div class="form-row">
+            <div class="value">
+              <div class="input-group" style="width: 200%;">
+                <input class="input--style-5"
+                       type="{{ isVisibleDeletePassword ? 'text' : 'password' }}"
+                       name="passwordToConfirmDelete"
+                       placeholder="Enter your current password to confirm"
+                       [(ngModel)]="passwordToConfirmDelete"
+                       required>
+                <span class="toggle-password" (click)="toggleDeletePassword()">
+                <i class="fa" [ngClass]="isVisibleDeletePassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+              </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="container-login100-form-btn">
+            <button class="login100-form-btn"
+                    type="submit"
+                    [disabled]="deleteForm.invalid">
+              Delete account
+            </button>
+          </div>
+
+          <div class="error-container p-t-20">
+            <div *ngIf="backendErrorDelete" class="alert alert-danger text-center">
+              {{ backendErrorDelete }}
+            </div>
+          </div>
+        </form>
+      </div>
+
     </ng-container>
 
   </div>
