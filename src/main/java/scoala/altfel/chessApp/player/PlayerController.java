@@ -2,6 +2,7 @@ package scoala.altfel.chessApp.player;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -27,13 +28,15 @@ public class PlayerController {
 	}
 
 	@GetMapping("/login-credentials/{playerName}")
-	public PlayerDTO checkLoginCredentials(@PathVariable("playerName") String playerName, @RequestParam("playerPassword") String playerPassword) {
+	public PlayerDTO checkLoginCredentials(@PathVariable("playerName") String playerName,
+										   @RequestParam("playerPassword") String playerPassword) {
 		return playerService.checkLoginCredentials(playerName, playerPassword);
 	}
 
-	@DeleteMapping("/player/{playerId}")
-	public void deletePlayerById(@PathVariable("playerId") Long playerId) {
-		playerService.deletePlayerById(playerId);
+	@DeleteMapping("/delete/{playerId}")
+	public void deletePlayerById(@PathVariable("playerId") Long playerId,
+								 @RequestParam("password") String password) {
+		playerService.deletePlayerById(playerId, password);
 	}
 
 	@PostMapping(value = "/register")

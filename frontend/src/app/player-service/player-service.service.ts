@@ -39,6 +39,18 @@ export class PlayerServiceService {
         				);
     }
 
+    public deletePlayer(playerId: number, password: string): Observable<Player> {
+        const url = `${this.baseUrl}/delete/${playerId}?password=${password}`;
+        return this.http.delete<Player>(url).pipe(
+        				    catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+        						    if (!(error.error instanceof ErrorEvent)) {
+        										return throwError(error.error);
+        						    }
+        						    return caught;
+        					  })
+        				);
+    }
+
     public registerNewPlayer(newPlayer: Player) {
         const url = `${this.baseUrl}/register`;
 				return this.http.post<Player>(url, newPlayer).pipe(

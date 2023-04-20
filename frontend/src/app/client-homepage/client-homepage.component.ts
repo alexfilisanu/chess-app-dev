@@ -23,9 +23,14 @@ export class ClientHomepageComponent implements OnInit {
   isVisiblePasswordPassword: Boolean = false;
   isVisibleNewPassword: Boolean = false;
   isVisibleConfirmNewPassword: Boolean = false;
+  isVisibleDeletePassword: Boolean = false;
   backendErrorUsername: string = '';
   backendErrorEmail: string = '';
   backendErrorPassword: string = '';
+  backendErrorDelete: string = '';
+  successMessageUsername: string = '';
+  successMessageEmail: string = '';
+  successMessagePassword: string = '';
   newUsername: string = '';
   newEmail: string = '';
   newPassword: string = '';
@@ -33,6 +38,7 @@ export class ClientHomepageComponent implements OnInit {
   passwordToConfirmUsername: string = '';
   passwordToConfirmEmail: string = '';
   passwordToConfirmPassword: string = '';
+  passwordToConfirmDelete: string = '';
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -46,6 +52,7 @@ export class ClientHomepageComponent implements OnInit {
     if (isLoggedIn && username) {
       this.usernameAuthenticated = username;
     }
+
     this.playerService.getPlayerByName(this.usernameAuthenticated).subscribe(data => this.player = data);
   }
 
@@ -103,6 +110,10 @@ export class ClientHomepageComponent implements OnInit {
     this.isVisibleConfirmNewPassword = !this.isVisibleConfirmNewPassword;
   }
 
+  toggleDeletePassword(): void {
+    this.isVisibleDeletePassword = !this.isVisibleDeletePassword;
+  }
+
   updateUsername(): void {
     const playerId = this.player.id ?? 0;
     const newUsername = this.newUsername ?? '';
@@ -111,8 +122,13 @@ export class ClientHomepageComponent implements OnInit {
       this.player = data
       localStorage.setItem("username", newUsername);
       this.ngOnInit();
+      this.successMessageUsername = "Username updated successfully";
+      this.backendErrorUsername = '';
       },
-      error => (this.backendErrorUsername = error.message));
+      error => {
+       this.backendErrorUsername = error.message;
+       this.successMessageUsername = '';
+      });
     }
 
   updateEmail(): void {
@@ -120,11 +136,17 @@ export class ClientHomepageComponent implements OnInit {
     const newEmail = this.newEmail ?? '';
     const password = this.passwordToConfirmEmail ?? '';
     this.playerService.updateEmail(password, newEmail, playerId).subscribe(data => {
-      this.player = data
+      this.player = data;
       this.ngOnInit();
+      this.successMessageEmail = "Email updated successfully";
+      this.backendErrorEmail = '';
     },
-    error => (this.backendErrorEmail = error.message));
+    error => {
+      this.backendErrorEmail = error.message;
+      this.successMessageEmail = '';
+    });
   }
+
 
   updatePassword(): void {
     const playerId = this.player.id ?? 0;
@@ -134,7 +156,24 @@ export class ClientHomepageComponent implements OnInit {
     this.playerService.updatePassword(password, newPassword, confirmNewPassword, playerId).subscribe(data => {
       this.player = data
       this.ngOnInit();
+      this.successMessagePassword = "Password updated successfully";
+      this.backendErrorPassword = '';
     },
-      error => (this.backendErrorPassword = error.message));
+    error => {
+      this.backendErrorPassword = error.message;
+      this.successMessagePassword = '';
+    });
+  }
+
+  deletePlayer(): void {
+    const playerId = this.player.id ?? 0;
+    const password = this.passwordToConfirmDelete ?? '';
+    this.playerService.deletePlayer(playerId, password).subscribe(data => {
+      this.player = data
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('username');
+      this.router.navigate(['/login']);
+    },
+    error => (this.backendErrorDelete = error.message));
   }
 }
