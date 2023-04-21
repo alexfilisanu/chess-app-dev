@@ -24,7 +24,15 @@ export class PlayerServiceService {
 		}
 
 		public getPlayerByName(playerName: string): Observable<Player> {
-    			  return this.http.get<Player>(`${this.baseUrl}/player-by-name/${playerName}`);
+		    const url = `${this.baseUrl}/player-by-name/${playerName}`;
+    		return this.http.get<Player>(url).pipe(
+                    catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                        if (!(error.error instanceof ErrorEvent)) {
+                            return throwError(error.error);
+                        }
+                        return caught;
+                      })
+               );
     }
 
 		public checkLoginCredentials(playerName: string, playerPassword: string): Observable<Player> {

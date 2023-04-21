@@ -129,6 +129,12 @@ public class PlayerService {
 						)
 				);
 
+		if (!player.getPassword().equals(passwordForm.password())) {
+			throw new IllegalStateException(
+					"Password inserted is not correct."
+			);
+		}
+
 		if (!PasswordValidator.isValid(passwordForm.newPassword())) {
 			throw new IllegalStateException(
 					"Password inserted is not valid. Password must contain at least " +
@@ -139,12 +145,6 @@ public class PlayerService {
 		if (!passwordForm.newPassword().equals(passwordForm.confirmNewPassword())) {
 			throw new IllegalStateException(
 					"New password and confirm new password does not match."
-			);
-		}
-
-		if (!player.getPassword().equals(passwordForm.password())) {
-			throw new IllegalStateException(
-					"Password inserted is not correct."
 			);
 		}
 
@@ -162,15 +162,15 @@ public class PlayerService {
 						)
 				);
 
-		if (!EmailValidator.isValid(emailForm.newEmail())) {
-			throw new IllegalStateException(
-					"Email inserted is not valid."
-			);
-		}
-
 		if (!player.getPassword().equals(emailForm.password())) {
 			throw new IllegalStateException(
 					"Password inserted is not correct."
+			);
+		}
+
+		if (!EmailValidator.isValid(emailForm.newEmail())) {
+			throw new IllegalStateException(
+					"Email inserted is not valid."
 			);
 		}
 
@@ -187,15 +187,15 @@ public class PlayerService {
 						)
 				);
 
-		if (playerRepository.findPlayerByName(usernameForm.newUsername()).isPresent()) {
-			throw new IllegalStateException(
-					"Player with name " + usernameForm.newUsername() + " already exists."
-			);
-		}
-
 		if (!player.getPassword().equals(usernameForm.password())) {
 			throw new IllegalStateException(
 					"Password inserted is not correct."
+			);
+		}
+
+		if (playerRepository.findPlayerByName(usernameForm.newUsername()).isPresent()) {
+			throw new IllegalStateException(
+					"Player with name " + usernameForm.newUsername() + " already exists."
 			);
 		}
 

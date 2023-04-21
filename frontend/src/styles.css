@@ -6,6 +6,7 @@
 @import "css/client-homepage/style.css";
 @import "css/client-homepage/bootstrap/mixins/_border-radius.css";
 @import "css/client-homepage/bootstrap/mixins/_screen-reader.css";
+@import "css/client-homepage/css/main.css";
 @import "css/client-homepage/bootstrap/mixins/_visibility.css";
 @import "css/client-homepage/bootstrap/utilities/_stretched-link.css";
 @import "vendor/bootstrap/css/bootstrap.css";
