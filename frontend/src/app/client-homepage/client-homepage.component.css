@@ -38,3 +38,17 @@ a {
 .login100-form {
   width: 100%;
 }
+
+.btn-outline-primary {
+  background-image: linear-gradient(to bottom, #007bff, #0062cc);
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:active, .btn-outline-primary:focus {
+  background-image: linear-gradient(to right, #08aeea, #b721ff);
+  background-color: #08aeea;
+  color: #fff;
+  border-color: #08aeea;
+}

@@ -108,13 +108,15 @@
     </ng-container>
 
     <ng-container *ngIf="isEditAccountInfoBtnClicked">
-      <h2 class="text-center mb-4 p-t-100">Player's account settings</h2>
+      <h2 class="text-center mb-4 p-t-30">Player's account settings</h2>
       <div class="row justify-content-center p-t-50">
         <div class="col-md-3 mb-2">
           <div class="text-center">
-            <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg btn-block">Edit username
+            <button (click)="toogleEditUsername()" type="button"
+                    class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg btn-block">Edit username
             </button>
-            <form class="login100-form validate-form p-t-50 d-inline-block" (ngSubmit)="updateUsername()"
+            <form *ngIf="isEditUsernameBtnClicked" class="login100-form validate-form p-t-50 d-inline-block"
+                  (ngSubmit)="updateUsername()"
                   #usernameForm="ngForm">
               <div class="form-row">
                 <div class="input-group text-center" style="width: 200%;">
@@ -152,7 +154,7 @@
                 </a>
               </div>
 
-              <div class="error-container p-t-20">
+              <div class="error-container p-t-50">
                 <div *ngIf="backendErrorUsername" class="alert alert-danger text-center">
                   {{ backendErrorUsername }}
                 </div>
@@ -165,11 +167,13 @@
         </div>
 
         <div class="col-md-3 mb-2">
-          <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-success btn-lg p-t-100 btn-block">Edit
+          <button (click)="toogleEditEmail()" type="button"
+                  class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg p-t-100 btn-block">Edit
             email
           </button>
           <div class="text-center">
-            <form class="login100-form validate-form p-t-50" (ngSubmit)="updateEmail()" #emailForm="ngForm">
+            <form *ngIf="isEditEmailBtnClicked" class="login100-form validate-form p-t-50" (ngSubmit)="updateEmail()"
+                  #emailForm="ngForm">
               <div class="form-row">
                 <div class="input-group" style="width: 200%;">
                   <input class="input--style-5"
@@ -205,7 +209,7 @@
                 </a>
               </div>
 
-              <div class="error-container p-t-20">
+              <div class="error-container p-t-50">
                 <div *ngIf="backendErrorEmail" class="alert alert-danger text-center">
                   {{ backendErrorEmail }}
                 </div>
@@ -218,10 +222,12 @@
         </div>
 
         <div class="col-md-3 mb-2">
-          <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-info btn-lg btn-block">Edit password
+          <button (click)="toogleEditPassword()" type="button"
+                  class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg btn-block">Edit password
           </button>
           <div class="text-center">
-            <form class="login100-form validate-form p-t-50" (ngSubmit)="updatePassword()" #passwordForm="ngForm">
+            <form *ngIf="isEditPasswordBtnClicked" class="login100-form validate-form p-t-50"
+                  (ngSubmit)="updatePassword()" #passwordForm="ngForm">
               <div class="form-row">
 
                 <div class="input-group" style="width: 200%;">
@@ -277,7 +283,7 @@
                 </a>
               </div>
 
-              <div class="error-container p-t-20">
+              <div class="error-container p-t-50">
                 <div *ngIf="backendErrorPassword" class="alert alert-danger text-center">
                   {{ backendErrorPassword }}
                 </div>
@@ -290,11 +296,13 @@
         </div>
 
         <div class="col-md-3 mb-2">
-          <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-danger btn-lg p-t-100 btn-block">Delete
+          <button (click)="toogleDeleteAccount()" type="button"
+                  class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg p-t-100 btn-block">Delete
             account
           </button>
           <div class="text-center">
-            <form class="login100-form validate-form p-t-50" (ngSubmit)="deletePlayer()" #deleteForm="ngForm">
+            <form *ngIf="isDeleteAccountBtnClicked" class="login100-form validate-form p-t-50"
+                  (ngSubmit)="deletePlayer()" #deleteForm="ngForm">
               <div class="form-row">
                 <div class="input-group" style="width: 200%;">
                   <input class="input--style-5"
@@ -320,7 +328,7 @@
                 </a>
               </div>
 
-              <div class="error-container p-t-20">
+              <div class="error-container p-t-50">
                 <div *ngIf="backendErrorDelete" class="alert alert-danger text-center">
                   {{ backendErrorDelete }}
                 </div>
