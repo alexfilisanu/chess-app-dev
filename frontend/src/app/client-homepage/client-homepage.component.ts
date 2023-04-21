@@ -39,6 +39,10 @@ export class ClientHomepageComponent implements OnInit {
   passwordToConfirmEmail: string = '';
   passwordToConfirmPassword: string = '';
   passwordToConfirmDelete: string = '';
+  isEditUsernameBtnClicked = false;
+  isEditEmailBtnClicked = false;
+  isEditPasswordBtnClicked = false;
+  isDeleteAccountBtnClicked = false;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -62,12 +66,35 @@ export class ClientHomepageComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
+  toggleButtonToDisplayForm(button: string): void {
+    this.isEditUsernameBtnClicked = button === 'editUsername';
+    this.isEditEmailBtnClicked = button === 'editEmail';
+    this.isEditPasswordBtnClicked = button === 'editPassword';
+    this.isDeleteAccountBtnClicked = button === 'deleteAccount';
+  }
+
   toggleButton(button: string): void {
     this.isViewAccountInfoBtnClicked = button === 'viewAccount';
     this.isEditAccountInfoBtnClicked = button === 'editAccount';
     this.isSearchPlayersBtnClicked = button === 'searchPlayers';
     this.isScoalaAltfelInfoBtnClicked = button === 'scoalaAltfel';
     this.isHomeBtnClicked = button === 'home';
+  }
+
+  toogleEditUsername(): void {
+    this.toggleButtonToDisplayForm('editUsername');
+  }
+
+  toogleEditEmail(): void {
+    this.toggleButtonToDisplayForm('editEmail');
+  }
+
+  toogleEditPassword(): void {
+    this.toggleButtonToDisplayForm('editPassword');
+  }
+
+  toogleDeleteAccount(): void {
+    this.toggleButtonToDisplayForm('deleteAccount');
   }
 
   toogleViewAccountDetails(): void {
