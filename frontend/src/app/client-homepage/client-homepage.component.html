@@ -112,220 +112,222 @@
       <div class="row justify-content-center p-t-50">
         <div class="col-md-3 mb-2">
           <div class="text-center">
-        <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg btn-block">Edit username</button>
-        <form class="login100-form validate-form p-t-50" (ngSubmit)="updateUsername()" #usernameForm="ngForm">
-          <div class="form-row">
-            <div class="value">
-              <div class="input-group" style="width: 200%;">
-                <input class="input--style-5"
-                       type="text"
-                       name="newUsername"
-                       placeholder="Enter your new username"
-                       [(ngModel)]="newUsername"
-                       required>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="value">
-              <div class="input-group" style="width: 200%;">
-                <input class="input--style-5"
-                       type="{{ isVisiblePasswordUsername ? 'text' : 'password' }}"
-                       name="passwordToConfirmUsername"
-                       placeholder="Enter your current password to confirm"
-                       [(ngModel)]="passwordToConfirmUsername"
-                       required>
-                <span class="toggle-password" (click)="toggleUsernamePassword()">
-                <i class="fa" [ngClass]="isVisiblePasswordUsername ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
-              </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="container-login100-form-btn">
-            <button class="login100-form-btn"
-                    type="submit"
-                    [disabled]="usernameForm.invalid">
-              Update username
+            <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg btn-block">Edit username
             </button>
-          </div>
-
-          <div class="error-container p-t-20">
-            <div *ngIf="backendErrorUsername" class="alert alert-danger text-center">
-              {{ backendErrorUsername }}
-            </div>
-            <div *ngIf="successMessageUsername" class="alert alert-success text-center">
-              {{ successMessageUsername }}
-            </div>
-          </div>
-        </form>
-        </div>
-        </div>
-
-        <div class="col-md-3 mb-2">
-        <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-success btn-lg p-t-100 btn-block">Edit email</button>
-          <div class="text-center">
-        <form class="login100-form validate-form p-t-50" (ngSubmit)="updateEmail()" #emailForm="ngForm">
-
-          <div class="form-row">
-            <div class="value">
-              <div class="input-group" style="width: 200%;">
-                <input class="input--style-5"
-                       type="text"
-                       name="newEmail"
-                       placeholder="Enter your new email"
-                       [(ngModel)]="newEmail"
-                       required>
+            <form class="login100-form validate-form p-t-50 d-inline-block" (ngSubmit)="updateUsername()"
+                  #usernameForm="ngForm">
+              <div class="form-row">
+                <div class="input-group text-center" style="width: 200%;">
+                  <input class="input--style-5"
+                         type="text"
+                         name="newUsername"
+                         placeholder="Enter your new username"
+                         [(ngModel)]="newUsername"
+                         required>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div class="form-row">
-            <div class="value">
-              <div class="input-group" style="width: 200%;">
-                <input class="input--style-5"
-                       type="{{ isVisiblePasswordEmail ? 'text' : 'password' }}"
-                       name="passwordToConfirmEmail"
-                       placeholder="Enter your current password to confirm"
-                       [(ngModel)]="passwordToConfirmEmail"
-                       required>
-                <span class="toggle-password" (click)="toggleEmailPassword()">
-                <i class="fa" [ngClass]="isVisiblePasswordEmail ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
-              </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="container-login100-form-btn">
-            <button class="login100-form-btn"
-                    type="submit"
-                    [disabled]="emailForm.invalid">
-              Update email
-            </button>
-          </div>
-
-          <div class="error-container p-t-20">
-            <div *ngIf="backendErrorEmail" class="alert alert-danger text-center">
-              {{ backendErrorEmail }}
-            </div>
-            <div *ngIf="successMessageEmail" class="alert alert-success text-center">
-              {{ successMessageEmail }}
-            </div>
-          </div>
-        </form>
-      </div>
-        </div>
-
-        <div class="col-md-3 mb-2">
-        <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-info btn-lg btn-block">Edit password</button>
-          <div class="text-center">
-        <form class="login100-form validate-form p-t-50" (ngSubmit)="updatePassword()" #passwordForm="ngForm">
-          <div class="form-row">
-            <div class="value">
-              <div class="input-group" style="width: 200%;">
-                <input class="input--style-5"
-                       type="{{ isVisibleNewPassword ? 'text' : 'password' }}"
-                       name="newPassword"
-                       placeholder="Enter your new password"
-                       [(ngModel)]="newPassword"
-                       required>
-                <span class="toggle-password" (click)="toggleNewPassword()">
-                <i class="fa" [ngClass]="isVisibleNewPassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
-              </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="value">
-              <div class="input-group" style="width: 200%;">
-                <input class="input--style-5"
-                       type="{{ isVisibleConfirmNewPassword ? 'text' : 'password' }}"
-                       name="confirmNewPassword"
-                       placeholder="Confirm your new password"
-                       [(ngModel)]="confirmNewPassword"
-                       required>
-                <span class="toggle-password" (click)="toggleConfirmNewPassword()">
-                <i class="fa" [ngClass]="isVisibleConfirmNewPassword ? 'fa-eye' : 'fa-eye-slash'"
+              <div class="form-row">
+                <div class="input-group" style="width: 200%;">
+                  <input class="input--style-5"
+                         type="{{ isVisiblePasswordUsername ? 'text' : 'password' }}"
+                         name="passwordToConfirmUsername"
+                         placeholder="Enter your current password to confirm"
+                         [(ngModel)]="passwordToConfirmUsername"
+                         required>
+                  <span class="toggle-password" (click)="toggleUsernamePassword()">
+                <i class="fa" [ngClass]="isVisiblePasswordUsername ? 'fa-eye' : 'fa-eye-slash'"
                    aria-hidden="true"></i>
               </span>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div class="form-row">
-            <div class="value">
-              <div class="input-group" style="width: 200%;">
-                <input class="input--style-5"
-                       type="{{ isVisiblePasswordPassword ? 'text' : 'password' }}"
-                       name="passwordToConfirm"
-                       placeholder="Enter your current password to confirm"
-                       [(ngModel)]="passwordToConfirmPassword"
-                       required>
-                <span class="toggle-password" (click)="togglePasswordPassword()">
-                <i class="fa" [ngClass]="isVisiblePasswordPassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
-              </span>
+              <div class="container-login100-form-btn" style="width: 100%;">
+                <a>
+                  <button class="login100-form-btn"
+                          type="submit"
+                          [disabled]="usernameForm.invalid">
+                    Update username
+                  </button>
+                </a>
               </div>
-            </div>
-          </div>
 
-          <div class="container-login100-form-btn">
-            <button class="login100-form-btn"
-                    type="submit"
-                    [disabled]="passwordForm.invalid">
-              Update password
-            </button>
+              <div class="error-container p-t-20">
+                <div *ngIf="backendErrorUsername" class="alert alert-danger text-center">
+                  {{ backendErrorUsername }}
+                </div>
+                <div *ngIf="successMessageUsername" class="alert alert-success text-center">
+                  {{ successMessageUsername }}
+                </div>
+              </div>
+            </form>
           </div>
-
-          <div class="error-container p-t-20">
-            <div *ngIf="backendErrorPassword" class="alert alert-danger text-center">
-              {{ backendErrorPassword }}
-            </div>
-            <div *ngIf="successMessagePassword" class="alert alert-success text-center">
-              {{ successMessagePassword }}
-            </div>
-          </div>
-        </form>
-          </div>
-      </div>
+        </div>
 
         <div class="col-md-3 mb-2">
-        <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-danger btn-lg p-t-100 btn-block">Delete account</button>
+          <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-success btn-lg p-t-100 btn-block">Edit
+            email
+          </button>
           <div class="text-center">
-        <form class="login100-form validate-form p-t-50" (ngSubmit)="deletePlayer()" #deleteForm="ngForm">
-          <div class="form-row">
-            <div class="value">
-              <div class="input-group" style="width: 200%;">
-                <input class="input--style-5"
-                       type="{{ isVisibleDeletePassword ? 'text' : 'password' }}"
-                       name="passwordToConfirmDelete"
-                       placeholder="Enter your current password to confirm"
-                       [(ngModel)]="passwordToConfirmDelete"
-                       required>
-                <span class="toggle-password" (click)="toggleDeletePassword()">
-                <i class="fa" [ngClass]="isVisibleDeletePassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
-              </span>
+            <form class="login100-form validate-form p-t-50" (ngSubmit)="updateEmail()" #emailForm="ngForm">
+              <div class="form-row">
+                <div class="input-group" style="width: 200%;">
+                  <input class="input--style-5"
+                         type="text"
+                         name="newEmail"
+                         placeholder="Enter your new email"
+                         [(ngModel)]="newEmail"
+                         required>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div class="container-login100-form-btn">
-            <button class="login100-form-btn"
-                    type="submit"
-                    [disabled]="deleteForm.invalid">
-              Delete account
-            </button>
-          </div>
+              <div class="form-row">
+                <div class="input-group" style="width: 200%;">
+                  <input class="input--style-5"
+                         type="{{ isVisiblePasswordEmail ? 'text' : 'password' }}"
+                         name="passwordToConfirmEmail"
+                         placeholder="Enter your current password to confirm"
+                         [(ngModel)]="passwordToConfirmEmail"
+                         required>
+                  <span class="toggle-password" (click)="toggleEmailPassword()">
+                <i class="fa" [ngClass]="isVisiblePasswordEmail ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+              </span>
+                </div>
+              </div>
 
-          <div class="error-container p-t-20">
-            <div *ngIf="backendErrorDelete" class="alert alert-danger text-center">
-              {{ backendErrorDelete }}
-            </div>
+              <div class="container-login100-form-btn">
+                <a>
+                  <button class="login100-form-btn"
+                          type="submit"
+                          [disabled]="emailForm.invalid">
+                    Update email
+                  </button>
+                </a>
+              </div>
+
+              <div class="error-container p-t-20">
+                <div *ngIf="backendErrorEmail" class="alert alert-danger text-center">
+                  {{ backendErrorEmail }}
+                </div>
+                <div *ngIf="successMessageEmail" class="alert alert-success text-center">
+                  {{ successMessageEmail }}
+                </div>
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
-      </div>
+        </div>
+
+        <div class="col-md-3 mb-2">
+          <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-info btn-lg btn-block">Edit password
+          </button>
+          <div class="text-center">
+            <form class="login100-form validate-form p-t-50" (ngSubmit)="updatePassword()" #passwordForm="ngForm">
+              <div class="form-row">
+
+                <div class="input-group" style="width: 200%;">
+                  <input class="input--style-5"
+                         type="{{ isVisibleNewPassword ? 'text' : 'password' }}"
+                         name="newPassword"
+                         placeholder="Enter your new password"
+                         [(ngModel)]="newPassword"
+                         required>
+                  <span class="toggle-password" (click)="toggleNewPassword()">
+                    <i class="fa" [ngClass]="isVisibleNewPassword ? 'fa-eye' : 'fa-eye-slash'" aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-group" style="width: 200%;">
+                  <input class="input--style-5"
+                         type="{{ isVisibleConfirmNewPassword ? 'text' : 'password' }}"
+                         name="confirmNewPassword"
+                         placeholder="Confirm your new password"
+                         [(ngModel)]="confirmNewPassword"
+                         required>
+                  <span class="toggle-password" (click)="toggleConfirmNewPassword()">
+                    <i class="fa" [ngClass]="isVisibleConfirmNewPassword ? 'fa-eye' : 'fa-eye-slash'"
+                       aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="input-group" style="width: 200%;">
+                  <input class="input--style-5"
+                         type="{{ isVisiblePasswordPassword ? 'text' : 'password' }}"
+                         name="passwordToConfirm"
+                         placeholder="Enter your current password to confirm"
+                         [(ngModel)]="passwordToConfirmPassword"
+                         required>
+                  <span class="toggle-password" (click)="togglePasswordPassword()">
+                    <i class="fa" [ngClass]="isVisiblePasswordPassword ? 'fa-eye' : 'fa-eye-slash'"
+                       aria-hidden="true"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="container-login100-form-btn">
+                <a>
+                  <button class="login100-form-btn"
+                          type="submit"
+                          [disabled]="passwordForm.invalid">
+                    Update password
+                  </button>
+                </a>
+              </div>
+
+              <div class="error-container p-t-20">
+                <div *ngIf="backendErrorPassword" class="alert alert-danger text-center">
+                  {{ backendErrorPassword }}
+                </div>
+                <div *ngIf="successMessagePassword" class="alert alert-success text-center">
+                  {{ successMessagePassword }}
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="col-md-3 mb-2">
+          <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-danger btn-lg p-t-100 btn-block">Delete
+            account
+          </button>
+          <div class="text-center">
+            <form class="login100-form validate-form p-t-50" (ngSubmit)="deletePlayer()" #deleteForm="ngForm">
+              <div class="form-row">
+                <div class="input-group" style="width: 200%;">
+                  <input class="input--style-5"
+                         type="{{ isVisibleDeletePassword ? 'text' : 'password' }}"
+                         name="passwordToConfirmDelete"
+                         placeholder="Enter your current password to confirm"
+                         [(ngModel)]="passwordToConfirmDelete"
+                         required>
+                  <span class="toggle-password" (click)="toggleDeletePassword()">
+                      <i class="fa" [ngClass]="isVisibleDeletePassword ? 'fa-eye' : 'fa-eye-slash'"
+                         aria-hidden="true"></i>
+                    </span>
+                </div>
+              </div>
+
+              <div class="container-login100-form-btn">
+                <a>
+                  <button class="login100-form-btn"
+                          type="submit"
+                          [disabled]="deleteForm.invalid">
+                    Delete account
+                  </button>
+                </a>
+              </div>
+
+              <div class="error-container p-t-20">
+                <div *ngIf="backendErrorDelete" class="alert alert-danger text-center">
+                  {{ backendErrorDelete }}
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
 
     </ng-container>
