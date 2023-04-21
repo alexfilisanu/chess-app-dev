@@ -3,10 +3,8 @@
 <head>
   <title>Sidebar 01</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
   <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
@@ -337,7 +335,85 @@
           </div>
         </div>
       </div>
+    </ng-container>
 
+    <ng-container *ngIf="isSearchPlayersBtnClicked">
+      <div class="s130">
+        <form>
+          <div class="inner-form">
+            <div class="input-field first-wrap">
+              <div class="svg-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path
+                    d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                </svg>
+              </div>
+              <input id="search" type="text" placeholder="Type player's username"  #searchBox/>
+            </div>
+            <div class="input-field second-wrap">
+              <button class="btn-search" type="button" (click)="searchPlayer(searchBox.value)">SEARCH</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="error-container-search-player">
+        <div *ngIf="backendErrorSearchPlayer" class="alert alert-danger text-center">
+          {{ backendErrorSearchPlayer }}
+        </div>
+      </div>
+
+      <div *ngIf="displaySearchedPlayer" class="row d-flex justify-content-center align-items-center">
+        <div class="col col-lg-6 mb-4 mb-lg-0">
+          <div class="card mb-3" style="border-radius: .5rem;">
+            <div class="row g-0">
+              <div class="col-md-4 gradient-custom text-center text-white"
+                   style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
+                     alt="Avatar" class="img-fluid my-5" style="width: 80px;"/>
+                <h2>{{ searchedPlayer.username }}</h2>
+                <h5>Chess player</h5>
+              </div>
+              <div class="col-md-8">
+                <div class="card-body p-4">
+                  <h6>Account Information</h6>
+                  <hr class="mt-0 mb-4">
+                  <div class="row pt-1">
+                    <div class="col-6 mb-3">
+                      <h6>Email</h6>
+                      <p class="text-muted">{{ searchedPlayer.email }}</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <h6>Score</h6>
+                      <p class="text-muted">{{ searchedPlayer.score }}</p>
+                    </div>
+                  </div>
+                  <h6>Matches History</h6>
+                  <hr class="mt-0 mb-4">
+                  <div class="row pt-1">
+                    <div class="col-6 mb-3">
+                      <h6>Victory</h6>
+                      <p class="text-muted">Lorem ipsum</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <h6>Draw</h6>
+                      <p class="text-muted">Dolor sit amet</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <h6>Defeat</h6>
+                      <p class="text-muted">Dolor sit amet</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <h6>Id</h6>
+                      <p class="text-muted">{{ searchedPlayer.id }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </ng-container>
 
   </div>

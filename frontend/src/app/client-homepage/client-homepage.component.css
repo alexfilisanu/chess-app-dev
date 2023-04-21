@@ -52,3 +52,20 @@ a {
   color: #fff;
   border-color: #08aeea;
 }
+
+.s130 {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  background-position: bottom right;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  padding: 100px 15px;
+}
+
+.error-container-search-player {
+  width: 40%;
+  margin: auto;
+}

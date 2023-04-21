@@ -13,6 +13,7 @@ import { Player } from '../player';
 export class ClientHomepageComponent implements OnInit {
   usernameAuthenticated: string = '';
   player: Player = {};
+  searchedPlayer: Player = {};
   isHomeBtnClicked = true;
   isViewAccountInfoBtnClicked = false;
   isEditAccountInfoBtnClicked = false;
@@ -28,6 +29,7 @@ export class ClientHomepageComponent implements OnInit {
   backendErrorEmail: string = '';
   backendErrorPassword: string = '';
   backendErrorDelete: string = '';
+  backendErrorSearchPlayer: string = '';
   successMessageUsername: string = '';
   successMessageEmail: string = '';
   successMessagePassword: string = '';
@@ -43,6 +45,7 @@ export class ClientHomepageComponent implements OnInit {
   isEditEmailBtnClicked = false;
   isEditPasswordBtnClicked = false;
   isDeleteAccountBtnClicked = false;
+  displaySearchedPlayer = false;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -202,5 +205,18 @@ export class ClientHomepageComponent implements OnInit {
       this.router.navigate(['/login']);
     },
     error => (this.backendErrorDelete = error.message));
+  }
+
+  searchPlayer(playerToSearch: string): void {
+    this.playerService.getPlayerByName(playerToSearch).subscribe(
+    data => {
+      this.searchedPlayer = data;
+      this.displaySearchedPlayer = true;
+      this.backendErrorSearchPlayer = '';
+    },
+    error => {
+      this.backendErrorSearchPlayer = error.message;
+      this.displaySearchedPlayer = false;
+    });
   }
 }
