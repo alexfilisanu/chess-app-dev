@@ -219,4 +219,8 @@ export class ClientHomepageComponent implements OnInit {
       this.displaySearchedPlayer = false;
     });
   }
+
+  gotoChessBoard(): void {
+    this.router.navigate(['/chess-board']);
+  }
 }
