@@ -12,7 +12,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlayerServiceService } from './player-service/player-service.service';
 import { RegisterSuccessfulComponent } from './register-successful/register-successful.component';
 import { ClientHomepageComponent } from './client-homepage/client-homepage.component';
-
+import { ChessBoardComponent } from './chess-board/chess-board.component';
+import { NgxChessBoardModule } from "ngx-chess-board";
 
 @NgModule({
     declarations: [
@@ -21,7 +22,8 @@ import { ClientHomepageComponent } from './client-homepage/client-homepage.compo
         PlayerRegisterFormComponent,
         PlayerListComponent,
         RegisterSuccessfulComponent,
-        ClientHomepageComponent
+        ClientHomepageComponent,
+        ChessBoardComponent,
     ],
     imports: [
         BrowserModule,
@@ -29,7 +31,8 @@ import { ClientHomepageComponent } from './client-homepage/client-homepage.compo
         FormsModule,
         HttpClientModule,
         NgbModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+         NgxChessBoardModule.forRoot()
     ],
     providers: [PlayerServiceService],
     bootstrap: [AppComponent]

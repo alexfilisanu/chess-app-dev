@@ -100,9 +100,10 @@
     <ng-container *ngIf="isHomeBtnClicked">
       <h2 class="text-center mb-4 p-t-100">What do you want to play today?</h2>
       <div class="text-center p-t-100">
-        <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg">Local game</button>
+        <button (click)="gotoChessBoard()" type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg">Local game</button>
         <button type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-success btn-lg p-t-100">Online game</button>
       </div>
+
     </ng-container>
 
     <ng-container *ngIf="isEditAccountInfoBtnClicked">
