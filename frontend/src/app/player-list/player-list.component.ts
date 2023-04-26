@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Player } from '../player';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { PlayerServiceService } from '../player-service/player-service.service';
 
 @Component({
