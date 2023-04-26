@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,7 +13,16 @@ import { PlayerServiceService } from './player-service/player-service.service';
 import { RegisterSuccessfulComponent } from './register-successful/register-successful.component';
 import { ClientHomepageComponent } from './client-homepage/client-homepage.component';
 import { ChessBoardComponent } from './chess-board/chess-board.component';
-import { NgxChessBoardModule } from "ngx-chess-board";
+import { KnightComponent } from './knight/knight.component';
+import { SquareComponent } from './square/square.component';
+import { GameService } from './game-service/game.service';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PawnComponent } from './pawn/pawn.component';
+import { RookComponent } from './rook/rook.component';
+import { BishopComponent } from './bishop/bishop.component';
+import { QueenComponent } from './queen/queen.component';
+import { KingComponent } from './king/king.component';
+
 
 @NgModule({
     declarations: [
@@ -24,6 +33,13 @@ import { NgxChessBoardModule } from "ngx-chess-board";
         RegisterSuccessfulComponent,
         ClientHomepageComponent,
         ChessBoardComponent,
+        KnightComponent,
+        SquareComponent,
+        PawnComponent,
+        RookComponent,
+        BishopComponent,
+        QueenComponent,
+        KingComponent,
     ],
     imports: [
         BrowserModule,
@@ -32,9 +48,12 @@ import { NgxChessBoardModule } from "ngx-chess-board";
         HttpClientModule,
         NgbModule,
         BrowserAnimationsModule,
-         NgxChessBoardModule.forRoot()
+        DragDropModule
     ],
-    providers: [PlayerServiceService],
+    providers: [
+        PlayerServiceService,
+        GameService,
+        ],
     bootstrap: [AppComponent]
 })
 

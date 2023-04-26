@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { PlayerServiceService } from '../player-service/player-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Player } from '../player';
 
