@@ -1,27 +1,57 @@
 <div class="chess-board-container">
   <div class="board">
-    <ng-container *ngIf="knightPosition$ | async as np">
-      <ng-container *ngIf="pawnPosition$ | async as pp">
-        <ng-container *ngIf="rookPosition$ | async as rp">
-          <ng-container *ngIf="bishopPosition$ | async as bp">
-            <ng-container *ngIf="queenPosition$ | async as qp">
-              <ng-container *ngIf="kingPosition$ | async as kp">
-                <div class="square-container" *ngFor="let i of sixtyFour">
-                  <app-square
-                    *ngIf="xy(i) as pos"
-                    [black]="isBlack(pos)"
-                    [class.selected]="isSquareSelected(pos)"
-                    [isValid]="isValidMove(pos)"
-                    (click)="handleSquareClick(pos)"
-                  >
-                    <app-knight *ngIf="pos.x === np.x && pos.y === np.y"></app-knight>
-                    <app-pawn *ngIf="pos.x === pp.x && pos.y === pp.y"></app-pawn>
-                    <app-rook *ngIf="pos.x === rp.x && pos.y === rp.y"></app-rook>
-                    <app-bishop *ngIf="pos.x === bp.x && pos.y === bp.y"></app-bishop>
-                    <app-queen *ngIf="pos.x === qp.x && pos.y === qp.y"></app-queen>
-                    <app-king *ngIf="pos.x === kp.x && pos.y === kp.y"></app-king>
-                  </app-square>
-                </div>
+    <ng-container *ngIf="knightPosition1$ | async as np1">
+      <ng-container *ngIf="knightPosition2$ | async as np2">
+        <ng-container *ngIf="pawnPosition1$ | async as pp1">
+          <ng-container *ngIf="pawnPosition2$ | async as pp2">
+            <ng-container *ngIf="pawnPosition3$ | async as pp3">
+              <ng-container *ngIf="pawnPosition4$ | async as pp4">
+                <ng-container *ngIf="pawnPosition5$ | async as pp5">
+                  <ng-container *ngIf="pawnPosition6$ | async as pp6">
+                    <ng-container *ngIf="pawnPosition7$ | async as pp7">
+                      <ng-container *ngIf="pawnPosition8$ | async as pp8">
+                        <ng-container *ngIf="rookPosition1$ | async as rp1">
+                          <ng-container *ngIf="rookPosition2$ | async as rp2">
+                            <ng-container *ngIf="bishopPosition1$ | async as bp1">
+                              <ng-container *ngIf="bishopPosition2$ | async as bp2">
+                                <ng-container *ngIf="queenPosition$ | async as qp">
+                                  <ng-container *ngIf="kingPosition$ | async as kp">
+                                    <div class="square-container" *ngFor="let i of sixtyFour">
+                                      <app-square
+                                        *ngIf="xy(i) as pos"
+                                        [black]="isBlack(pos)"
+                                        [class.selected]="isSquareSelected(pos)"
+                                        [isValid]="isValidMove(pos)"
+                                        (click)="handleSquareClick(pos)"
+                                      >
+                                        <app-knight *ngIf="pos.x === np1.x && pos.y === np1.y"></app-knight>
+                                        <app-knight *ngIf="pos.x === np2.x && pos.y === np2.y"></app-knight>
+                                        <app-pawn *ngIf="pos.x === pp1.x && pos.y === pp1.y"></app-pawn>
+                                        <app-pawn *ngIf="pos.x === pp2.x && pos.y === pp2.y"></app-pawn>
+                                        <app-pawn *ngIf="pos.x === pp3.x && pos.y === pp3.y"></app-pawn>
+                                        <app-pawn *ngIf="pos.x === pp4.x && pos.y === pp4.y"></app-pawn>
+                                        <app-pawn *ngIf="pos.x === pp5.x && pos.y === pp5.y"></app-pawn>
+                                        <app-pawn *ngIf="pos.x === pp6.x && pos.y === pp6.y"></app-pawn>
+                                        <app-pawn *ngIf="pos.x === pp7.x && pos.y === pp7.y"></app-pawn>
+                                        <app-pawn *ngIf="pos.x === pp8.x && pos.y === pp8.y"></app-pawn>
+                                        <app-rook *ngIf="pos.x === rp1.x && pos.y === rp1.y"></app-rook>
+                                        <app-rook *ngIf="pos.x === rp2.x && pos.y === rp2.y"></app-rook>
+                                        <app-bishop *ngIf="pos.x === bp1.x && pos.y === bp1.y"></app-bishop>
+                                        <app-bishop *ngIf="pos.x === bp2.x && pos.y === bp2.y"></app-bishop>
+                                        <app-queen *ngIf="pos.x === qp.x && pos.y === qp.y"></app-queen>
+                                        <app-king *ngIf="pos.x === kp.x && pos.y === kp.y"></app-king>
+                                      </app-square>
+                                    </div>
+                                  </ng-container>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
               </ng-container>
             </ng-container>
           </ng-container>
