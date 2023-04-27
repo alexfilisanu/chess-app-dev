@@ -7,14 +7,15 @@ import { Coord } from '../chess-board/coord';
 })
 export class GameService {
 
-      knightPosition$ = new BehaviorSubject<Coord>({ x: 1, y: 0 });
-      pawnPosition$ = new BehaviorSubject<Coord>({ x: 0, y: 1 });
       rookPosition$ = new BehaviorSubject<Coord>({ x: 0, y: 0 });
+      knightPosition$ = new BehaviorSubject<Coord>({ x: 1, y: 0 });
       bishopPosition$ = new BehaviorSubject<Coord>({ x: 2, y: 0 });
       queenPosition$ = new BehaviorSubject<Coord>({ x: 3, y: 0 });
       kingPosition$ = new BehaviorSubject<Coord>({ x: 4, y: 0 });
-      currentPosition: { knight: Coord, pawn: Coord , rook: Coord, bishop: Coord, queen: Coord, king: Coord } =
-      { knight: { x: 1, y: 0 },
+      pawnPosition$ = new BehaviorSubject<Coord>({ x: 0, y: 1 });
+      currentPosition: { knight: Coord, pawn: Coord, rook: Coord, bishop: Coord, queen: Coord, king: Coord } =
+      {
+        knight: { x: 1, y: 0 },
         pawn: { x: 0, y: 1 },
         rook: { x: 0, y: 0 },
         bishop: { x: 2, y: 0 },
@@ -23,9 +24,9 @@ export class GameService {
       };
 
       constructor() {
-            this.knightPosition$.subscribe(np => {
+           this.knightPosition$.subscribe(np => {
                 this.currentPosition.knight = np;
-            })
+           })
            this.pawnPosition$.subscribe(pp => {
                 this.currentPosition.pawn = pp;
            })
@@ -71,6 +72,87 @@ export class GameService {
                   return "";
                 }
               }
+
+        getValidMoves(pieceType: string, pos: Coord) {
+          const validMoves: Coord[] = [];
+
+          if (pieceType === "knight") {
+            for (let i = 0; i <= 7; i++) {
+              for(let j = 0; j <= 7; j++) {
+                const toX = i;
+                const toY = j;
+                if (!(toX == pos.x && toY == pos.y)) {
+                  if (this.canMoveKnight(pos, { x: toX, y: toY }) && !this.isPieceAt({ x: toX, y: toY })) {
+                    validMoves.push({ x: toX, y: toY });
+                  }
+                }
+              }
+            }
+          } else if (pieceType === "pawn") {
+            for (let i = 0; i <= 7; i++) {
+              for(let j = 0; j <= 7; j++) {
+                const toX = i;
+                const toY = j;
+                if (!(toX == pos.x && toY == pos.y)) {
+                  if (this.canMovePawn(pos, { x: toX, y: toY }) && !this.isPieceAt({ x: toX, y: toY })) {
+                    validMoves.push({ x: toX, y: toY });
+                  }
+                }
+              }
+            }
+          } else if (pieceType === "rook") {
+            for (let i = 0; i <= 7; i++) {
+              for(let j = 0; j <= 7; j++) {
+                const toX = i;
+                const toY = j;
+                if (!(toX == pos.x && toY == pos.y)) {
+                  if (this.canMoveRook(pos, { x: toX, y: toY }) && !this.isPieceAt({ x: toX, y: toY })) {
+                    validMoves.push({ x: toX, y: toY });
+                  }
+                }
+              }
+            }
+          } else if (pieceType === "bishop") {
+            for (let i = 0; i <= 7; i++) {
+              for(let j = 0; j <= 7; j++) {
+                const toX = i;
+                const toY = j;
+                if (!(toX == pos.x && toY == pos.y)) {
+                  if (this.canMoveBishop(pos, { x: toX, y: toY }) && !this.isPieceAt({ x: toX, y: toY })) {
+                    validMoves.push({ x: toX, y: toY });
+                  }
+                }
+              }
+            }
+          } else if (pieceType === "queen") {
+            for (let i = 0; i <= 7; i++) {
+              for(let j = 0; j <= 7; j++) {
+                const toX = i;
+                const toY = j;
+                if (!(toX == pos.x && toY == pos.y)) {
+                  if (this.canMoveQueen(pos, { x: toX, y: toY }) && !this.isPieceAt({ x: toX, y: toY })) {
+                    validMoves.push({ x: toX, y: toY });
+                  }
+                }
+              }
+            }
+          } else if (pieceType === "king") {
+            for (let i = 0; i <= 7; i++) {
+              for(let j = 0; j <= 7; j++) {
+                const toX = i;
+                const toY = j;
+                if (!(toX == pos.x && toY == pos.y)) {
+                  if (this.canMoveKing(pos, { x: toX, y: toY }) && !this.isPieceAt({ x: toX, y: toY })) {
+                    validMoves.push({ x: toX, y: toY });
+                  }
+                }
+              }
+            }
+          }
+
+          return validMoves;
+        }
+
 
 
         moveKnight(from: Coord, to: Coord) {

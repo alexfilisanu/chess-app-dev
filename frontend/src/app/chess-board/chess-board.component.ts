@@ -6,12 +6,6 @@ import { GameService } from '../game-service/game.service';
 @Component({
   selector: 'app-chess-board',
   templateUrl: './chess-board.component.html',
-  template: `
-      <div>
-          <app-square [black]="true">
-              <app-knight></app-knight>
-          </app-square>
-      </div>`,
   styleUrls: ['./chess-board.component.css']
 })
 export class ChessBoardComponent {
@@ -25,6 +19,8 @@ export class ChessBoardComponent {
     kingPosition$ = this.game.kingPosition$;
 
     selectedPosition: Coord | undefined;
+
+    validMoves: Coord[] = [];
 
     constructor(private router: Router, public game: GameService) {
     }
@@ -46,6 +42,17 @@ export class ChessBoardComponent {
           this.selectedPosition.x === pos.x &&
           this.selectedPosition.y === pos.y
         );
+      }
+
+      isValidMove(pos: Coord): boolean {
+          // check if validMoves is defined and check if pos is in validMoves
+          if (this.selectedPosition) {
+            const pieceType = this.game.getPieceType(this.selectedPosition);
+            console.log(pieceType)
+            this.validMoves = this.game.getValidMoves(pieceType, this.selectedPosition);
+            console.log(this.validMoves)
+          }
+          return this.validMoves && this.validMoves.some(vm => vm.x === pos.x && vm.y === pos.y);
       }
 
 
@@ -85,9 +92,11 @@ export class ChessBoardComponent {
                 }
                 break;
             }
+            this.validMoves = [];
             this.selectedPosition = undefined;
           }
         } else {
+
           this.selectedPosition = pos;
         }
       }

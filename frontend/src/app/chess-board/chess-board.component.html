@@ -6,21 +6,22 @@
           <ng-container *ngIf="bishopPosition$ | async as bp">
             <ng-container *ngIf="queenPosition$ | async as qp">
               <ng-container *ngIf="kingPosition$ | async as kp">
-            <div class="square-container" *ngFor="let i of sixtyFour">
-              <app-square
-                *ngIf="xy(i) as pos"
-                [black]="isBlack(pos)"
-                [class.selected]="isSquareSelected(pos)"
-                (click)="handleSquareClick(pos)"
-              >
-                <app-knight *ngIf="pos.x === np.x && pos.y === np.y"></app-knight>
-                <app-pawn *ngIf="pos.x === pp.x && pos.y === pp.y"></app-pawn>
-                <app-rook *ngIf="pos.x === rp.x && pos.y === rp.y"></app-rook>
-                <app-bishop *ngIf="pos.x === bp.x && pos.y === bp.y"></app-bishop>
-                <app-queen *ngIf="pos.x === qp.x && pos.y === qp.y"></app-queen>
-                <app-king *ngIf="pos.x === kp.x && pos.y === kp.y"></app-king>
-              </app-square>
-            </div>
+                <div class="square-container" *ngFor="let i of sixtyFour">
+                  <app-square
+                    *ngIf="xy(i) as pos"
+                    [black]="isBlack(pos)"
+                    [class.selected]="isSquareSelected(pos)"
+                    [isValid]="isValidMove(pos)"
+                    (click)="handleSquareClick(pos)"
+                  >
+                    <app-knight *ngIf="pos.x === np.x && pos.y === np.y"></app-knight>
+                    <app-pawn *ngIf="pos.x === pp.x && pos.y === pp.y"></app-pawn>
+                    <app-rook *ngIf="pos.x === rp.x && pos.y === rp.y"></app-rook>
+                    <app-bishop *ngIf="pos.x === bp.x && pos.y === bp.y"></app-bishop>
+                    <app-queen *ngIf="pos.x === qp.x && pos.y === qp.y"></app-queen>
+                    <app-king *ngIf="pos.x === kp.x && pos.y === kp.y"></app-king>
+                  </app-square>
+                </div>
               </ng-container>
             </ng-container>
           </ng-container>
