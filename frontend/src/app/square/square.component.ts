@@ -15,9 +15,13 @@ export class SquareComponent {
               : { backgroundColor: 'rgb(97, 84, 61)', color: 'black' }
       }
 
-      getValid() {
-          return this.isValid
-              ? { backgroundColor: 'green', color: 'black' }
-              : this.getStyle();
-      }
+     getValid() {
+       return this.isValid
+         ? {
+             backgroundColor: 'rgb(104, 150, 87)',
+             border: 'solid rgb(97, 84, 61) 0.5px',
+             color: 'black'
+           }
+         : this.getStyle();
+     }
 }
