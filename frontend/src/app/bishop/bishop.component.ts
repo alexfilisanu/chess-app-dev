@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-bishop',
-  template: `<span>♗</span>`,
+  template: `<span>{{ isWhite ? '♗' : '♝' }}</span>`,
     styles: [`
     span {
           font-weight: 400;
@@ -12,5 +12,5 @@ import { Component } from '@angular/core';
     `]
 })
 export class BishopComponent {
-
+     @Input() isWhite !: boolean;
 }

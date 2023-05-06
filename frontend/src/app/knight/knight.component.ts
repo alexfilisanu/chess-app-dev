@@ -3,7 +3,7 @@ import { ItemTypes } from '../chess-board/constants';
 
 @Component({
     selector: 'app-knight',
-    template: `<span>♘</span>`,
+    template: `<span>{{ isWhite ? '♘' : '♞' }}</span>`,
     styles: [`
     span {
         font-weight: 400;
@@ -13,5 +13,5 @@ import { ItemTypes } from '../chess-board/constants';
     `]
 })
 export class KnightComponent {
-
+     @Input() isWhite !: boolean;
 }

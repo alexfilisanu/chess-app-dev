@@ -11,26 +11,43 @@ import { GameService } from '../game-service/game.service';
 export class ChessBoardComponent {
     sixtyFour = new Array(64).fill(0).map((_, i) => i);
 
-    rookPosition1$ = this.game.rookPosition1$;
-    knightPosition1$ = this.game.knightPosition1$;
-    bishopPosition1$ = this.game.bishopPosition1$;
-    queenPosition$ = this.game.queenPosition$;
-    kingPosition$ = this.game.kingPosition$;
-    bishopPosition2$ = this.game.bishopPosition2$;
-    knightPosition2$ = this.game.knightPosition2$;
-    rookPosition2$ = this.game.rookPosition2$;
-    pawnPosition1$ = this.game.pawnPosition1$;
-    pawnPosition2$ = this.game.pawnPosition2$;
-    pawnPosition3$ = this.game.pawnPosition3$;
-    pawnPosition4$ = this.game.pawnPosition4$;
-    pawnPosition5$ = this.game.pawnPosition5$;
-    pawnPosition6$ = this.game.pawnPosition6$;
-    pawnPosition7$ = this.game.pawnPosition7$;
-    pawnPosition8$ = this.game.pawnPosition8$;
+    rookPosition1W$ = this.game.rookPosition1W$;
+    knightPosition1W$ = this.game.knightPosition1W$;
+    bishopPosition1W$ = this.game.bishopPosition1W$;
+    queenPositionW$ = this.game.queenPositionW$;
+    kingPositionW$ = this.game.kingPositionW$;
+    bishopPosition2W$ = this.game.bishopPosition2W$;
+    knightPosition2W$ = this.game.knightPosition2W$;
+    rookPosition2W$ = this.game.rookPosition2W$;
+    pawnPosition1W$ = this.game.pawnPosition1W$;
+    pawnPosition2W$ = this.game.pawnPosition2W$;
+    pawnPosition3W$ = this.game.pawnPosition3W$;
+    pawnPosition4W$ = this.game.pawnPosition4W$;
+    pawnPosition5W$ = this.game.pawnPosition5W$;
+    pawnPosition6W$ = this.game.pawnPosition6W$;
+    pawnPosition7W$ = this.game.pawnPosition7W$;
+    pawnPosition8W$ = this.game.pawnPosition8W$;
 
+    rookPosition1B$ = this.game.rookPosition1B$;
+    knightPosition1B$ = this.game.knightPosition1B$;
+    bishopPosition1B$ = this.game.bishopPosition1B$;
+    queenPositionB$ = this.game.queenPositionB$;
+    kingPositionB$ = this.game.kingPositionB$;
+    bishopPosition2B$ = this.game.bishopPosition2B$;
+    knightPosition2B$ = this.game.knightPosition2B$;
+    rookPosition2B$ = this.game.rookPosition2B$;
+    pawnPosition1B$ = this.game.pawnPosition1B$;
+    pawnPosition2B$ = this.game.pawnPosition2B$;
+    pawnPosition3B$ = this.game.pawnPosition3B$;
+    pawnPosition4B$ = this.game.pawnPosition4B$;
+    pawnPosition5B$ = this.game.pawnPosition5B$;
+    pawnPosition6B$ = this.game.pawnPosition6B$;
+    pawnPosition7B$ = this.game.pawnPosition7B$;
+    pawnPosition8B$ = this.game.pawnPosition8B$;
     selectedPosition: Coord | undefined;
 
     validMoves: Coord[] = [];
+    colorToMove = 'white';
 
     constructor(private router: Router, public game: GameService) {
     }
@@ -57,11 +74,15 @@ export class ChessBoardComponent {
     isValidMove(pos: Coord): boolean {
       if (this.selectedPosition) {
         const pieceType = this.game.getPieceType(this.selectedPosition);
-        console.log(pieceType)
+        if (pieceType.color === this.colorToMove) {
         this.validMoves = this.game.getValidMoves(pieceType, this.selectedPosition);
-        console.log(this.validMoves)
+        }
       }
       return this.validMoves && this.validMoves.some(vm => vm.x === pos.x && vm.y === pos.y);
+    }
+
+    changeTurns() {
+        (this.colorToMove === 'white') ? this.colorToMove = 'black' : this.colorToMove = 'white';
     }
 
 
@@ -69,36 +90,43 @@ export class ChessBoardComponent {
       if (this.selectedPosition) {
         const pieceType = this.game.getPieceType(this.selectedPosition).piece;
         const index = this.game.getPieceType(this.selectedPosition).index;
+        const color = this.game.getPieceType(this.selectedPosition).color;
         if (!this.game.isPieceAt(pos)) {
           switch(pieceType) {
           case "knight":
-            if (this.game.canMoveKnight(index, this.selectedPosition, pos)) {
-              this.game.moveKnight(index, this.selectedPosition, pos);
+            if (this.game.canMoveKnight(index, color, this.selectedPosition, pos)) {
+              this.game.moveKnight(index, color, this.selectedPosition, pos);
+              this.changeTurns();
             }
             break;
           case "pawn":
-            if (this.game.canMovePawn(index, this.selectedPosition, pos)) {
-              this.game.movePawn(index, this.selectedPosition, pos);
+            if (this.game.canMovePawn(index, color, this.selectedPosition, pos)) {
+              this.game.movePawn(index, color, this.selectedPosition, pos);
+              this.changeTurns();
             }
             break;
           case "rook":
-            if (this.game.canMoveRook(index, this.selectedPosition, pos)) {
-              this.game.moveRook(index, this.selectedPosition, pos);
+            if (this.game.canMoveRook(index, color, this.selectedPosition, pos)) {
+              this.game.moveRook(index, color, this.selectedPosition, pos);
+              this.changeTurns();
             }
             break;
           case "bishop":
-            if (this.game.canMoveBishop(index, this.selectedPosition, pos)) {
-              this.game.moveBishop(index, this.selectedPosition, pos);
+            if (this.game.canMoveBishop(index, color, this.selectedPosition, pos)) {
+              this.game.moveBishop(index, color, this.selectedPosition, pos);
+              this.changeTurns();
             }
             break;
           case "queen":
-            if (this.game.canMoveQueen(index, this.selectedPosition, pos)) {
-              this.game.moveQueen(index, this.selectedPosition, pos);
+            if (this.game.canMoveQueen(index, color, this.selectedPosition, pos)) {
+              this.game.moveQueen(index, color, this.selectedPosition, pos);
+              this.changeTurns();
             }
             break;
           case "king":
-            if (this.game.canMoveKing(index, this.selectedPosition, pos)) {
-              this.game.moveKing(index, this.selectedPosition, pos);
+            if (this.game.canMoveKing(index, color, this.selectedPosition, pos)) {
+              this.game.moveKing(index, color, this.selectedPosition, pos);
+              this.changeTurns();
             }
             break;
           }
