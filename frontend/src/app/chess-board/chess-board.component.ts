@@ -3,10 +3,15 @@ import { Router } from '@angular/router';
 import { Coord } from './coord'
 import { GameService } from '../game-service/game.service';
 
+enum Color {
+    White = 'white',
+    Black = 'black'
+}
+
 @Component({
-  selector: 'app-chess-board',
-  templateUrl: './chess-board.component.html',
-  styleUrls: ['./chess-board.component.css']
+    selector: 'app-chess-board',
+    templateUrl: './chess-board.component.html',
+    styleUrls: ['./chess-board.component.css']
 })
 export class ChessBoardComponent {
     sixtyFour = new Array(64).fill(0).map((_, i) => i);
@@ -44,97 +49,110 @@ export class ChessBoardComponent {
     pawnPosition6B$ = this.game.pawnPosition6B$;
     pawnPosition7B$ = this.game.pawnPosition7B$;
     pawnPosition8B$ = this.game.pawnPosition8B$;
+
     selectedPosition: Coord | undefined;
 
     validMoves: Coord[] = [];
-    colorToMove = 'white';
 
-    constructor(private router: Router, public game: GameService) {
-    }
+    colorToMove: Color = Color.White;
+
+    constructor(private router: Router, public game: GameService) { }
 
     xy(i: number): Coord {
-      return {
-        x: i % 8,
-        y: Math.floor(i / 8)
-      }
+        return {
+            x: i % 8,
+            y: Math.floor(i / 8)
+        }
     }
 
     isBlack({ x, y }: Coord) {
-      return (x + y) % 2 === 1;
+        return (x + y) % 2 === 1;
     }
 
     isSquareSelected(pos: Coord) {
-      return (
-        this.selectedPosition &&
-        this.selectedPosition.x === pos.x &&
-        this.selectedPosition.y === pos.y
-      );
+        return this.selectedPosition
+            && this.selectedPosition.x === pos.x
+            && this.selectedPosition.y === pos.y;
     }
 
     isValidMove(pos: Coord): boolean {
-      if (this.selectedPosition) {
-        const pieceType = this.game.getPieceType(this.selectedPosition);
-        if (pieceType.color === this.colorToMove) {
-        this.validMoves = this.game.getValidMoves(pieceType, this.selectedPosition);
+        if (this.selectedPosition) {
+            const pieceType = this.game.getPieceType(this.selectedPosition);
+            if (pieceType.color === this.colorToMove) {
+                this.validMoves = this.game.getValidMoves(pieceType, this.selectedPosition);
+            }
         }
-      }
-      return this.validMoves && this.validMoves.some(vm => vm.x === pos.x && vm.y === pos.y);
+
+        return this.validMoves
+            && this.validMoves.some(vm => vm.x === pos.x && vm.y === pos.y);
     }
 
     changeTurns() {
-        (this.colorToMove === 'white') ? this.colorToMove = 'black' : this.colorToMove = 'white';
+        this.colorToMove = (this.colorToMove === Color.White) ? Color.Black : Color.White;
     }
 
-
     handleSquareClick(pos: Coord) {
-      if (this.selectedPosition) {
-        const pieceType = this.game.getPieceType(this.selectedPosition).piece;
-        const index = this.game.getPieceType(this.selectedPosition).index;
-        const color = this.game.getPieceType(this.selectedPosition).color;
-        if (!this.game.isPieceAt(pos)) {
-          switch(pieceType) {
-          case "knight":
-            if (this.game.canMoveKnight(index, color, this.selectedPosition, pos)) {
-              this.game.moveKnight(index, color, this.selectedPosition, pos);
-              this.changeTurns();
+        if (this.selectedPosition) {
+            const pieceType = this.game.getPieceType(this.selectedPosition).piece;
+            const index = this.game.getPieceType(this.selectedPosition).index;
+            const color = this.game.getPieceType(this.selectedPosition).color;
+
+            if (!this.game.isPieceAt(pos)) {
+                switch(pieceType) {
+                    case "knight":
+                        if (this.game.canMoveKnight(index, color, this.selectedPosition, pos)
+                                && this.colorToMove === color) {
+                            this.game.moveKnight(index, color, this.selectedPosition, pos);
+                            this.changeTurns();
+                        }
+                        break;
+
+                    case "pawn":
+                        if (this.game.canMovePawn(index, color, this.selectedPosition, pos)
+                                && this.colorToMove === color) {
+                            this.game.movePawn(index, color, this.selectedPosition, pos);
+                            this.changeTurns();
+                        }
+                        break;
+
+                    case "rook":
+                        if (this.game.canMoveRook(index, color, this.selectedPosition, pos)
+                                && this.colorToMove === color) {
+                            this.game.moveRook(index, color, this.selectedPosition, pos);
+                            this.changeTurns();
+                        }
+                        break;
+
+                    case "bishop":
+                        if (this.game.canMoveBishop(index, color, this.selectedPosition, pos)
+                                && this.colorToMove === color) {
+                            this.game.moveBishop(index, color, this.selectedPosition, pos);
+                            this.changeTurns();
+                        }
+                        break;
+
+                    case "queen":
+                        if (this.game.canMoveQueen(index, color, this.selectedPosition, pos)
+                                && this.colorToMove === color) {
+                            this.game.moveQueen(index, color, this.selectedPosition, pos);
+                            this.changeTurns();
+                        }
+                        break;
+
+                    case "king":
+                        if (this.game.canMoveKing(index, color, this.selectedPosition, pos)
+                                && this.colorToMove === color) {
+                            this.game.moveKing(index, color, this.selectedPosition, pos);
+                            this.changeTurns();
+                        }
+                        break;
+                }
+
+                this.validMoves = [];
+                this.selectedPosition = undefined;
             }
-            break;
-          case "pawn":
-            if (this.game.canMovePawn(index, color, this.selectedPosition, pos)) {
-              this.game.movePawn(index, color, this.selectedPosition, pos);
-              this.changeTurns();
-            }
-            break;
-          case "rook":
-            if (this.game.canMoveRook(index, color, this.selectedPosition, pos)) {
-              this.game.moveRook(index, color, this.selectedPosition, pos);
-              this.changeTurns();
-            }
-            break;
-          case "bishop":
-            if (this.game.canMoveBishop(index, color, this.selectedPosition, pos)) {
-              this.game.moveBishop(index, color, this.selectedPosition, pos);
-              this.changeTurns();
-            }
-            break;
-          case "queen":
-            if (this.game.canMoveQueen(index, color, this.selectedPosition, pos)) {
-              this.game.moveQueen(index, color, this.selectedPosition, pos);
-              this.changeTurns();
-            }
-            break;
-          case "king":
-            if (this.game.canMoveKing(index, color, this.selectedPosition, pos)) {
-              this.game.moveKing(index, color, this.selectedPosition, pos);
-              this.changeTurns();
-            }
-            break;
-          }
-          this.validMoves = [];
-          this.selectedPosition = undefined;
+        } else {
+            this.selectedPosition = pos;
         }
-      } else {
-      this.selectedPosition = pos;
-      }
     }
 }
