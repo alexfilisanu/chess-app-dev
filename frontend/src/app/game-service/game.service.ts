@@ -262,8 +262,7 @@ export class GameService {
         return { type: '', index: -1, color: '' };
     }
 
-
-    getValidMoves(pieceType: { type: string, index: number, color: string }, pos: Coord) {
+    getValidMoves(piece: { type: string, index: number, color: string }, pos: Coord) {
         const validMoves: Coord[] = [];
 
         for (let i = 0; i <= 7; i++) {
@@ -272,46 +271,63 @@ export class GameService {
                 const toY = j;
 
                 if (!(toX === pos.x && toY === pos.y)) {
-                    switch (pieceType.type) {
+                    switch (piece.type) {
                         case PieceType.King:
-                            if (this.canMoveKing(pieceType.index, pieceType.color, pos, { x: toX, y: toY })
-                                    && (!this.isPieceAt({ x: toX, y: toY }) || this.isOpponentAt({ x: toX, y: toY }, pieceType.color))) {
+                            if (this.canMoveKing(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && !this.isPieceAt({ x: toX, y: toY }
+                                    || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Queen:
-                            if (this.canMoveQueen(pieceType.index, pieceType.color, pos, { x: toX, y: toY })
-                                    && (!this.isPieceAt({ x: toX, y: toY }) || this.isOpponentAt({ x: toX, y: toY }, pieceType.color))) {
+                            if (this.canMoveQueen(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && !this.isPieceAt({ x: toX, y: toY }
+                                    || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Rook:
-                            if (this.canMoveRook(pieceType.index, pieceType.color, pos, { x: toX, y: toY })
-                                    && (!this.isPieceAt({ x: toX, y: toY }) || this.isOpponentAt({ x: toX, y: toY }, pieceType.color))) {
+                            if (this.canMoveRook(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && !this.isPieceAt({ x: toX, y: toY }
+                                    || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Bishop:
-                            if (this.canMoveBishop(pieceType.index, pieceType.color, pos, { x: toX, y: toY })
-                                    && (!this.isPieceAt({ x: toX, y: toY }) || this.isOpponentAt({ x: toX, y: toY }, pieceType.color))) {
+                            if (this.canMoveBishop(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && !this.isPieceAt({ x: toX, y: toY }
+                                    || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Knight:
-                            if (this.canMoveKnight(pieceType.index, pieceType.color, pos, { x: toX, y: toY })
-                                    && (!this.isPieceAt({ x: toX, y: toY }) || this.isOpponentAt({ x: toX, y: toY }, pieceType.color))) {
+                            if (this.canMoveKnight(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && !this.isPieceAt({ x: toX, y: toY }
+                                    || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Pawn:
-                            if (this.canMovePawn(pieceType.index, pieceType.color, pos, { x: toX, y: toY })
-                                    && (!this.isPieceAt({ x: toX, y: toY }) || this.isOpponentAt({ x: toX, y: toY }, pieceType.color))) {
+                            if (this.canMovePawn(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && !this.isPieceAt({ x: toX, y: toY })) {
                                 validMoves.push({ x: toX, y: toY });
+                            }
+
+                            const opponentDirection = piece.color === Color.White ? 1 : -1;
+                            if ((toX - 1) === pos.x + opponentDirection
+                                    && toY === pos.y + opponentDirection
+                                    && this.isOpponentAt({ x: toX - 1, y: toY }, piece.color)) {
+                                validMoves.push({ x: toX - 1, y: toY });
+                            }
+                            if ((toX + 1) === pos.x - opponentDirection
+                                    && toY === pos.y + opponentDirection
+                                    && this.isOpponentAt({ x: toX + 1, y: toY }, piece.color)) {
+                                validMoves.push({ x: toX + 1, y: toY });
                             }
                             break;
 
