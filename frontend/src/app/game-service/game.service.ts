@@ -396,15 +396,17 @@ export class GameService {
         }
     }
 
-
     movePawn(index: number, color: string, from: Coord, to: Coord) {
         const pawn = (this as any)[`pawnPosition${index}${color.charAt(0).toUpperCase()}$`];
+        if (this.canMovePawn(index, color, from, to) && !this.isPieceAt(to)) {
+            pawn.next(to);
+        }
 
-        if (this.canMovePawn(index, color, from, to)) {
-            if (this.isOpponentAt(to, color)) {
-                this.captureOpponent(to, color);
-            }
-
+        const opponentDirection = color === Color.White ? 1 : -1;
+        if (to.y === from.y + opponentDirection
+                && (to.x === from.x + 1 || to.x === from.x - 1)
+                && this.isOpponentAt(to, color)) {
+            this.captureOpponent(to, color);
             pawn.next(to);
         }
     }
@@ -474,6 +476,10 @@ export class GameService {
     canMovePawn(index: number, color: string, from: Coord, to: Coord) {
         const { x: fromX, y: fromY } = from;
         const { x: toX, y: toY } = to;
+
+        if (this.isPieceAt(to)) {
+            return false;
+        }
 
         const piece = `pawn${index}${color.charAt(0).toUpperCase()}` as keyof typeof this.currentPosition;
 
