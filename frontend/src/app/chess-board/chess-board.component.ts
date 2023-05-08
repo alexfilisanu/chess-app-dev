@@ -114,7 +114,7 @@ export class ChessBoardComponent {
                 switch(pieceType) {
                     case PieceType.King:
                         if (this.game.canMoveKing(index, color, this.selectedPosition, pos)
-                                && this.isColorToMove(color)) {
+                                && this.isColorToMove(color) && !this.game.areKingsAdjacent(pos, color)) {
                             this.game.moveKing(index, color, this.selectedPosition, pos);
                             this.changeTurns();
                         }

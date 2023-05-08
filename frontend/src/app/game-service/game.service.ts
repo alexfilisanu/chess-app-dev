@@ -229,6 +229,16 @@ export class GameService {
         }
     }
 
+    areKingsAdjacent(kingPos: Coord, color: string): boolean {
+        const otherKingPos = (color === Color.White)
+                ? this.currentPosition['kingB']
+                : this.currentPosition['kingW'];
+
+        const distanceX = Math.abs(kingPos.x - otherKingPos.x);
+        const distanceY = Math.abs(kingPos.y - otherKingPos.y);
+        return distanceX <= 1 && distanceY <= 1;
+    }
+
     getPieceInfo(pos: Coord): {type: string, index: number, color: string} {
         const pieces = {
             king: [this.currentPosition.kingW, this.currentPosition.kingB],
@@ -274,6 +284,7 @@ export class GameService {
                     switch (piece.type) {
                         case PieceType.King:
                             if (this.canMoveKing(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && !this.areKingsAdjacent({ x: toX, y: toY }, piece.color)
                                     && (!this.isPieceAt({ x: toX, y: toY })
                                         || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
