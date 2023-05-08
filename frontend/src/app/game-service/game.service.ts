@@ -211,17 +211,16 @@ export class GameService {
             for (const piece of pieces) {
                 const targetPiece = this.getPieceInfo(pos);
                 if (piece.x === pos.x && piece.y === pos.y && targetPiece.color !== color) {
-                console.log(true);
                     return true;
             }
         }
-         console.log(false);
+
         return false;
     }
 
     captureOpponent(pos: Coord, color: string) {
         const targetPiece = this.getPieceInfo(pos);
-        const opp = (targetPiece.type === 'queen' || targetPiece.type === 'king')
+        const opp = (targetPiece.type === PieceType.Queen || targetPiece.type === PieceType.King)
             ? (this as any)[`${targetPiece.type}Position${targetPiece.color.charAt(0).toUpperCase()}$`]
             : (this as any)[`${targetPiece.type}Position${targetPiece.index}${targetPiece.color.charAt(0).toUpperCase()}$`];
 
@@ -390,7 +389,7 @@ export class GameService {
                 this.captureOpponent(to, color);
             }
 
-        pawn.next(to);
+            pawn.next(to);
         }
     }
 
@@ -398,22 +397,13 @@ export class GameService {
         const { x: fromX, y: fromY } = from;
         const { x: toX, y: toY } = to;
 
-        if (Math.abs(fromX - toX) <= 1 && Math.abs(fromY - toY) <= 1) {
-            const piece = this.isPieceAt(to);
-            return !piece;
-        }
-
-        return false;
+        return Math.abs(fromX - toX) <= 1
+            && Math.abs(fromY - toY) <= 1;
     }
 
     canMoveQueen(index: number, color: string, from: Coord, to: Coord) {
-        if (this.canMoveRook(index, color, from, to)
-                || this.canMoveBishop(index, color, from, to)) {
-            const piece = this.isPieceAt(to);
-            return !piece;
-        }
-
-        return false;
+        return this.canMoveRook(index, color, from, to)
+            || this.canMoveBishop(index, color, from, to);
     }
 
     canMoveRook(index: number, color: string, from: Coord, to: Coord) {
@@ -455,23 +445,29 @@ export class GameService {
     }
 
     canMoveKnight(index: number, color: string, from: Coord, to: Coord) {
-        const dx = to.x - from.x;
-        const dy = to.y - from.y;
+        const { x: fromX, y: fromY } = from;
+        const { x: toX, y: toY } = to;
+
+        const dx = toX - fromX;
+        const dy = toY - fromY;
 
         return (Math.abs(dx) === 2 && Math.abs(dy) === 1)
             || (Math.abs(dx) === 1 && Math.abs(dy) === 2);
     }
 
     canMovePawn(index: number, color: string, from: Coord, to: Coord) {
+        const { x: fromX, y: fromY } = from;
+        const { x: toX, y: toY } = to;
+
         const piece = `pawn${index}${color.charAt(0).toUpperCase()}` as keyof typeof this.currentPosition;
-        const { x, y } = this.currentPosition[piece];
-        const dx = to.x - from.x;
-        const dy = to.y - from.y;
+
+        const dx = toX - fromX;
+        const dy = toY - fromY;
 
         return (color === Color.White)
             ? (dx === 0 && dy === 1)
-                || (dx === 0 && dy === 2 && y === 1 && from.y === 1 && to.y === 3)
+                || (dx === 0 && dy === 2 && from.y === 1 && to.y === 3 && !this.isPieceAt({ x: to.x, y: to.y - 1 }))
             : (dx === 0 && dy === -1)
-                || (dx === 0 && dy === -2 && y === 6 && from.y === 6 && to.y === 4);
+                || (dx === 0 && dy === -2 && from.y === 6 && to.y === 4 && !this.isPieceAt({ x: to.x, y: to.y + 1 }));
     }
 }
