@@ -153,7 +153,9 @@ export class ChessBoardComponent {
                         break;
 
                     case PieceType.Pawn:
-                        if (this.game.canMovePawn(index, color, this.selectedPosition, pos)
+                        if ((this.game.canMovePawn(index, color, this.selectedPosition, pos)
+                                || (this.game.isOpponentAt(pos, color)
+                                    && (this.selectedPosition.x == pos.x + 1 || this.selectedPosition.x == pos.x - 1)))
                                 && this.isColorToMove(color)) {
                             this.game.movePawn(index, color, this.selectedPosition, pos);
                             this.changeTurns();
