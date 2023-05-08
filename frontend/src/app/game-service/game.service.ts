@@ -274,40 +274,40 @@ export class GameService {
                     switch (piece.type) {
                         case PieceType.King:
                             if (this.canMoveKing(piece.index, piece.color, pos, { x: toX, y: toY })
-                                    && !this.isPieceAt({ x: toX, y: toY }
-                                    || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
+                                    && (!this.isPieceAt({ x: toX, y: toY })
+                                        || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Queen:
                             if (this.canMoveQueen(piece.index, piece.color, pos, { x: toX, y: toY })
-                                    && !this.isPieceAt({ x: toX, y: toY }
-                                    || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
+                                    && (!this.isPieceAt({ x: toX, y: toY })
+                                        || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Rook:
                             if (this.canMoveRook(piece.index, piece.color, pos, { x: toX, y: toY })
-                                    && !this.isPieceAt({ x: toX, y: toY }
-                                    || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
+                                    && (!this.isPieceAt({ x: toX, y: toY })
+                                        || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Bishop:
                             if (this.canMoveBishop(piece.index, piece.color, pos, { x: toX, y: toY })
-                                    && !this.isPieceAt({ x: toX, y: toY }
-                                    || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
+                                    && (!this.isPieceAt({ x: toX, y: toY })
+                                        || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Knight:
                             if (this.canMoveKnight(piece.index, piece.color, pos, { x: toX, y: toY })
-                                    && !this.isPieceAt({ x: toX, y: toY }
-                                    || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
+                                    && (!this.isPieceAt({ x: toX, y: toY })
+                                        || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
