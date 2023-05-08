@@ -106,11 +106,11 @@ export class ChessBoardComponent {
             const index = this.game.getPieceInfo(this.selectedPosition).index;
             const color = this.game.getPieceInfo(this.selectedPosition).color;
 
-            if (!this.game.isPieceAt(pos)) {
+            if (!this.game.isPieceAt(pos) || this.game.isOpponentAt(pos, color)) {
                 switch(pieceType) {
                     case PieceType.King:
                         if (this.game.canMoveKing(index, color, this.selectedPosition, pos)
-                                && this.colorToMove === color) {
+                                && this.colorToMove === color || this.game.isOpponentAt(pos, color)) {
                             this.game.moveKing(index, color, this.selectedPosition, pos);
                             this.changeTurns();
                         }
@@ -118,7 +118,7 @@ export class ChessBoardComponent {
 
                     case PieceType.Queen:
                         if (this.game.canMoveQueen(index, color, this.selectedPosition, pos)
-                                && this.colorToMove === color) {
+                                && this.colorToMove === color || this.game.isOpponentAt(pos, color)) {
                             this.game.moveQueen(index, color, this.selectedPosition, pos);
                             this.changeTurns();
                         }
@@ -126,7 +126,7 @@ export class ChessBoardComponent {
 
                     case PieceType.Rook:
                         if (this.game.canMoveRook(index, color, this.selectedPosition, pos)
-                                && this.colorToMove === color) {
+                                && this.colorToMove === color || this.game.isOpponentAt(pos, color)) {
                             this.game.moveRook(index, color, this.selectedPosition, pos);
                             this.changeTurns();
                         }
@@ -134,7 +134,7 @@ export class ChessBoardComponent {
 
                     case PieceType.Bishop:
                         if (this.game.canMoveBishop(index, color, this.selectedPosition, pos)
-                                && this.colorToMove === color) {
+                                && this.colorToMove === color || this.game.isOpponentAt(pos, color)) {
                             this.game.moveBishop(index, color, this.selectedPosition, pos);
                             this.changeTurns();
                         }
@@ -142,7 +142,7 @@ export class ChessBoardComponent {
 
                     case PieceType.Knight:
                         if (this.game.canMoveKnight(index, color, this.selectedPosition, pos)
-                                && this.colorToMove === color) {
+                                && this.colorToMove === color || this.game.isOpponentAt(pos, color)) {
                             this.game.moveKnight(index, color, this.selectedPosition, pos);
                             this.changeTurns();
                         }
@@ -150,7 +150,7 @@ export class ChessBoardComponent {
 
                     case PieceType.Pawn:
                         if (this.game.canMovePawn(index, color, this.selectedPosition, pos)
-                                && this.colorToMove === color) {
+                                && this.colorToMove === color || this.game.isOpponentAt(pos, color)) {
                             this.game.movePawn(index, color, this.selectedPosition, pos);
                             this.changeTurns();
                         }
