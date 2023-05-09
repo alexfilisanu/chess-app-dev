@@ -272,6 +272,100 @@ export class GameService {
         return { type: '', index: -1, color: '' };
     }
 
+    getAllProtectedPositions(piece: { type: string, index: number, color: string }, pos: Coord) {
+        const validMoves: Coord[] = [];
+
+        for (let i = 0; i <= 7; i++) {
+            for (let j = 0; j <= 7; j++) {
+                const toX = i;
+                const toY = j;
+
+                if (!(toX === pos.x && toY === pos.y)) {
+                    switch (piece.type) {
+                        case PieceType.King:
+                            if (this.canMoveKing(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && !this.areKingsAdjacent({ x: toX, y: toY }, piece.color)) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Queen:
+                            if (this.canMoveQueen(piece.index, piece.color, pos, { x: toX, y: toY })) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Rook:
+                            if (this.canMoveRook(piece.index, piece.color, pos, { x: toX, y: toY })) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Bishop:
+                            if (this.canMoveBishop(piece.index, piece.color, pos, { x: toX, y: toY })) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Knight:
+                            if (this.canMoveKnight(piece.index, piece.color, pos, { x: toX, y: toY })) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Pawn:
+                            const opponentDirection = piece.color === Color.White ? -1 : 1;
+                            if ((toX - 1) === pos.x && toY === pos.y + opponentDirection) {
+                                validMoves.push({ x: toX - 1, y: toY - opponentDirection});
+                            }
+
+                            if ((toX + 1) === pos.x && toY === pos.y + opponentDirection) {
+                                validMoves.push({ x: toX + 1, y: toY - opponentDirection});
+                            }
+
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        return validMoves;
+    }
+
+    isNewPositionNotInCheck(newPos: Coord, color: string) {
+        const positions = Object.values(this.currentPosition);
+
+        for (const piecePos of positions) {
+            const targetPiece = this.getPieceInfo(piecePos);
+
+            if (targetPiece.color !== color) {
+                if (targetPiece.type == PieceType.Pawn) {
+                    let validMovesForPawn: Coord[] = [];
+                    const opponentDirection = targetPiece.color === Color.White ? -1 : 1;
+
+                    if ((piecePos.x - 1) === newPos.x && piecePos.y === newPos.y + opponentDirection) {
+                        validMovesForPawn.push({ x: piecePos.x - 1, y: piecePos.y - opponentDirection});
+                    }
+
+                    if ((piecePos.x + 1) === newPos.x && piecePos.y === newPos.y + opponentDirection) {
+                        validMovesForPawn.push({ x: piecePos.x + 1, y: piecePos.y - opponentDirection});
+                    }
+
+                    if (validMovesForPawn.some(vm => vm.x === newPos.x && vm.y === newPos.y)) {
+                        return false;
+                    }
+                } else if (this.getAllProtectedPositions(targetPiece, piecePos).some(vm => vm.x === newPos.x && vm.y === newPos.y)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     getValidMoves(piece: { type: string, index: number, color: string }, pos: Coord) {
         const validMoves: Coord[] = [];
 
@@ -285,8 +379,9 @@ export class GameService {
                         case PieceType.King:
                             if (this.canMoveKing(piece.index, piece.color, pos, { x: toX, y: toY })
                                     && !this.areKingsAdjacent({ x: toX, y: toY }, piece.color)
+                                    && this.isNewPositionNotInCheck({ x: toX, y: toY }, piece.color)
                                     && (!this.isPieceAt({ x: toX, y: toY })
-                                        || this.isOpponentAt({ x: toX, y: toY }, piece.color))) {
+                                        || (this.isOpponentAt({ x: toX, y: toY }, piece.color)))) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
