@@ -180,11 +180,11 @@ export class ChessBoardComponent {
             const pieceType = this.game.getPieceInfo(this.selectedPosition).type;
             const index = this.game.getPieceInfo(this.selectedPosition).index;
             const color = this.game.getPieceInfo(this.selectedPosition).color;
-            const kingColor = (color === Color.White)
+            const isKingInCheck = (color === Color.White)
                 ? this.isWhiteKingInCheck
                 : this.isBlackKingInCheck;
 
-            if (!kingColor) {
+            if (!isKingInCheck) {
                 if (!this.game.isPieceAt(pos) || this.game.isOpponentAt(pos, color)) {
                     switch(pieceType) {
                         case PieceType.King:
@@ -251,22 +251,19 @@ export class ChessBoardComponent {
 
                     this.validMoves = [];
                     this.selectedPosition = undefined;
-                    console.log("white check: ", this.isWhiteKingInCheck);
-                    console.log("black check: ", this.isBlackKingInCheck);
                 }
             } else {
                 const safePositions = this.getSafePositions(color);
-                console.log(safePositions);
-                if (safePositions.some(vm => vm.x === pos.x && vm.y === pos.y)) {
-                    // Move the king to the safe position
-                    console.log("safe pos");
-//                     this.game.moveKing(index, color, this.selectedPosition, pos);
-//                     this.isKingInCheck(color);
-//                     this.changeTurns();
+                if (safePositions.length != 0) {
+                    if (safePositions.some(vm => vm.x === pos.x && vm.y === pos.y)) {
+                        this.game.moveKing(index, color, this.selectedPosition, pos);
+                        this.isKingInCheck(color);
+                        this.changeTurns();
+                    }
+                    this.validMoves = [];
+                    this.selectedPosition = undefined;
                 } else {
-                    // The king has no safe position, so the game is over
-                    console.log("game over");
-//                     this.gameOver$.next({ winner: pieceInfo.color === Color.White ? Color.Black : Color.White });
+                    console.log("!!!CHECK MATE!!!");
                 }
             }
         } else {
