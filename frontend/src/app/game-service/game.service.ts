@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Coord } from '../chess-board/coord';
+import { cloneDeep } from 'lodash';
 
 enum Color {
     White = 'white',
@@ -195,6 +196,9 @@ export class GameService {
         })
     }
 
+    isWhiteKingInCheck: boolean = false;
+    isBlackKingInCheck: boolean = false;
+
     isPieceAt(pos: Coord): boolean {
         const pieces = Object.values(this.currentPosition);
         for (const piece of pieces) {
@@ -364,6 +368,112 @@ export class GameService {
         }
 
         return true;
+    }
+
+    isBishopCheck(targetPiece: Coord, kingPos: Coord, newPos: Coord): boolean {
+        const dx = Math.sign(kingPos.x - targetPiece.x);
+        const dy = Math.sign(kingPos.y - targetPiece.y);
+        for (let x = targetPiece.x + dx, y = targetPiece.y + dy; x !== kingPos.x || y !== kingPos.y; x += dx, y += dy) {
+            if (newPos.x == x && newPos.y == y) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    isNewPositionSavingKingFromCheck(pieceToMove: { type: string, index: number, color: string }, newPos: Coord, color: string) {
+        const pieces = Object.values(this.currentPosition);
+
+        const kingPos = (color === Color.White)
+                    ? this.kingPositionW$.getValue()
+                    : this.kingPositionB$.getValue();
+
+        for (const piece of pieces) {
+            const targetPiece = this.getPieceInfo(piece);
+            if (targetPiece.color !== color) {
+                if (this.getValidMoves(targetPiece, piece).some(vm => vm.x === kingPos.x && vm.y === kingPos.y
+                        && this.isBishopCheck(piece, kingPos, newPos))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    validateNewPosition(color: string, pos: Coord): boolean {
+        const pieces = Object.values(this.currentPosition);
+
+        for (const piece of pieces) {
+            const targetPiece = this.getPieceInfo(piece);
+
+            if (targetPiece.color !== color) {
+                if (targetPiece.type == PieceType.Pawn) {
+                    let validMovesForPawn: Coord[] = [];
+                    const opponentDirection = targetPiece.color === Color.White ? 1 : -1;
+                    if ((piece.x - 1) === pos.x + opponentDirection
+                            && piece.y === pos.y + opponentDirection
+                            && this.isOpponentAt({ x: piece.x - 1, y: piece.y }, targetPiece.color)) {
+                        validMovesForPawn.push({ x: piece.x - 1, y: piece.y });
+                    }
+                    if ((piece.x + 1) === pos.x - opponentDirection
+                            && piece.y === pos.y + opponentDirection
+                            && this.isOpponentAt({ x: piece.x + 1, y: piece.y }, targetPiece.color)) {
+                        validMovesForPawn.push({ x: piece.x + 1, y: piece.y });
+                    }
+                    if (validMovesForPawn.some(vm => vm.x === pos.x && vm.y === pos.y)) {
+                        return false;
+                    }
+                } else if (this.getValidMoves(targetPiece, piece).some(vm => vm.x === pos.x && vm.y === pos.y)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    isKingInCheck(color: string) {
+        const kingPos = (color === Color.White)
+            ? this.kingPositionB$.getValue()
+            : this.kingPositionW$.getValue();
+        const pieces = Object.values(this.currentPosition);
+
+        for (const piece of pieces) {
+            const targetPiece = this.getPieceInfo(piece);
+            if (targetPiece.color === color) {
+                if (this.getValidMoves(targetPiece, piece).some(vm => vm.x === kingPos.x && vm.y === kingPos.y)) {
+                    (color === Color.White)
+                        ? this.isBlackKingInCheck = true
+                        : this.isWhiteKingInCheck = true;
+                    return;
+                }
+            }
+        }
+
+        (color === Color.White)
+            ? this.isWhiteKingInCheck = false
+            : this.isBlackKingInCheck = false;
+    }
+
+    getSafePositions(piece: { type: string, index: number, color: string }, piecePos: Coord): Coord[] {
+        const kingPos = (piece.color === Color.White)
+            ? this.kingPositionW$.getValue()
+            : this.kingPositionB$.getValue();
+
+        let validMoves = this.getValidMoves(piece, piecePos);
+//         console.log(validMoves);
+
+        switch(piece.type) {
+            case PieceType.King:
+                return validMoves.filter(vm => this.validateNewPosition(piece.color, vm));
+
+            default:
+                return validMoves.filter(vm => !this.isNewPositionSavingKingFromCheck(piece, vm, piece.color)
+                    || this.isOpponentAt(vm, piece.color));
+        }
+
     }
 
     getValidMoves(piece: { type: string, index: number, color: string }, pos: Coord) {
