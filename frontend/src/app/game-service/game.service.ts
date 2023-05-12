@@ -199,10 +199,28 @@ export class GameService {
     isWhiteKingInCheck: boolean = false;
     isBlackKingInCheck: boolean = false;
 
+    isColorKingInCheck(color: string): boolean {
+        return color === Color.White
+            ? this.isWhiteKingInCheck
+            : this.isBlackKingInCheck;
+    }
+
+    getColorKingPos(color: string): Coord {
+        return color === Color.White
+            ? this.kingPositionW$.getValue()
+            : this.kingPositionB$.getValue();
+    }
+
+    getOppositeColorKingPos(color: string): Coord {
+        return color === Color.White
+            ? this.kingPositionB$.getValue()
+            : this.kingPositionW$.getValue();
+    }
+
     isPieceAt(pos: Coord): boolean {
-        const pieces = Object.values(this.currentPosition);
-        for (const piece of pieces) {
-            if (piece.x === pos.x && piece.y === pos.y) {
+        const piecesPos = Object.values(this.currentPosition);
+        for (const piecePos of piecesPos) {
+            if (piecePos.x === pos.x && piecePos.y === pos.y) {
                 return true;
             }
         }
@@ -211,10 +229,10 @@ export class GameService {
     }
 
     isOpponentAt(pos: Coord, color: string): boolean {
-        const pieces = Object.values(this.currentPosition);
-            for (const piece of pieces) {
+        const piecesPos = Object.values(this.currentPosition);
+            for (const piecePos of piecesPos) {
                 const targetPiece = this.getPieceInfo(pos);
-                if (piece.x === pos.x && piece.y === pos.y && targetPiece.color !== color) {
+                if (piecePos.x === pos.x && piecePos.y === pos.y && targetPiece.color !== color) {
                     return true;
             }
         }
@@ -234,13 +252,43 @@ export class GameService {
     }
 
     areKingsAdjacent(kingPos: Coord, color: string): boolean {
-        const otherKingPos = (color === Color.White)
-                ? this.currentPosition['kingB']
-                : this.currentPosition['kingW'];
+        const oppositeKingPos = this.getOppositeColorKingPos(color);
 
-        const distanceX = Math.abs(kingPos.x - otherKingPos.x);
-        const distanceY = Math.abs(kingPos.y - otherKingPos.y);
+        const distanceX = Math.abs(kingPos.x - oppositeKingPos.x);
+        const distanceY = Math.abs(kingPos.y - oppositeKingPos.y);
+
         return distanceX <= 1 && distanceY <= 1;
+    }
+
+    isNewKingPositionNotInCheck(newKingPos: Coord, color: string): boolean {
+        const positions = Object.values(this.currentPosition);
+
+        for (const piecePos of positions) {
+            const targetPiece = this.getPieceInfo(piecePos);
+
+            if (targetPiece.color !== color) {
+                if (targetPiece.type == PieceType.Pawn) {
+                    let validMovesForPawn: Coord[] = [];
+                    const opponentDirection = targetPiece.color === Color.White ? -1 : 1;
+
+                    if ((piecePos.x - 1) === newKingPos.x && piecePos.y === newKingPos.y + opponentDirection) {
+                        validMovesForPawn.push({ x: piecePos.x - 1, y: piecePos.y - opponentDirection});
+                    }
+
+                    if ((piecePos.x + 1) === newKingPos.x && piecePos.y === newKingPos.y + opponentDirection) {
+                        validMovesForPawn.push({ x: piecePos.x + 1, y: piecePos.y - opponentDirection});
+                    }
+
+                    if (validMovesForPawn.some(vm => vm.x === newKingPos.x && vm.y === newKingPos.y)) {
+                        return false;
+                    }
+                } else if (this.getAllProtectedPositions(targetPiece, piecePos).some(vm => vm.x === newKingPos.x && vm.y === newKingPos.y)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     getPieceInfo(pos: Coord): {type: string, index: number, color: string} {
@@ -326,7 +374,6 @@ export class GameService {
                             if ((toX + 1) === pos.x && toY === pos.y + opponentDirection) {
                                 validMoves.push({ x: toX + 1, y: toY - opponentDirection});
                             }
-
                             break;
 
                         default:
@@ -339,41 +386,10 @@ export class GameService {
         return validMoves;
     }
 
-    isNewPositionNotInCheck(newPos: Coord, color: string) {
-        const positions = Object.values(this.currentPosition);
-
-        for (const piecePos of positions) {
-            const targetPiece = this.getPieceInfo(piecePos);
-
-            if (targetPiece.color !== color) {
-                if (targetPiece.type == PieceType.Pawn) {
-                    let validMovesForPawn: Coord[] = [];
-                    const opponentDirection = targetPiece.color === Color.White ? -1 : 1;
-
-                    if ((piecePos.x - 1) === newPos.x && piecePos.y === newPos.y + opponentDirection) {
-                        validMovesForPawn.push({ x: piecePos.x - 1, y: piecePos.y - opponentDirection});
-                    }
-
-                    if ((piecePos.x + 1) === newPos.x && piecePos.y === newPos.y + opponentDirection) {
-                        validMovesForPawn.push({ x: piecePos.x + 1, y: piecePos.y - opponentDirection});
-                    }
-
-                    if (validMovesForPawn.some(vm => vm.x === newPos.x && vm.y === newPos.y)) {
-                        return false;
-                    }
-                } else if (this.getAllProtectedPositions(targetPiece, piecePos).some(vm => vm.x === newPos.x && vm.y === newPos.y)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    isBishopCheck(targetPiece: Coord, kingPos: Coord, newPos: Coord): boolean {
-        const dx = Math.sign(kingPos.x - targetPiece.x);
-        const dy = Math.sign(kingPos.y - targetPiece.y);
-        for (let x = targetPiece.x + dx, y = targetPiece.y + dy; x !== kingPos.x || y !== kingPos.y; x += dx, y += dy) {
+    isNewPosOnLineOfAttack(piecePos: Coord, kingPos: Coord, newPos: Coord): boolean {
+        const dx = Math.sign(kingPos.x - piecePos.x);
+        const dy = Math.sign(kingPos.y - piecePos.y);
+        for (let x = piecePos.x + dx, y = piecePos.y + dy; x !== kingPos.x || y !== kingPos.y; x += dx, y += dy) {
             if (newPos.x == x && newPos.y == y) {
                 return true;
             }
@@ -383,67 +399,30 @@ export class GameService {
     }
 
     isNewPositionSavingKingFromCheck(pieceToMove: { type: string, index: number, color: string }, newPos: Coord, color: string) {
-        const pieces = Object.values(this.currentPosition);
+        const kingPos = this.getColorKingPos(color);
+        const piecesPos = Object.values(this.currentPosition);
 
-        const kingPos = (color === Color.White)
-                    ? this.kingPositionW$.getValue()
-                    : this.kingPositionB$.getValue();
-
-        for (const piece of pieces) {
-            const targetPiece = this.getPieceInfo(piece);
+        for (const piecePos of piecesPos) {
+            const targetPiece = this.getPieceInfo(piecePos);
             if (targetPiece.color !== color) {
-                if (this.getValidMoves(targetPiece, piece).some(vm => vm.x === kingPos.x && vm.y === kingPos.y
-                        && this.isBishopCheck(piece, kingPos, newPos))) {
-                    return false;
+                if (this.getValidMoves(targetPiece, piecePos).some(vm => vm.x === kingPos.x && vm.y === kingPos.y
+                        && this.isNewPosOnLineOfAttack(piecePos, kingPos, newPos))) {
+                    return true;
                 }
             }
         }
 
-        return true;
+        return false;
     }
 
-    validateNewPosition(color: string, pos: Coord): boolean {
-        const pieces = Object.values(this.currentPosition);
+    setOppositeColorKingInCheck(color: string) {
+        const kingPos = this.getOppositeColorKingPos(color);
+        const piecesPos = Object.values(this.currentPosition);
 
-        for (const piece of pieces) {
-            const targetPiece = this.getPieceInfo(piece);
-
-            if (targetPiece.color !== color) {
-                if (targetPiece.type == PieceType.Pawn) {
-                    let validMovesForPawn: Coord[] = [];
-                    const opponentDirection = targetPiece.color === Color.White ? 1 : -1;
-                    if ((piece.x - 1) === pos.x + opponentDirection
-                            && piece.y === pos.y + opponentDirection
-                            && this.isOpponentAt({ x: piece.x - 1, y: piece.y }, targetPiece.color)) {
-                        validMovesForPawn.push({ x: piece.x - 1, y: piece.y });
-                    }
-                    if ((piece.x + 1) === pos.x - opponentDirection
-                            && piece.y === pos.y + opponentDirection
-                            && this.isOpponentAt({ x: piece.x + 1, y: piece.y }, targetPiece.color)) {
-                        validMovesForPawn.push({ x: piece.x + 1, y: piece.y });
-                    }
-                    if (validMovesForPawn.some(vm => vm.x === pos.x && vm.y === pos.y)) {
-                        return false;
-                    }
-                } else if (this.getValidMoves(targetPiece, piece).some(vm => vm.x === pos.x && vm.y === pos.y)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    isKingInCheck(color: string) {
-        const kingPos = (color === Color.White)
-            ? this.kingPositionB$.getValue()
-            : this.kingPositionW$.getValue();
-        const pieces = Object.values(this.currentPosition);
-
-        for (const piece of pieces) {
-            const targetPiece = this.getPieceInfo(piece);
+        for (const piecePos of piecesPos) {
+            const targetPiece = this.getPieceInfo(piecePos);
             if (targetPiece.color === color) {
-                if (this.getValidMoves(targetPiece, piece).some(vm => vm.x === kingPos.x && vm.y === kingPos.y)) {
+                if (this.getValidMoves(targetPiece, piecePos).some(vm => vm.x === kingPos.x && vm.y === kingPos.y)) {
                     (color === Color.White)
                         ? this.isBlackKingInCheck = true
                         : this.isWhiteKingInCheck = true;
@@ -458,22 +437,13 @@ export class GameService {
     }
 
     getSafePositions(piece: { type: string, index: number, color: string }, piecePos: Coord): Coord[] {
-        const kingPos = (piece.color === Color.White)
-            ? this.kingPositionW$.getValue()
-            : this.kingPositionB$.getValue();
-
+        const kingPos = this.getColorKingPos(piece.color);
         let validMoves = this.getValidMoves(piece, piecePos);
-//         console.log(validMoves);
 
-        switch(piece.type) {
-            case PieceType.King:
-                return validMoves.filter(vm => this.validateNewPosition(piece.color, vm));
-
-            default:
-                return validMoves.filter(vm => !this.isNewPositionSavingKingFromCheck(piece, vm, piece.color)
+        return piece.type === PieceType.King
+            ? validMoves.filter(vm => this.isNewKingPositionNotInCheck(vm, piece.color))
+            : validMoves.filter(vm => this.isNewPositionSavingKingFromCheck(piece, vm, piece.color)
                     || this.isOpponentAt(vm, piece.color));
-        }
-
     }
 
     getValidMoves(piece: { type: string, index: number, color: string }, pos: Coord) {
@@ -489,7 +459,7 @@ export class GameService {
                         case PieceType.King:
                             if (this.canMoveKing(piece.index, piece.color, pos, { x: toX, y: toY })
                                     && !this.areKingsAdjacent({ x: toX, y: toY }, piece.color)
-                                    && this.isNewPositionNotInCheck({ x: toX, y: toY }, piece.color)
+                                    && this.isNewKingPositionNotInCheck({ x: toX, y: toY }, piece.color)
                                     && (!this.isPieceAt({ x: toX, y: toY })
                                         || (this.isOpponentAt({ x: toX, y: toY }, piece.color)))) {
                                 validMoves.push({ x: toX, y: toY });
@@ -627,7 +597,7 @@ export class GameService {
         }
     }
 
-    canMoveKing(index: number, color: string, from: Coord, to: Coord) {
+    canMoveKing(index: number, color: string, from: Coord, to: Coord): boolean {
         const { x: fromX, y: fromY } = from;
         const { x: toX, y: toY } = to;
 
@@ -635,12 +605,12 @@ export class GameService {
             && Math.abs(fromY - toY) <= 1;
     }
 
-    canMoveQueen(index: number, color: string, from: Coord, to: Coord) {
+    canMoveQueen(index: number, color: string, from: Coord, to: Coord): boolean {
         return this.canMoveRook(index, color, from, to)
             || this.canMoveBishop(index, color, from, to);
     }
 
-    canMoveRook(index: number, color: string, from: Coord, to: Coord) {
+    canMoveRook(index: number, color: string, from: Coord, to: Coord): boolean {
         const { x: fromX, y: fromY } = from;
         const { x: toX, y: toY } = to;
 
@@ -659,7 +629,7 @@ export class GameService {
         return true;
     }
 
-    canMoveBishop(index: number, color: string, from: Coord, to: Coord) {
+    canMoveBishop(index: number, color: string, from: Coord, to: Coord): boolean {
         const { x: fromX, y: fromY } = from;
         const { x: toX, y: toY } = to;
 
@@ -678,7 +648,7 @@ export class GameService {
         return true;
     }
 
-    canMoveKnight(index: number, color: string, from: Coord, to: Coord) {
+    canMoveKnight(index: number, color: string, from: Coord, to: Coord): boolean {
         const { x: fromX, y: fromY } = from;
         const { x: toX, y: toY } = to;
 
@@ -689,7 +659,7 @@ export class GameService {
             || (Math.abs(dx) === 1 && Math.abs(dy) === 2);
     }
 
-    canMovePawn(index: number, color: string, from: Coord, to: Coord) {
+    canMovePawn(index: number, color: string, from: Coord, to: Coord): boolean {
         const { x: fromX, y: fromY } = from;
         const { x: toX, y: toY } = to;
 

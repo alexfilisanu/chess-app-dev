@@ -88,49 +88,47 @@ export class ChessBoardComponent {
 
     isValidMove(pos: Coord): boolean {
         if (this.selectedPosition) {
-            const pieceType = this.game.getPieceInfo(this.selectedPosition);
-            if (pieceType.color === this.colorToMove) {
-                const isKingInCheck = (pieceType.color === Color.White)
-                    ? this.game.isWhiteKingInCheck
-                    : this.game.isBlackKingInCheck;
+            const pieceInfo = this.game.getPieceInfo(this.selectedPosition);
+
+            if (this.isColorToMove(pieceInfo.color)) {
+                const isKingInCheck = this.game.isColorKingInCheck(pieceInfo.color);
 
                 this.validMoves = isKingInCheck
-                    ? this.game.getSafePositions(pieceType, this.selectedPosition)
-                    : this.game.getValidMoves(pieceType, this.selectedPosition);
+                    ? this.game.getSafePositions(pieceInfo, this.selectedPosition)
+                    : this.game.getValidMoves(pieceInfo, this.selectedPosition);
             }
         }
 
         return this.validMoves.some(vm => vm.x === pos.x && vm.y === pos.y);
     }
 
-    changeTurns() {
-        this.colorToMove = (this.colorToMove === Color.White) ? Color.Black : Color.White;
-    }
-
     isColorToMove(color: string): boolean {
         return color === this.colorToMove;
     }
 
+    changeTurns() {
+        this.colorToMove = this.isColorToMove(Color.White)
+            ? Color.Black
+            : Color.White;
+    }
 
     handleSquareClick(pos: Coord) {
         if (this.selectedPosition) {
-            const pieceType = this.game.getPieceInfo(this.selectedPosition).type;
+            const type = this.game.getPieceInfo(this.selectedPosition).type;
             const index = this.game.getPieceInfo(this.selectedPosition).index;
             const color = this.game.getPieceInfo(this.selectedPosition).color;
-            const isKingInCheck = (color === Color.White)
-                ? this.game.isWhiteKingInCheck
-                : this.game.isBlackKingInCheck;
+            const isKingInCheck = this.game.isColorKingInCheck(color);
 
             if (!isKingInCheck) {
                 if (!this.game.isPieceAt(pos) || this.game.isOpponentAt(pos, color)) {
-                    switch(pieceType) {
+                    switch(type) {
                         case PieceType.King:
                             if (this.game.canMoveKing(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)
-                                    && this.game.isNewPositionNotInCheck(pos, color)
+                                    && this.game.isNewKingPositionNotInCheck(pos, color)
                                     && !this.game.areKingsAdjacent(pos, color)) {
                                 this.game.moveKing(index, color, this.selectedPosition, pos);
-                                this.game.isKingInCheck(color);
+                                this.game.setOppositeColorKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -139,7 +137,7 @@ export class ChessBoardComponent {
                             if (this.game.canMoveQueen(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)) {
                                 this.game.moveQueen(index, color, this.selectedPosition, pos);
-                                this.game.isKingInCheck(color);
+                                this.game.setOppositeColorKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -148,7 +146,7 @@ export class ChessBoardComponent {
                             if (this.game.canMoveRook(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)) {
                                 this.game.moveRook(index, color, this.selectedPosition, pos);
-                                this.game.isKingInCheck(color);
+                                this.game.setOppositeColorKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -157,7 +155,7 @@ export class ChessBoardComponent {
                             if (this.game.canMoveBishop(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)) {
                                 this.game.moveBishop(index, color, this.selectedPosition, pos);
-                                this.game.isKingInCheck(color);
+                                this.game.setOppositeColorKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -166,7 +164,7 @@ export class ChessBoardComponent {
                             if (this.game.canMoveKnight(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)) {
                                 this.game.moveKnight(index, color, this.selectedPosition, pos);
-                                this.game.isKingInCheck(color);
+                                this.game.setOppositeColorKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -177,7 +175,7 @@ export class ChessBoardComponent {
                                         && (this.selectedPosition.x == pos.x + 1 || this.selectedPosition.x == pos.x - 1)))
                                     && this.isColorToMove(color)) {
                                 this.game.movePawn(index, color, this.selectedPosition, pos);
-                                this.game.isKingInCheck(color);
+                                this.game.setOppositeColorKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -225,7 +223,7 @@ export class ChessBoardComponent {
                                 break;
                         }
 
-                        this.game.isKingInCheck(color);
+                        this.game.setOppositeColorKingInCheck(color);
                         this.changeTurns();
                     }
                     this.validMoves = [];
