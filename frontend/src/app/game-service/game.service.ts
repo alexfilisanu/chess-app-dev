@@ -527,6 +527,22 @@ export class GameService {
         return validMoves;
     }
 
+    isCheckmate(color: string): boolean {
+        const kingPos = this.getColorKingPos(color);
+        const piecesPos = Object.values(this.currentPosition);
+
+        for (const piecePos of piecesPos) {
+            const targetPiece = this.getPieceInfo(piecePos);
+            if (targetPiece.color !== color) {
+                if (this.getSafePositions(targetPiece, piecePos).length !== 0) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     moveKing(index: number, color: string, from: Coord, to: Coord) {
         if (this.canMoveKing(index, color, from, to)) {
             if (this.isOpponentAt(to, color)) {
