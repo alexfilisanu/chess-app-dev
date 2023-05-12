@@ -199,6 +199,13 @@ export class GameService {
     isWhiteKingInCheck: boolean = false;
     isBlackKingInCheck: boolean = false;
 
+    isFirstMoveKingW: boolean = true;
+    isFirstMoveRook1W: boolean = true;
+    isFirstMoveRook2W: boolean = true;
+    isFirstMoveKingB: boolean = true;
+    isFirstMoveRook1B: boolean = true;
+    isFirstMoveRook2B: boolean = true;
+
     isColorKingInCheck(color: string): boolean {
         return color === Color.White
             ? this.isWhiteKingInCheck
@@ -238,6 +245,66 @@ export class GameService {
         }
 
         return false;
+    }
+
+    isShortCastlingAvailable(color: string): boolean {
+        return color === Color.White
+            ? this.isFirstMoveKingW && this.isFirstMoveRook2W && !this.isWhiteKingInCheck
+                && !this.isPieceAt({ x: 5, y: 0 }) && !this.isPieceAt({ x: 6, y: 0 })
+            : this.isFirstMoveKingB && this.isFirstMoveRook2B && !this.isBlackKingInCheck
+                && !this.isPieceAt({ x: 5, y: 7 }) && !this.isPieceAt({ x: 6, y: 7 });
+    }
+
+    isLongCastlingAvailable(color: string): boolean {
+        return color === Color.White
+            ? this.isFirstMoveKingW && this.isFirstMoveRook1W && !this.isWhiteKingInCheck
+                && !this.isPieceAt({ x: 1, y: 0 }) && !this.isPieceAt({ x: 2, y: 0 }) && !this.isPieceAt({ x: 3, y: 0 })
+            : this.isFirstMoveKingB && this.isFirstMoveRook1B && !this.isBlackKingInCheck
+                && !this.isPieceAt({ x: 1, y: 7 }) && !this.isPieceAt({ x: 2, y: 7 }) && !this.isPieceAt({ x: 3, y: 7 });
+    }
+
+    isShortCastlingRequired(color: string, pos: Coord): boolean {
+        return color === Color.White
+            ? pos.x === 6 && pos.y === 0
+            : pos.x === 6 && pos.y === 7;
+    }
+
+    isLongCastlingRequired(color: string, pos: Coord): boolean {
+        return color === Color.White
+            ? pos.x === 2 && pos.y === 0
+            : pos.x === 2 && pos.y === 7;
+    }
+
+    kingHasMoved(color: string) {
+        color === Color.White
+            ? this.isFirstMoveKingW = false
+            : this.isFirstMoveKingB = false;
+    }
+
+    rookHasMoved(index: number, color: string) {
+        color === Color.White
+            ? index === 1 ? this.isFirstMoveRook1W = false : this.isFirstMoveRook2W = false
+            : index === 1 ? this.isFirstMoveRook1B = false : this.isFirstMoveRook2B = false;
+    }
+
+    moveShortCastling(color: string) {
+        if (color === Color.White) {
+            this.kingPositionW$.next({ x: 6, y: 0});
+            this.rookPosition2W$.next({ x: 5, y: 0});
+        } else {
+            this.kingPositionB$.next({ x: 6, y: 7});
+            this.rookPosition2B$.next({ x: 5, y: 7});
+        }
+    }
+
+    moveLongCastling(color: string) {
+        if (color === Color.White) {
+            this.kingPositionW$.next({ x: 2, y: 0});
+            this.rookPosition1W$.next({ x: 3, y: 0});
+        } else {
+            this.kingPositionB$.next({ x: 2, y: 7});
+            this.rookPosition1B$.next({ x: 3, y: 7});
+        }
     }
 
     captureOpponent(pos: Coord, color: string) {
@@ -521,6 +588,20 @@ export class GameService {
                             break;
                     }
                 }
+            }
+        }
+
+        if (piece.type === PieceType.King) {
+            if (this.isShortCastlingAvailable(piece.color)) {
+                piece.color === Color.White
+                    ? validMoves.push({ x: 6, y: 0 })
+                    : validMoves.push({ x: 6, y: 7 });
+            }
+
+            if (this.isLongCastlingAvailable(piece.color)) {
+                piece.color === Color.White
+                    ? validMoves.push({ x: 2, y: 0 })
+                    : validMoves.push({ x: 2, y: 7 });
             }
         }
 
