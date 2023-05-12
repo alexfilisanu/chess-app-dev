@@ -188,48 +188,51 @@ export class ChessBoardComponent {
                     this.selectedPosition = undefined;
                 }
             } else {
-                const pieces = Object.values(this.game.currentPosition);
-                const targetPiece = this.game.getPieceInfo(this.selectedPosition);
-                const safePositions = this.game.getSafePositions(targetPiece, this.selectedPosition);
+                if (!this.game.isCheckmate(color)) {
+                    const targetPiece = this.game.getPieceInfo(this.selectedPosition);
+                    const safePositions = this.game.getSafePositions(targetPiece, this.selectedPosition);
 
-                if (safePositions.length != 0) {
-                    if (safePositions.some(vm => vm.x === pos.x && vm.y === pos.y)) {
-                        switch(targetPiece.type) {
-                            case PieceType.King:
-                                this.game.moveKing(index, color, this.selectedPosition, pos);
-                                break;
+                    if (safePositions.length != 0) {
+                        if (safePositions.some(vm => vm.x === pos.x && vm.y === pos.y)) {
+                            switch(targetPiece.type) {
+                                case PieceType.King:
+                                    this.game.moveKing(index, color, this.selectedPosition, pos);
+                                    break;
 
-                            case PieceType.Queen:
-                                this.game.moveQueen(index, color, this.selectedPosition, pos);
-                                break;
+                                case PieceType.Queen:
+                                    this.game.moveQueen(index, color, this.selectedPosition, pos);
+                                    break;
 
-                            case PieceType.Rook:
-                                this.game.moveRook(index, color, this.selectedPosition, pos);
-                                break;
+                                case PieceType.Rook:
+                                    this.game.moveRook(index, color, this.selectedPosition, pos);
+                                    break;
 
-                            case PieceType.Bishop:
-                                this.game.moveBishop(index, color, this.selectedPosition, pos);
-                                break;
+                                case PieceType.Bishop:
+                                    this.game.moveBishop(index, color, this.selectedPosition, pos);
+                                    break;
 
-                            case PieceType.Knight:
-                                this.game.moveKnight(index, color, this.selectedPosition, pos);
-                                break;
+                                case PieceType.Knight:
+                                    this.game.moveKnight(index, color, this.selectedPosition, pos);
+                                    break;
 
-                            case PieceType.Pawn:
-                                this.game.movePawn(index, color, this.selectedPosition, pos);
-                                break;
+                                case PieceType.Pawn:
+                                    this.game.movePawn(index, color, this.selectedPosition, pos);
+                                    break;
 
-                            default:
-                                break;
+                                default:
+                                    break;
+                            }
+
+                            this.game.setOppositeColorKingInCheck(color);
+                            this.changeTurns();
                         }
-
-                        this.game.setOppositeColorKingInCheck(color);
-                        this.changeTurns();
+                        this.validMoves = [];
+                        this.selectedPosition = undefined;
+                    } else {
+                        color === Color.Black
+                            ? console.log("!!!CHECK MATE - BLACK LOST!!!")
+                            : console.log("!!!CHECK MATE - WHITE LOST!!!");
                     }
-                    this.validMoves = [];
-                    this.selectedPosition = undefined;
-                } else {
-                    console.log("!!!CHECK MATE!!!");
                 }
             }
         } else {
