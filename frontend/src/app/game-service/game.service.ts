@@ -593,15 +593,15 @@ export class GameService {
 
         if (piece.type === PieceType.King) {
             if (this.isShortCastlingAvailable(piece.color)) {
-                piece.color === Color.White
-                    ? validMoves.push({ x: 6, y: 0 })
-                    : validMoves.push({ x: 6, y: 7 });
+                piece.color === Color.White ?
+                    (this.isNewKingPositionNotInCheck({ x: 6, y: 0 }, Color.White) && validMoves.push({ x: 6, y: 0 })) :
+                    (this.isNewKingPositionNotInCheck({ x: 6, y: 7 }, Color.Black) && validMoves.push({ x: 6, y: 7 }));
             }
 
             if (this.isLongCastlingAvailable(piece.color)) {
-                piece.color === Color.White
-                    ? validMoves.push({ x: 2, y: 0 })
-                    : validMoves.push({ x: 2, y: 7 });
+                piece.color === Color.White ?
+                    (this.isNewKingPositionNotInCheck({ x: 2, y: 0 }, Color.White) && validMoves.push({ x: 2, y: 0 })) :
+                    (this.isNewKingPositionNotInCheck({ x: 2, y: 7 }, Color.Black) && validMoves.push({ x: 2, y: 7 }));
             }
         }
 
@@ -688,7 +688,8 @@ export class GameService {
         const opponentDirection = color === Color.White ? 1 : -1;
         if (to.y === from.y + opponentDirection
                 && (to.x === from.x + 1 || to.x === from.x - 1)
-                && this.isOpponentAt(to, color)) {
+                && this.isOpponentAt(to, color)
+                ) {
             this.captureOpponent(to, color);
             pawn.next(to);
         }
