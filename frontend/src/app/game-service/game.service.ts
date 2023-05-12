@@ -342,19 +342,19 @@ export class GameService {
                             break;
 
                         case PieceType.Queen:
-                            if (this.canMoveQueen(piece.index, piece.color, pos, { x: toX, y: toY })) {
+                            if (this.isQueenProtecting(piece.index, piece.color, pos, { x: toX, y: toY })) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Rook:
-                            if (this.canMoveRook(piece.index, piece.color, pos, { x: toX, y: toY })) {
+                            if (this.isRookProtecting(piece.index, piece.color, pos, { x: toX, y: toY })) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
                         case PieceType.Bishop:
-                            if (this.canMoveBishop(piece.index, piece.color, pos, { x: toX, y: toY })) {
+                            if (this.isBishopProtecting(piece.index, piece.color, pos, { x: toX, y: toY })) {
                                 validMoves.push({ x: toX, y: toY });
                             }
                             break;
@@ -677,5 +677,48 @@ export class GameService {
                 || (dx === 0 && dy === 2 && from.y === 1 && to.y === 3 && !this.isPieceAt({ x: to.x, y: to.y - 1 }))
             : (dx === 0 && dy === -1)
                 || (dx === 0 && dy === -2 && from.y === 6 && to.y === 4 && !this.isPieceAt({ x: to.x, y: to.y + 1 }));
+    }
+
+    isQueenProtecting(index: number, color: string, from: Coord, to: Coord): boolean {
+        return this.isRookProtecting(index, color, from, to)
+            || this.isBishopProtecting(index, color, from, to);
+    }
+
+    isRookProtecting(index: number, color: string, from: Coord, to: Coord): boolean {
+        const { x: fromX, y: fromY } = from;
+        const { x: toX, y: toY } = to;
+
+        if (fromX !== toX && fromY !== toY) {
+            return false;
+        }
+
+        const dx = Math.sign(toX - fromX);
+        const dy = Math.sign(toY - fromY);
+        for (let x = fromX + dx, y = fromY + dy; x !== toX || y !== toY; x += dx, y += dy) {
+            if (this.isPieceAt({ x, y }) && this.getPieceInfo({ x, y }).color === color) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    isBishopProtecting(index: number, color: string, from: Coord, to: Coord): boolean {
+        const { x: fromX, y: fromY } = from;
+        const { x: toX, y: toY } = to;
+
+        if (Math.abs(toX - fromX) !== Math.abs(toY - fromY)) {
+            return false;
+        }
+
+        const dx = Math.sign(toX - fromX);
+        const dy = Math.sign(toY - fromY);
+        for (let x = fromX + dx, y = fromY + dy; x !== toX || y !== toY; x += dx, y += dy) {
+            if (this.isPieceAt({ x, y }) && this.getPieceInfo({ x, y }).color === color)  {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
