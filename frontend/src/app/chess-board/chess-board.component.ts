@@ -123,11 +123,29 @@ export class ChessBoardComponent {
                 if (!this.game.isPieceAt(pos) || this.game.isOpponentAt(pos, color)) {
                     switch(type) {
                         case PieceType.King:
+                            console.log("isShortCastlingAvailable: ", this.game.isShortCastlingAvailable(color));
+                            console.log("isShortCastlingRequired: ", this.game.isShortCastlingRequired(color, pos), "pos: ", pos);
                             if (this.game.canMoveKing(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)
                                     && this.game.isNewKingPositionNotInCheck(pos, color)
                                     && !this.game.areKingsAdjacent(pos, color)) {
                                 this.game.moveKing(index, color, this.selectedPosition, pos);
+                                this.game.kingHasMoved(color);
+                                this.game.setOppositeColorKingInCheck(color);
+                                this.changeTurns();
+                            } else if (this.game.isShortCastlingAvailable(color)
+                                        && this.game.isShortCastlingRequired(color, pos)) {
+                                console.log("am incercat sa fac rocada mica");
+                                this.game.moveShortCastling(color);
+                                this.game.kingHasMoved(color);
+                                this.game.rookHasMoved(2, color);
+                                this.game.setOppositeColorKingInCheck(color);
+                                this.changeTurns();
+                            } else if (this.game.isLongCastlingAvailable(color)
+                                        && this.game.isLongCastlingRequired(color, pos)) {
+                                this.game.moveLongCastling(color);
+                                this.game.kingHasMoved(color);
+                                this.game.rookHasMoved(1, color);
                                 this.game.setOppositeColorKingInCheck(color);
                                 this.changeTurns();
                             }
@@ -146,6 +164,7 @@ export class ChessBoardComponent {
                             if (this.game.canMoveRook(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)) {
                                 this.game.moveRook(index, color, this.selectedPosition, pos);
+                                this.game.rookHasMoved(index, color);
                                 this.game.setOppositeColorKingInCheck(color);
                                 this.changeTurns();
                             }
