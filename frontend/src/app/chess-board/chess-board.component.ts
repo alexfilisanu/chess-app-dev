@@ -67,9 +67,6 @@ export class ChessBoardComponent {
 
     colorToMove: Color = Color.White;
 
-    isWhiteKingInCheck: boolean = false;
-    isBlackKingInCheck: boolean = false;
-
     constructor(private router: Router, public game: GameService) { }
 
     xy(i: number): Coord {
@@ -93,12 +90,17 @@ export class ChessBoardComponent {
         if (this.selectedPosition) {
             const pieceType = this.game.getPieceInfo(this.selectedPosition);
             if (pieceType.color === this.colorToMove) {
-                this.validMoves = this.game.getValidMoves(pieceType, this.selectedPosition);
+                const isKingInCheck = (pieceType.color === Color.White)
+                    ? this.game.isWhiteKingInCheck
+                    : this.game.isBlackKingInCheck;
+
+                this.validMoves = isKingInCheck
+                    ? this.game.getSafePositions(pieceType, this.selectedPosition)
+                    : this.game.getValidMoves(pieceType, this.selectedPosition);
             }
         }
 
-        return this.validMoves
-            && this.validMoves.some(vm => vm.x === pos.x && vm.y === pos.y);
+        return this.validMoves.some(vm => vm.x === pos.x && vm.y === pos.y);
     }
 
     changeTurns() {
@@ -109,71 +111,6 @@ export class ChessBoardComponent {
         return color === this.colorToMove;
     }
 
-    isKingInCheck(color: string) {
-        const kingPos = (color === Color.White)
-            ? this.kingPositionB$.getValue()
-            : this.kingPositionW$.getValue();
-        const pieces = Object.values(this.game.currentPosition);
-
-        for (const piece of pieces) {
-            const targetPiece = this.game.getPieceInfo(piece);
-            if (targetPiece.color === color) {
-                if (this.game.getValidMoves(targetPiece, piece).some(vm => vm.x === kingPos.x && vm.y === kingPos.y)) {
-                    (color === Color.White)
-                        ? this.isBlackKingInCheck = true
-                        : this.isWhiteKingInCheck = true;
-                    return;
-                }
-            }
-        }
-
-        (color === Color.White)
-            ? this.isWhiteKingInCheck = false
-            : this.isBlackKingInCheck = false;
-    }
-
-    getSafePositions(color: string) {
-        const kingPos = (color === Color.White)
-            ? this.kingPositionW$.getValue()
-            : this.kingPositionB$.getValue();
-
-        const pieces = Object.values(this.game.currentPosition);
-        let validMoves = this.game.getValidMoves(this.game.getPieceInfo(kingPos), kingPos);
-
-        return validMoves.filter(vm => this.validateNewPosition(color, vm));
-    }
-
-    validateNewPosition(color: string, pos: Coord) {
-        const pieces = Object.values(this.game.currentPosition);
-
-        for (const piece of pieces) {
-            const targetPiece = this.game.getPieceInfo(piece);
-
-            if (targetPiece.color !== color) {
-                if (targetPiece.type == PieceType.Pawn) {
-                    let validMovesForPawn: Coord[] = [];
-                    const opponentDirection = targetPiece.color === Color.White ? 1 : -1;
-                    if ((piece.x - 1) === pos.x + opponentDirection
-                            && piece.y === pos.y + opponentDirection
-                            && this.game.isOpponentAt({ x: piece.x - 1, y: piece.y }, targetPiece.color)) {
-                        validMovesForPawn.push({ x: piece.x - 1, y: piece.y });
-                    }
-                    if ((piece.x + 1) === pos.x - opponentDirection
-                            && piece.y === pos.y + opponentDirection
-                            && this.game.isOpponentAt({ x: piece.x + 1, y: piece.y }, targetPiece.color)) {
-                        validMovesForPawn.push({ x: piece.x + 1, y: piece.y });
-                    }
-                    if (validMovesForPawn.some(vm => vm.x === pos.x && vm.y === pos.y)) {
-                        return false;
-                    }
-                } else if (this.game.getValidMoves(targetPiece, piece).some(vm => vm.x === pos.x && vm.y === pos.y)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
 
     handleSquareClick(pos: Coord) {
         if (this.selectedPosition) {
@@ -181,8 +118,8 @@ export class ChessBoardComponent {
             const index = this.game.getPieceInfo(this.selectedPosition).index;
             const color = this.game.getPieceInfo(this.selectedPosition).color;
             const isKingInCheck = (color === Color.White)
-                ? this.isWhiteKingInCheck
-                : this.isBlackKingInCheck;
+                ? this.game.isWhiteKingInCheck
+                : this.game.isBlackKingInCheck;
 
             if (!isKingInCheck) {
                 if (!this.game.isPieceAt(pos) || this.game.isOpponentAt(pos, color)) {
@@ -193,7 +130,7 @@ export class ChessBoardComponent {
                                     && this.game.isNewPositionNotInCheck(pos, color)
                                     && !this.game.areKingsAdjacent(pos, color)) {
                                 this.game.moveKing(index, color, this.selectedPosition, pos);
-                                this.isKingInCheck(color);
+                                this.game.isKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -202,7 +139,7 @@ export class ChessBoardComponent {
                             if (this.game.canMoveQueen(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)) {
                                 this.game.moveQueen(index, color, this.selectedPosition, pos);
-                                this.isKingInCheck(color);
+                                this.game.isKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -211,7 +148,7 @@ export class ChessBoardComponent {
                             if (this.game.canMoveRook(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)) {
                                 this.game.moveRook(index, color, this.selectedPosition, pos);
-                                this.isKingInCheck(color);
+                                this.game.isKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -220,7 +157,7 @@ export class ChessBoardComponent {
                             if (this.game.canMoveBishop(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)) {
                                 this.game.moveBishop(index, color, this.selectedPosition, pos);
-                                this.isKingInCheck(color);
+                                this.game.isKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -229,7 +166,7 @@ export class ChessBoardComponent {
                             if (this.game.canMoveKnight(index, color, this.selectedPosition, pos)
                                     && this.isColorToMove(color)) {
                                 this.game.moveKnight(index, color, this.selectedPosition, pos);
-                                this.isKingInCheck(color);
+                                this.game.isKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -240,7 +177,7 @@ export class ChessBoardComponent {
                                         && (this.selectedPosition.x == pos.x + 1 || this.selectedPosition.x == pos.x - 1)))
                                     && this.isColorToMove(color)) {
                                 this.game.movePawn(index, color, this.selectedPosition, pos);
-                                this.isKingInCheck(color);
+                                this.game.isKingInCheck(color);
                                 this.changeTurns();
                             }
                             break;
@@ -253,11 +190,42 @@ export class ChessBoardComponent {
                     this.selectedPosition = undefined;
                 }
             } else {
-                const safePositions = this.getSafePositions(color);
+                const pieces = Object.values(this.game.currentPosition);
+                const targetPiece = this.game.getPieceInfo(this.selectedPosition);
+                const safePositions = this.game.getSafePositions(targetPiece, this.selectedPosition);
+
                 if (safePositions.length != 0) {
                     if (safePositions.some(vm => vm.x === pos.x && vm.y === pos.y)) {
-                        this.game.moveKing(index, color, this.selectedPosition, pos);
-                        this.isKingInCheck(color);
+                        switch(targetPiece.type) {
+                            case PieceType.King:
+                                this.game.moveKing(index, color, this.selectedPosition, pos);
+                                break;
+
+                            case PieceType.Queen:
+                                this.game.moveQueen(index, color, this.selectedPosition, pos);
+                                break;
+
+                            case PieceType.Rook:
+                                this.game.moveRook(index, color, this.selectedPosition, pos);
+                                break;
+
+                            case PieceType.Bishop:
+                                this.game.moveBishop(index, color, this.selectedPosition, pos);
+                                break;
+
+                            case PieceType.Knight:
+                                this.game.moveKnight(index, color, this.selectedPosition, pos);
+                                break;
+
+                            case PieceType.Pawn:
+                                this.game.movePawn(index, color, this.selectedPosition, pos);
+                                break;
+
+                            default:
+                                break;
+                        }
+
+                        this.game.isKingInCheck(color);
                         this.changeTurns();
                     }
                     this.validMoves = [];
