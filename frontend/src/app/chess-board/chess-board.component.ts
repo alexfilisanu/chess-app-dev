@@ -133,7 +133,8 @@ export class ChessBoardComponent {
                                 this.changeTurns();
                             } else if (this.game.isShortCastlingAvailable(color)
                                         && this.game.isShortCastlingRequired(color, pos)
-                                        && this.isColorToMove(color)) {
+                                        && this.isColorToMove(color)
+                                        && this.game.isNewKingPositionNotInCheck(pos, color)) {
                                 this.game.moveShortCastling(color);
                                 this.game.kingHasMoved(color);
                                 this.game.rookHasMoved(2, color);
@@ -141,7 +142,8 @@ export class ChessBoardComponent {
                                 this.changeTurns();
                             } else if (this.game.isLongCastlingAvailable(color)
                                         && this.game.isLongCastlingRequired(color, pos)
-                                        && this.isColorToMove(color)) {
+                                        && this.isColorToMove(color)
+                                        && this.game.isNewKingPositionNotInCheck(pos, color)) {
                                 this.game.moveLongCastling(color);
                                 this.game.kingHasMoved(color);
                                 this.game.rookHasMoved(1, color);
