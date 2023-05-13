@@ -246,13 +246,13 @@ export class ChessBoardComponent {
                             this.game.setOppositeColorKingInCheck(color);
                             this.changeTurns();
                         }
-                        this.validMoves = [];
-                        this.selectedPosition = undefined;
-                    } else {
-                        color === Color.Black
-                            ? console.log("!!!CHECK MATE - BLACK LOST!!!")
-                            : console.log("!!!CHECK MATE - WHITE LOST!!!");
                     }
+                    this.validMoves = [];
+                    this.selectedPosition = undefined;
+                } else {
+                    color === Color.Black
+                        ? console.log("!!!CHECK MATE - BLACK LOST!!!")
+                        : console.log("!!!CHECK MATE - WHITE LOST!!!");
                 }
             }
         } else {
