@@ -465,7 +465,7 @@ export class GameService {
         return false;
     }
 
-    isNewPositionSavingKingFromCheck(pieceToMove: { type: string, index: number, color: string }, newPos: Coord, color: string) {
+    isNewPositionSavingKingFromCheck(newPos: Coord, color: string) {
         const kingPos = this.getColorKingPos(color);
         const piecesPos = Object.values(this.currentPosition);
 
@@ -473,7 +473,8 @@ export class GameService {
             const targetPiece = this.getPieceInfo(piecePos);
             if (targetPiece.color !== color) {
                 if (this.getValidMoves(targetPiece, piecePos).some(vm => vm.x === kingPos.x && vm.y === kingPos.y
-                        && this.isNewPosOnLineOfAttack(piecePos, kingPos, newPos))) {
+                        && (this.isNewPosOnLineOfAttack(piecePos, kingPos, newPos)
+                            || (newPos.x === piecePos.x && newPos.y === piecePos.y)))) {
                     return true;
                 }
             }
@@ -509,8 +510,7 @@ export class GameService {
 
         return piece.type === PieceType.King
             ? validMoves.filter(vm => this.isNewKingPositionNotInCheck(vm, piece.color))
-            : validMoves.filter(vm => this.isNewPositionSavingKingFromCheck(piece, vm, piece.color)
-                    || this.isOpponentAt(vm, piece.color));
+            : validMoves.filter(vm => this.isNewPositionSavingKingFromCheck(vm, piece.color));
     }
 
     getValidMoves(piece: { type: string, index: number, color: string }, pos: Coord) {
@@ -572,15 +572,10 @@ export class GameService {
                             }
 
                             const opponentDirection = piece.color === Color.White ? 1 : -1;
-                            if ((toX - 1) === pos.x + opponentDirection
+                            if ((toX === pos.x + 1 || toX === pos.x - 1)
                                     && toY === pos.y + opponentDirection
-                                    && this.isOpponentAt({ x: toX - 1, y: toY }, piece.color)) {
-                                validMoves.push({ x: toX - 1, y: toY });
-                            }
-                            if ((toX + 1) === pos.x - opponentDirection
-                                    && toY === pos.y + opponentDirection
-                                    && this.isOpponentAt({ x: toX + 1, y: toY }, piece.color)) {
-                                validMoves.push({ x: toX + 1, y: toY });
+                                    && this.isOpponentAt({ x: toX, y: toY }, piece.color)) {
+                                validMoves.push({ x: toX, y: toY });
                             }
                             break;
 
