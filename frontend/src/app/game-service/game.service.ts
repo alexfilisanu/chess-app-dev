@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Coord } from '../chess-board/coord';
-import { cloneDeep } from 'lodash';
 
 enum Color {
     White = 'white',
@@ -609,7 +608,7 @@ export class GameService {
 
         for (const piecePos of piecesPos) {
             const targetPiece = this.getPieceInfo(piecePos);
-            if (targetPiece.color !== color) {
+            if (targetPiece.color === color) {
                 if (this.getSafePositions(targetPiece, piecePos).length !== 0) {
                     return false;
                 }
