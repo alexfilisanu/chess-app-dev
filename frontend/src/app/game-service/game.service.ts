@@ -682,8 +682,7 @@ export class GameService {
         const opponentDirection = color === Color.White ? 1 : -1;
         if (to.y === from.y + opponentDirection
                 && (to.x === from.x + 1 || to.x === from.x - 1)
-                && this.isOpponentAt(to, color)
-                ) {
+                && this.isOpponentAt(to, color)) {
             this.captureOpponent(to, color);
             pawn.next(to);
         }
@@ -787,7 +786,7 @@ export class GameService {
         const dx = Math.sign(toX - fromX);
         const dy = Math.sign(toY - fromY);
         for (let x = fromX + dx, y = fromY + dy; x !== toX || y !== toY; x += dx, y += dy) {
-            if (this.isPieceAt({ x, y }) && this.getPieceInfo({ x, y }).color === color) {
+            if (this.isPieceAt({ x, y }) && this.getPieceInfo({ x, y }).color !== color) {
                 return false;
             }
         }
@@ -806,7 +805,7 @@ export class GameService {
         const dx = Math.sign(toX - fromX);
         const dy = Math.sign(toY - fromY);
         for (let x = fromX + dx, y = fromY + dy; x !== toX || y !== toY; x += dx, y += dy) {
-            if (this.isPieceAt({ x, y }) && this.getPieceInfo({ x, y }).color === color)  {
+            if (this.isPieceAt({ x, y }) && this.getPieceInfo({ x, y }).color !== color)  {
                 return false;
             }
         }
