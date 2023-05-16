@@ -74,30 +74,31 @@ export class ChessBoardComponent implements OnInit {
 
     popupSubject: Subject<boolean> = new Subject<boolean>();
 
-     @ViewChild('popup') popup!: ElementRef;
+    @ViewChild('popup') popup!: ElementRef;
 
     constructor(private router: Router, public game: GameService) {}
 
     ngOnInit(): void {
-      this.popupSubject.subscribe((showPopup) => {
-        const popup = this.popup?.nativeElement;
-        if (popup) {
-          if (showPopup) {
-            popup.style.display = 'block';
-          } else {
-            popup.style.display = 'none';
-          }
-        }
-      });
+        this.updateIsValidMoves();
+        this.popupSubject.subscribe((showPopup) => {
+            const popup = this.popup?.nativeElement;
+            if (popup) {
+                if (showPopup) {
+                    popup.style.display = 'block';
+                } else {
+                    popup.style.display = 'none';
+                }
+            }
+        });
     }
 
     gotoClientHomePage(): void {
         this.router.navigate(['/client-homepage']);
     }
 
-     closePopup() {
-       this.showPopup = false;
-     }
+    closePopup() {
+        this.showPopup = false;
+    }
 
 
     xy(i: number): Coord {
@@ -118,10 +119,6 @@ export class ChessBoardComponent implements OnInit {
     }
 
     isValidMoves: boolean[] = [];
-
-    ngOnInit() {
-        this.updateIsValidMoves();
-    }
 
     isValidMove(pos: Coord): boolean {
         if (this.selectedPosition) {
@@ -349,7 +346,6 @@ export class ChessBoardComponent implements OnInit {
                     this.selectedPosition = undefined;
                     this.ngOnInit();
                 } else {
-
                     color === Color.Black
                         ? this.isWinForWhite = true
                         : this.isWinForBlack = true;
