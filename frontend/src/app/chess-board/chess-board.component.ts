@@ -1,7 +1,8 @@
-import { Component, ViewChild, AfterViewInit} from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ElementRef, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { Coord } from './coord'
 import { GameService } from '../game-service/game.service';
+import { Subject } from 'rxjs';
 
 enum Color {
     White = 'white',
@@ -22,7 +23,7 @@ enum PieceType {
     templateUrl: './chess-board.component.html',
     styleUrls: ['./chess-board.component.css']
 })
-export class ChessBoardComponent {
+export class ChessBoardComponent implements OnInit {
     sixtyFour = new Array(64).fill(0).map((_, i) => i);
 
     rookPosition1W$ = this.game.rookPosition1W$;
@@ -67,7 +68,37 @@ export class ChessBoardComponent {
 
     colorToMove: Color = Color.White;
 
-    constructor(private router: Router, public game: GameService) { }
+    showPopup: Boolean = false;
+    isWinForWhite: Boolean = false;
+    isWinForBlack: Boolean = false;
+
+    popupSubject: Subject<boolean> = new Subject<boolean>();
+
+     @ViewChild('popup') popup!: ElementRef;
+
+    constructor(private router: Router, public game: GameService) {}
+
+    ngOnInit(): void {
+      this.popupSubject.subscribe((showPopup) => {
+        const popup = this.popup?.nativeElement;
+        if (popup) {
+          if (showPopup) {
+            popup.style.display = 'block';
+          } else {
+            popup.style.display = 'none';
+          }
+        }
+      });
+    }
+
+    gotoClientHomePage(): void {
+        this.router.navigate(['/client-homepage']);
+    }
+
+     closePopup() {
+       this.showPopup = false;
+     }
+
 
     xy(i: number): Coord {
         return {
@@ -318,9 +349,13 @@ export class ChessBoardComponent {
                     this.selectedPosition = undefined;
                     this.ngOnInit();
                 } else {
+
                     color === Color.Black
-                        ? console.log("!!!CHECK MATE - BLACK LOST!!!")
-                        : console.log("!!!CHECK MATE - WHITE LOST!!!");
+                        ? this.isWinForWhite = true
+                        : this.isWinForBlack = true;
+
+                    this.showPopup = true;
+                    this.popupSubject.next(true);
                 }
             }
         } else {
