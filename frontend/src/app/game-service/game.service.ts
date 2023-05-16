@@ -452,6 +452,51 @@ export class GameService {
         return validMoves;
     }
 
+    getAllProtectedPositionsWithoutLettingKingInCheck(piece: { type: string, index: number, color: string }, pos: Coord) {
+        const validMoves: Coord[] = [];
+
+        for (let i = 0; i <= 7; i++) {
+            for (let j = 0; j <= 7; j++) {
+                const toX = i;
+                const toY = j;
+
+                if (!(toX === pos.x && toY === pos.y)) {
+                    switch (piece.type) {
+                        case PieceType.King:
+                            if (this.canMoveKing(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && !this.areKingsAdjacent({ x: toX, y: toY }, piece.color)) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Queen:
+                            if (this.isQueenAttackingTheKIng(piece.index, piece.color, pos, { x: toX, y: toY })) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Rook:
+                            if (this.isRookAttackingTheKing(piece.index, piece.color, pos, { x: toX, y: toY })) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Bishop:
+                            if (this.isBishopAttackingTheKing(piece.index, piece.color, pos, { x: toX, y: toY })) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
+
+        return validMoves;
+    }
+
     isNewPosOnLineOfAttack(piecePos: Coord, kingPos: Coord, newPos: Coord): boolean {
         const dx = Math.sign(kingPos.x - piecePos.x);
         const dy = Math.sign(kingPos.y - piecePos.y);
@@ -462,6 +507,49 @@ export class GameService {
         }
 
         return false;
+    }
+
+    isPosOnLineOfAttack(piecePos: Coord, kingPos: Coord, newPos: Coord): boolean {
+        const dx = kingPos.x - piecePos.x;
+        const dy = kingPos.y - piecePos.y;
+        var mx: number;
+        var my: number;
+
+        if ((kingPos.x === newPos.x && kingPos.x === piecePos.x) || (kingPos.y === newPos.y && kingPos.y === piecePos.y))
+            return true;
+
+        if (dx !== 0)
+            mx = (newPos.x - piecePos.x) / dx;
+        else
+            return false;
+
+        if (dy !== 0)
+            my = (newPos.y - piecePos.y) / dy;
+        else
+            return false;
+
+        return Math.abs(mx - my) < 1e-9 && 0 <= mx  && mx <= 1;
+    }
+
+    isOnePieceOnLineOfAttack(piecePos: Coord, kingPos: Coord, newPos: Coord): boolean {
+        let numberOfPiecesBetween = 0;
+
+        if (newPos.x === kingPos.x && newPos.y === kingPos.y) {
+            return true;
+        }
+
+        const dx = Math.sign(kingPos.x - piecePos.x);
+        const dy = Math.sign(kingPos.y - piecePos.y);
+        for (let x = piecePos.x + dx, y = piecePos.y + dy; x !== kingPos.x || y !== kingPos.y; x += dx, y += dy) {
+            if (newPos.x == x && newPos.y == y) {
+                numberOfPiecesBetween++;
+            } else
+            if (this.isPieceAt({ x, y}) && this.getPieceInfo({ x, y }).color === this.getPieceInfo({ x: newPos.x, y: newPos.y }).color) {
+                numberOfPiecesBetween++;
+            }
+        }
+
+        return numberOfPiecesBetween === 1;
     }
 
     isNewPositionSavingKingFromCheck(newPos: Coord, color: string) {
@@ -501,6 +589,27 @@ export class GameService {
         (color === Color.White)
             ? this.isWhiteKingInCheck = false
             : this.isBlackKingInCheck = false;
+    }
+
+    canMovePieceWithoutLettingKingInCheck(pos: Coord, color: string): boolean {
+        const kingPos = this.getColorKingPos(color);
+        const piecesPos = Object.values(this.currentPosition);
+
+        if (pos.x === kingPos.x && pos.y === kingPos.y)
+            return true;
+
+        for (const piecePos of piecesPos) {
+            const targetPiece = this.getPieceInfo(piecePos);
+            if (targetPiece.color !== color) {
+                if (this.getAllProtectedPositionsWithoutLettingKingInCheck(targetPiece, piecePos)
+                        .filter(vm => this.isPosOnLineOfAttack(piecePos, kingPos, vm))
+                        .some(vm => vm.x === pos.x && vm.y === pos.y && this.isOnePieceOnLineOfAttack(piecePos, kingPos, pos))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     getSafePositions(piece: { type: string, index: number, color: string }, piecePos: Coord): Coord[] {
@@ -596,6 +705,56 @@ export class GameService {
                 piece.color === Color.White ?
                     (this.isNewKingPositionNotInCheck({ x: 2, y: 0 }, Color.White) && validMoves.push({ x: 2, y: 0 })) :
                     (this.isNewKingPositionNotInCheck({ x: 2, y: 7 }, Color.Black) && validMoves.push({ x: 2, y: 7 }));
+            }
+        }
+
+        return validMoves;
+    }
+
+    getValidMovesToCaptureTargetPiece(piece: { type: string, index: number, color: string }, pos: Coord) {
+        const validMoves: Coord[] = [];
+
+        for (let i = 0; i <= 7; i++) {
+            for (let j = 0; j <= 7; j++) {
+                const toX = i;
+                const toY = j;
+
+                if (!(toX === pos.x && toY === pos.y)) {
+                    switch (piece.type) {
+                        case PieceType.Queen:
+                            if (this.canMoveQueen(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && this.isOpponentAt({ x: toX, y: toY }, piece.color)) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Rook:
+                            if (this.canMoveRook(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && this.isOpponentAt({ x: toX, y: toY }, piece.color)) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Bishop:
+                            if (this.canMoveBishop(piece.index, piece.color, pos, { x: toX, y: toY })
+                                    && this.isOpponentAt({ x: toX, y: toY }, piece.color)) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        case PieceType.Pawn:
+                            const opponentDirection = piece.color === Color.White ? 1 : -1;
+                            if ((toX === pos.x + 1 || toX === pos.x - 1)
+                                    && toY === pos.y + opponentDirection
+                                    && this.isOpponentAt({ x: toX, y: toY }, piece.color)) {
+                                validMoves.push({ x: toX, y: toY });
+                            }
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
             }
         }
 
@@ -806,6 +965,49 @@ export class GameService {
         const dy = Math.sign(toY - fromY);
         for (let x = fromX + dx, y = fromY + dy; x !== toX || y !== toY; x += dx, y += dy) {
             if (this.isPieceAt({ x, y }) && this.getPieceInfo({ x, y }).color !== color)  {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    isQueenAttackingTheKIng(index: number, color: string, from: Coord, to: Coord): boolean {
+        return this.isRookAttackingTheKing(index, color, from, to)
+            || this.isBishopAttackingTheKing(index, color, from, to);
+    }
+
+    isRookAttackingTheKing(index: number, color: string, from: Coord, to: Coord): boolean {
+        const { x: fromX, y: fromY } = from;
+        const { x: toX, y: toY } = to;
+
+        if (fromX !== toX && fromY !== toY) {
+            return false;
+        }
+
+        const dx = Math.sign(toX - fromX);
+        const dy = Math.sign(toY - fromY);
+        for (let x = fromX + dx, y = fromY + dy; x !== toX || y !== toY; x += dx, y += dy) {
+            if (this.isPieceAt({ x, y }) && this.getPieceInfo({ x, y }).color === color) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    isBishopAttackingTheKing(index: number, color: string, from: Coord, to: Coord): boolean {
+        const { x: fromX, y: fromY } = from;
+        const { x: toX, y: toY } = to;
+
+        if (Math.abs(toX - fromX) !== Math.abs(toY - fromY)) {
+            return false;
+        }
+
+        const dx = Math.sign(toX - fromX);
+        const dy = Math.sign(toY - fromY);
+        for (let x = fromX + dx, y = fromY + dy; x !== toX || y !== toY; x += dx, y += dy) {
+            if (this.isPieceAt({ x, y }) && this.getPieceInfo({ x, y }).color === color)  {
                 return false;
             }
         }

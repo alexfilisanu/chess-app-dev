@@ -86,6 +86,12 @@ export class ChessBoardComponent {
             && this.selectedPosition.y === pos.y;
     }
 
+    isValidMoves: boolean[] = [];
+
+    ngOnInit() {
+        this.updateIsValidMoves();
+    }
+
     isValidMove(pos: Coord): boolean {
         if (this.selectedPosition) {
             const pieceInfo = this.game.getPieceInfo(this.selectedPosition);
@@ -95,11 +101,24 @@ export class ChessBoardComponent {
 
                 this.validMoves = isKingInCheck
                     ? this.game.getSafePositions(pieceInfo, this.selectedPosition)
-                    : this.game.getValidMoves(pieceInfo, this.selectedPosition);
+                    : this.game.canMovePieceWithoutLettingKingInCheck(this.selectedPosition, pieceInfo.color)
+                        ? this.game.getValidMoves(pieceInfo, this.selectedPosition)
+                        : this.game.getValidMovesToCaptureTargetPiece(pieceInfo, this.selectedPosition);
             }
         }
 
         return this.validMoves.some(vm => vm.x === pos.x && vm.y === pos.y);
+    }
+
+    updateIsValidMoves() {
+        const isValidMoves: boolean[] = [];
+        for (let i = 0; i < 64; i++) {
+            const pos = this.xy(i);
+
+            isValidMoves[i] = this.isValidMove(pos);
+        }
+
+        this.isValidMoves = isValidMoves;
     }
 
     isColorToMove(color: string): boolean {
@@ -121,91 +140,139 @@ export class ChessBoardComponent {
 
             if (!isKingInCheck) {
                 if (!this.game.isPieceAt(pos) || this.game.isOpponentAt(pos, color)) {
-                    switch(type) {
-                        case PieceType.King:
-                            if (this.game.canMoveKing(index, color, this.selectedPosition, pos)
-                                    && this.isColorToMove(color)
-                                    && this.game.isNewKingPositionNotInCheck(pos, color)
-                                    && !this.game.areKingsAdjacent(pos, color)) {
-                                this.game.moveKing(index, color, this.selectedPosition, pos);
-                                this.game.kingHasMoved(color);
-                                this.game.setOppositeColorKingInCheck(color);
-                                this.changeTurns();
-                            } else if (this.game.isShortCastlingAvailable(color)
-                                        && this.game.isShortCastlingRequired(color, pos)
+                    if (this.game.canMovePieceWithoutLettingKingInCheck(this.selectedPosition, color)) {
+                        switch(type) {
+                            case PieceType.King:
+                                if (this.game.canMoveKing(index, color, this.selectedPosition, pos)
                                         && this.isColorToMove(color)
-                                        && this.game.isNewKingPositionNotInCheck(pos, color)) {
-                                this.game.moveShortCastling(color);
-                                this.game.kingHasMoved(color);
-                                this.game.rookHasMoved(2, color);
-                                this.game.setOppositeColorKingInCheck(color);
-                                this.changeTurns();
-                            } else if (this.game.isLongCastlingAvailable(color)
-                                        && this.game.isLongCastlingRequired(color, pos)
-                                        && this.isColorToMove(color)
-                                        && this.game.isNewKingPositionNotInCheck(pos, color)) {
-                                this.game.moveLongCastling(color);
-                                this.game.kingHasMoved(color);
-                                this.game.rookHasMoved(1, color);
-                                this.game.setOppositeColorKingInCheck(color);
-                                this.changeTurns();
-                            }
-                            break;
+                                        && this.game.isNewKingPositionNotInCheck(pos, color)
+                                        && !this.game.areKingsAdjacent(pos, color)) {
+                                    this.game.moveKing(index, color, this.selectedPosition, pos);
+                                    this.game.kingHasMoved(color);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                } else if (this.game.isShortCastlingAvailable(color)
+                                            && this.game.isShortCastlingRequired(color, pos)
+                                            && this.isColorToMove(color)
+                                            && this.game.isNewKingPositionNotInCheck(pos, color)) {
+                                    this.game.moveShortCastling(color);
+                                    this.game.kingHasMoved(color);
+                                    this.game.rookHasMoved(2, color);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                } else if (this.game.isLongCastlingAvailable(color)
+                                            && this.game.isLongCastlingRequired(color, pos)
+                                            && this.isColorToMove(color)
+                                            && this.game.isNewKingPositionNotInCheck(pos, color)) {
+                                    this.game.moveLongCastling(color);
+                                    this.game.kingHasMoved(color);
+                                    this.game.rookHasMoved(1, color);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                }
+                                break;
 
-                        case PieceType.Queen:
-                            if (this.game.canMoveQueen(index, color, this.selectedPosition, pos)
-                                    && this.isColorToMove(color)) {
-                                this.game.moveQueen(index, color, this.selectedPosition, pos);
-                                this.game.setOppositeColorKingInCheck(color);
-                                this.changeTurns();
-                            }
-                            break;
+                            case PieceType.Queen:
+                                if (this.game.canMoveQueen(index, color, this.selectedPosition, pos)
+                                        && this.isColorToMove(color)) {
+                                    this.game.moveQueen(index, color, this.selectedPosition, pos);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                }
+                                break;
 
-                        case PieceType.Rook:
-                            if (this.game.canMoveRook(index, color, this.selectedPosition, pos)
-                                    && this.isColorToMove(color)) {
-                                this.game.moveRook(index, color, this.selectedPosition, pos);
-                                this.game.rookHasMoved(index, color);
-                                this.game.setOppositeColorKingInCheck(color);
-                                this.changeTurns();
-                            }
-                            break;
+                            case PieceType.Rook:
+                                if (this.game.canMoveRook(index, color, this.selectedPosition, pos)
+                                        && this.isColorToMove(color)) {
+                                    this.game.moveRook(index, color, this.selectedPosition, pos);
+                                    this.game.rookHasMoved(index, color);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                }
+                                break;
 
-                        case PieceType.Bishop:
-                            if (this.game.canMoveBishop(index, color, this.selectedPosition, pos)
-                                    && this.isColorToMove(color)) {
-                                this.game.moveBishop(index, color, this.selectedPosition, pos);
-                                this.game.setOppositeColorKingInCheck(color);
-                                this.changeTurns();
-                            }
-                            break;
+                            case PieceType.Bishop:
+                                if (this.game.canMoveBishop(index, color, this.selectedPosition, pos)
+                                        && this.isColorToMove(color)) {
+                                    this.game.moveBishop(index, color, this.selectedPosition, pos);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                }
+                                break;
 
-                        case PieceType.Knight:
-                            if (this.game.canMoveKnight(index, color, this.selectedPosition, pos)
-                                    && this.isColorToMove(color)) {
-                                this.game.moveKnight(index, color, this.selectedPosition, pos);
-                                this.game.setOppositeColorKingInCheck(color);
-                                this.changeTurns();
-                            }
-                            break;
+                            case PieceType.Knight:
+                                if (this.game.canMoveKnight(index, color, this.selectedPosition, pos)
+                                        && this.isColorToMove(color)) {
+                                    this.game.moveKnight(index, color, this.selectedPosition, pos);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                }
+                                break;
 
-                        case PieceType.Pawn:
-                            if ((this.game.canMovePawn(index, color, this.selectedPosition, pos)
-                                    || (this.game.isOpponentAt(pos, color)
-                                        && (this.selectedPosition.x == pos.x + 1 || this.selectedPosition.x == pos.x - 1)))
-                                    && this.isColorToMove(color)) {
-                                this.game.movePawn(index, color, this.selectedPosition, pos);
-                                this.game.setOppositeColorKingInCheck(color);
-                                this.changeTurns();
-                            }
-                            break;
+                            case PieceType.Pawn:
+                                if ((this.game.canMovePawn(index, color, this.selectedPosition, pos)
+                                        || (this.game.isOpponentAt(pos, color)
+                                            && (this.selectedPosition.x == pos.x + 1 || this.selectedPosition.x == pos.x - 1)))
+                                        && this.isColorToMove(color)) {
+                                    this.game.movePawn(index, color, this.selectedPosition, pos);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                }
+                                break;
 
-                        default:
-                            break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        switch (type) {
+                            case PieceType.Queen:
+                                if (this.game.canMoveQueen(index, color, this.selectedPosition, pos)
+                                        && this.game.isOpponentAt(pos, color)
+                                        && this.isColorToMove(color)) {
+                                    this.game.moveQueen(index, color, this.selectedPosition, pos);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                }
+                                break;
+
+                            case PieceType.Rook:
+                                if (this.game.canMoveRook(index, color, this.selectedPosition, pos)
+                                        && this.game.isOpponentAt(pos, color)
+                                        && this.isColorToMove(color)) {
+                                    this.game.moveRook(index, color, this.selectedPosition, pos);
+                                    this.game.rookHasMoved(index, color);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                }
+                                break;
+
+                            case PieceType.Bishop:
+                                if (this.game.canMoveBishop(index, color, this.selectedPosition, pos)
+                                        && this.game.isOpponentAt(pos, color)
+                                        && this.isColorToMove(color)) {
+                                    this.game.moveBishop(index, color, this.selectedPosition, pos);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                }
+                                break;
+
+                            case PieceType.Pawn:
+                                if ((this.selectedPosition.x == pos.x + 1 || this.selectedPosition.x == pos.x - 1)
+                                        && this.isColorToMove(color)) {
+                                    this.game.movePawn(index, color, this.selectedPosition, pos);
+                                    this.game.setOppositeColorKingInCheck(color);
+                                    this.changeTurns();
+                                }
+                                break;
+
+                            default:
+                                break;
+                        }
                     }
 
                     this.validMoves = [];
                     this.selectedPosition = undefined;
+                    this.ngOnInit();
                 }
             } else {
                 if (!this.game.isCheckmate(color)) {
@@ -249,6 +316,7 @@ export class ChessBoardComponent {
                     }
                     this.validMoves = [];
                     this.selectedPosition = undefined;
+                    this.ngOnInit();
                 } else {
                     color === Color.Black
                         ? console.log("!!!CHECK MATE - BLACK LOST!!!")
@@ -257,6 +325,7 @@ export class ChessBoardComponent {
             }
         } else {
             this.selectedPosition = pos;
+            this.ngOnInit();
         }
     }
 }
