@@ -6,7 +6,6 @@ import { PlayerRegisterFormComponent } from './player-register-form/player-regis
 import { RegisterSuccessfulComponent } from './register-successful/register-successful.component';
 import { ClientHomepageComponent } from './client-homepage/client-homepage.component';
 import { ChessBoardComponent } from './chess-board/chess-board.component';
-import { MyComponent } from './mycomponent/mycomponent.component'
 
 const routes: Routes = [
     { path: '', component: PlayerListComponent },
@@ -15,7 +14,6 @@ const routes: Routes = [
     { path: 'register-successful', component: RegisterSuccessfulComponent },
     { path: 'client-homepage', component: ClientHomepageComponent},
     { path: 'chess-board', component: ChessBoardComponent},
-    { path: 'mycomponent', component: MyComponent}
 ];
 
 @NgModule({

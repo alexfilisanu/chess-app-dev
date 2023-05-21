@@ -23,7 +23,6 @@ import { BishopComponent } from './bishop/bishop.component';
 import { QueenComponent } from './queen/queen.component';
 import { KingComponent } from './king/king.component';
 import { WebSocketsService } from './websockets-service/websockets.service';
-import { MyComponent } from './mycomponent/mycomponent.component';
 
 @NgModule({
     declarations: [
@@ -41,7 +40,6 @@ import { MyComponent } from './mycomponent/mycomponent.component';
         BishopComponent,
         QueenComponent,
         KingComponent,
-        MyComponent,
     ],
     imports: [
         BrowserModule,

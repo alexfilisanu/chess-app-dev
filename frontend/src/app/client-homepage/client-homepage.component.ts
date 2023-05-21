@@ -7,6 +7,18 @@ import { Player } from '../player';
 import { Game } from '../game';
 import { GameService } from '../game-service/game.service';
 
+enum ResultMessage {
+    WinPlayer1 = 'Win player1',
+    WinPlayer2 = 'Win player2',
+    Draw = 'Draw',
+    StillPlaying = 'Still playing'
+}
+
+enum GameType {
+    Local = 'Local',
+    Online = 'Online'
+}
+
 @Component({
   selector: 'app-client-homepage',
   templateUrl: './client-homepage.component.html',
@@ -225,11 +237,11 @@ export class ClientHomepageComponent implements OnInit {
   }
 
   startLocalGame(): void {
-    this.gameService.game.type = "local";
-    this.gameService.game.result = "still playing";
+    this.gameService.game.type = GameType.Local;
+    this.gameService.game.result = ResultMessage.StillPlaying;
     this.gameService.game.playerId1 = this.player.id ?? 0;
     this.gameService.game.playerId2 = this.player.id ?? 0;
-    this.gameService.startLocalGame(this.gameService.game).subscribe(
+    this.gameService.startLocalGame().subscribe(
         result => {
             this.getCurrentLocalGame();
             this.router.navigate(['/chess-board']);
