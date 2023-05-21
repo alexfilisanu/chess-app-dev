@@ -4,6 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Player } from '../player';
+import { Game } from '../game';
+import { GameService } from '../game-service/game.service';
 
 @Component({
   selector: 'app-client-homepage',
@@ -49,7 +51,9 @@ export class ClientHomepageComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private playerService: PlayerServiceService) { }
+              private playerService: PlayerServiceService,
+              private gameService: GameService) {
+  }
 
   ngOnInit(): void {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -220,7 +224,23 @@ export class ClientHomepageComponent implements OnInit {
     });
   }
 
-  gotoChessBoard(): void {
-    this.router.navigate(['/chess-board']);
+  startLocalGame(): void {
+    this.gameService.game.type = "local";
+    this.gameService.game.result = "still playing";
+    this.gameService.game.playerId1 = this.player.id ?? 0;
+    this.gameService.game.playerId2 = this.player.id ?? 0;
+    this.gameService.startLocalGame(this.gameService.game).subscribe(
+        result => {
+            this.getCurrentLocalGame();
+            this.router.navigate(['/chess-board']);
+        }
+    );
+  }
+
+  getCurrentLocalGame(): void {
+    const playerId = this.player.id ?? 0;
+    this.gameService.getCurrentLocalGame(playerId, playerId).subscribe(
+        result => this.gameService.game = result
+    );
   }
 }
