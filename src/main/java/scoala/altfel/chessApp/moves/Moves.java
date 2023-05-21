@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "moves")
-@IdClass(MoveId.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,15 +16,16 @@ public class Moves {
 
 	@Id
 	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Id
-	@Column(name = "gameId")
-	private Long gameId;
+	@Column(name = "gameid")
+	private Long gameid;
 
-	@Column(name = "playerId")
-	private Long playerId;
+	@Column(name = "playerid")
+	private Long playerid;
 
 	@Column(name = "moves")
 	private String moves;
 }
+

@@ -1042,10 +1042,9 @@ export class GameService {
         );
     }
 
-
-    public startLocalGame(newGame: Game) {
+    public startLocalGame() {
         const url = `${this.baseUrl}/new`;
-    	return this.http.post<Game>(url, newGame).pipe(
+    	return this.http.post<Game>(url, this.game).pipe(
             catchError((error: HttpErrorResponse, caught: Observable<any>) => {
                 if (!(error.error instanceof ErrorEvent)) {
     			    return throwError(error.error);

@@ -105,13 +105,15 @@ export class ChessBoardComponent implements OnInit {
     }
 
     sendMessage(message: any): void {
-        this.webSocketService.sendMessage(message);
+        const gameid = this.gameService.game.id ?? 0;
+        const playerid = this.gameService.game.playerId1 ?? 0;
+        const messageToSend = {
+            message,
+            gameid,
+            playerid
+        };
+        this.webSocketService.sendMessage(messageToSend);
     }
-
-//     gotoClientHomePage(): void {
-//         this.endLocalGame();
-//         this.router.navigate(['/client-homepage']);
-//     }
 
     closePopup() {
         this.endLocalGame();
@@ -196,6 +198,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.kingHasMoved(color);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 } else if (this.gameService.isShortCastlingAvailable(color)
                                             && this.gameService.isShortCastlingRequired(color, pos)
                                             && this.isColorToMove(color)
@@ -205,6 +208,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.rookHasMoved(2, color);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 } else if (this.gameService.isLongCastlingAvailable(color)
                                             && this.gameService.isLongCastlingRequired(color, pos)
                                             && this.isColorToMove(color)
@@ -214,6 +218,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.rookHasMoved(1, color);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 }
                                 break;
 
@@ -223,6 +228,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.moveQueen(index, color, this.selectedPosition, pos);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 }
                                 break;
 
@@ -233,6 +239,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.rookHasMoved(index, color);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 }
                                 break;
 
@@ -242,6 +249,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.moveBishop(index, color, this.selectedPosition, pos);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 }
                                 break;
 
@@ -251,6 +259,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.moveKnight(index, color, this.selectedPosition, pos);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 }
                                 break;
 
@@ -262,6 +271,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.movePawn(index, color, this.selectedPosition, pos);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 }
                                 break;
 
@@ -277,6 +287,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.moveQueen(index, color, this.selectedPosition, pos);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 }
                                 break;
 
@@ -288,6 +299,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.rookHasMoved(index, color);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 }
                                 break;
 
@@ -298,6 +310,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.moveBishop(index, color, this.selectedPosition, pos);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 }
                                 break;
 
@@ -307,6 +320,7 @@ export class ChessBoardComponent implements OnInit {
                                     this.gameService.movePawn(index, color, this.selectedPosition, pos);
                                     this.gameService.setOppositeColorKingInCheck(color);
                                     this.changeTurns();
+                                    this.sendMessage(this.gameService.currentPosition);
                                 }
                                 break;
 
@@ -357,6 +371,7 @@ export class ChessBoardComponent implements OnInit {
 
                             this.gameService.setOppositeColorKingInCheck(color);
                             this.changeTurns();
+                            this.sendMessage(this.gameService.currentPosition);
                         }
                     }
                     this.validMoves = [];
