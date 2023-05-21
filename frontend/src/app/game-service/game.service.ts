@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Coord } from '../chess-board/coord';
+import { HttpClient } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Player } from '../player';
+import { Game } from '../game';
 
 enum Color {
     White = 'white',
@@ -20,6 +27,8 @@ enum PieceType {
     providedIn: 'root'
 })
 export class GameService {
+    baseUrl: string;
+
     rookPosition1W$ = new BehaviorSubject<Coord>({ x: 0, y: 0 });
     knightPosition1W$ = new BehaviorSubject<Coord>({ x: 1, y: 0 });
     bishopPosition1W$ = new BehaviorSubject<Coord>({ x: 2, y: 0 });
@@ -96,7 +105,9 @@ export class GameService {
             pawn8B: { x: 7, y: 6 }
         };
 
-    constructor() {
+    constructor(private http: HttpClient) {
+        this.baseUrl = 'http://localhost:8090/api/v1/chess-app/local-game';
+
         this.knightPosition1W$.subscribe(np => {
             this.currentPosition.knight1W = np;
         })
@@ -193,6 +204,7 @@ export class GameService {
         this.pawnPosition8B$.subscribe(pp => {
             this.currentPosition.pawn8B = pp;
         })
+        this.game = new Game();
     }
 
     isWhiteKingInCheck: boolean = false;
@@ -1014,4 +1026,44 @@ export class GameService {
 
         return true;
     }
+
+    // local game stored in DB
+    game: Game = {};
+
+    public getCurrentLocalGame(playerId1: number, playerId2: number): Observable<Game> {
+        const url = `${this.baseUrl}/game-by-player-id/${playerId1}/${playerId2}`;
+        return this.http.get<Game>(url).pipe(
+            catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                if (!(error.error instanceof ErrorEvent)) {
+                    return throwError(error.error);
+                }
+                return caught;
+            })
+        );
+    }
+
+
+    public startLocalGame(newGame: Game) {
+        const url = `${this.baseUrl}/new`;
+    	return this.http.post<Game>(url, newGame).pipe(
+            catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                if (!(error.error instanceof ErrorEvent)) {
+    			    return throwError(error.error);
+    			}
+    		    return caught;
+    	    })
+        );
+    }
+
+    public endLocalGame(result: string, gameId: number) {
+        const url = `${this.baseUrl}/${gameId}/result?result=${result}`;
+        return this.http.put<Game>(url, result).pipe(
+            catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                if (!(error.error instanceof ErrorEvent)) {
+                    return throwError(error.error);
+                }
+            return caught;
+        }));
+    }
+
 }

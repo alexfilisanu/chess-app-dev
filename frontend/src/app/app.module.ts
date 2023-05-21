@@ -22,7 +22,8 @@ import { RookComponent } from './rook/rook.component';
 import { BishopComponent } from './bishop/bishop.component';
 import { QueenComponent } from './queen/queen.component';
 import { KingComponent } from './king/king.component';
-
+import { WebSocketsService } from './websockets-service/websockets.service';
+import { MyComponent } from './mycomponent/mycomponent.component';
 
 @NgModule({
     declarations: [
@@ -40,6 +41,7 @@ import { KingComponent } from './king/king.component';
         BishopComponent,
         QueenComponent,
         KingComponent,
+        MyComponent,
     ],
     imports: [
         BrowserModule,
@@ -53,6 +55,7 @@ import { KingComponent } from './king/king.component';
     providers: [
         PlayerServiceService,
         GameService,
+        WebSocketsService
         ],
     bootstrap: [AppComponent]
 })
