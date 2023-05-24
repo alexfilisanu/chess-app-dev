@@ -2,7 +2,6 @@ package scoala.altfel.chessApp.game;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import scoala.altfel.chessApp.player.PlayerDTO;
 
 @RestController
 @RequestMapping("/api/v1/chess-app")
