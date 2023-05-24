@@ -244,6 +244,7 @@ export class ClientHomepageComponent implements OnInit {
     this.gameService.startLocalGame().subscribe(
         result => {
             this.getCurrentLocalGame();
+            this.gameService.webSocketService.connect();
             this.router.navigate(['/chess-board']);
         }
     );
@@ -252,7 +253,12 @@ export class ClientHomepageComponent implements OnInit {
   getCurrentLocalGame(): void {
     const playerId = this.player.id ?? 0;
     this.gameService.getCurrentLocalGame(playerId, playerId).subscribe(
-        result => this.gameService.game = result
+      result => {
+        this.gameService.game = result;
+        localStorage.setItem('currentGameId', this.gameService.game.id?.toString() ?? '0');
+        localStorage.setItem('currentPlayerId', this.gameService.game.playerId1?.toString() ?? '0');
+        localStorage.setItem('currentPositions', JSON.stringify(this.gameService.currentPosition));
+      }
     );
   }
 }

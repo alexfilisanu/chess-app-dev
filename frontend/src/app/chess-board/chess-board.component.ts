@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Coord } from './coord'
 import { GameService } from '../game-service/game.service';
 import { PlayerServiceService } from '../player-service/player-service.service';
-import { WebSocketsService } from '../websockets-service/websockets.service';
+// import { WebSocketsService } from '../websockets-service/websockets.service';
 import { Subject } from 'rxjs';
 import { Game } from '../game';
 
@@ -86,11 +86,24 @@ export class ChessBoardComponent implements OnInit {
 
     @ViewChild('popup') popup!: ElementRef;
 
-    constructor(private router: Router, public gameService: GameService, public webSocketService: WebSocketsService) {}
+    constructor(private router: Router, public gameService: GameService) { }
 
     game: Game = new Game();
 
     ngOnInit(): void {
+        this.gameService.webSocketService.getMessage().subscribe((message: any) => {
+//             console.log("la refreshhh", this.gameService.getCurrentPosition());
+            const actualMessage = message.message;
+            const gameid = actualMessage.gameid;
+            const playerid = actualMessage.playerid;
+            const moves = actualMessage.moves;
+           console.log("parsare jsoon JSON", JSON.parse(moves));
+//             localStorage.setItem('positions', moves);
+//             const positions = localStorage.getItem('positions');
+//             if (positions !== null) {
+//               Object.assign(this.gameService.currentPosition, JSON.parse(positions));
+//             }
+        });
         this.updateIsValidMoves();
         this.popupSubject.subscribe((showPopup) => {
             const popup = this.popup?.nativeElement;
@@ -105,14 +118,15 @@ export class ChessBoardComponent implements OnInit {
     }
 
     sendMessage(message: any): void {
-        const gameid = this.gameService.game.id ?? 0;
-        const playerid = this.gameService.game.playerId1 ?? 0;
+        const gameid = Number(localStorage.getItem('currentGameId')) || 0;
+        const playerid = Number(localStorage.getItem('currentPlayerId')) || 0;
         const messageToSend = {
             message,
             gameid,
             playerid
         };
-        this.webSocketService.sendMessage(messageToSend);
+
+        this.gameService.webSocketService.sendMessage(messageToSend);
     }
 
     closePopup() {
@@ -393,12 +407,16 @@ export class ChessBoardComponent implements OnInit {
     }
 
     endLocalGame(): void {
-        const gameId = this.gameService.game.id ?? 0;
-        const result = this.isWinForWhite
-            ? ResultMessage.WinPlayer1
-            : ResultMessage.WinPlayer2;
-        this.gameService.endLocalGame(result, gameId).subscribe(data => {
-            this.game = data
-        });
+      const gameId = Number(localStorage.getItem('currentGameId')) || 0;
+      const result = this.isWinForWhite
+        ? ResultMessage.WinPlayer1
+        : ResultMessage.WinPlayer2;
+      this.gameService.endLocalGame(result, gameId).subscribe(data => {
+        this.game = data;
+        localStorage.removeItem('currentGameId');
+        localStorage.removeItem('currentPayerId');
+        localStorage.removeItem('currentPositions');
+        this.gameService.webSocketService.disconnect();
+      });
     }
 }
