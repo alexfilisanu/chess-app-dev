@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="JpbDataSourceConfig">
-    <data-sources>
-      <data-source id="294f3cc5-f7d5-49d4-aa8f-dcfcdc8308be" name="chess-app" url="jdbc:postgresql://localhost/chess-app" driverClass="org.postgresql.Driver" />
-    </data-sources>
-  </component>
-</project>
