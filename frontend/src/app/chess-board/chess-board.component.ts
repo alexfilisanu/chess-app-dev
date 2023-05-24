@@ -36,39 +36,39 @@ enum ResultMessage {
 export class ChessBoardComponent implements OnInit {
     sixtyFour = new Array(64).fill(0).map((_, i) => i);
 
-    rookPosition1W$ = this.gameService.rookPosition1W$;
-    knightPosition1W$ = this.gameService.knightPosition1W$;
-    bishopPosition1W$ = this.gameService.bishopPosition1W$;
-    queenPositionW$ = this.gameService.queenPositionW$;
-    kingPositionW$ = this.gameService.kingPositionW$;
-    bishopPosition2W$ = this.gameService.bishopPosition2W$;
-    knightPosition2W$ = this.gameService.knightPosition2W$;
-    rookPosition2W$ = this.gameService.rookPosition2W$;
-    pawnPosition1W$ = this.gameService.pawnPosition1W$;
-    pawnPosition2W$ = this.gameService.pawnPosition2W$;
-    pawnPosition3W$ = this.gameService.pawnPosition3W$;
-    pawnPosition4W$ = this.gameService.pawnPosition4W$;
-    pawnPosition5W$ = this.gameService.pawnPosition5W$;
-    pawnPosition6W$ = this.gameService.pawnPosition6W$;
-    pawnPosition7W$ = this.gameService.pawnPosition7W$;
-    pawnPosition8W$ = this.gameService.pawnPosition8W$;
+    rook1W = this.gameService.rookPosition1W$;
+    knight1W = this.gameService.knightPosition1W$;
+    bishop1W = this.gameService.bishopPosition1W$;
+    queenW = this.gameService.queenPositionW$;
+    kingW = this.gameService.kingPositionW$;
+    bishop2W = this.gameService.bishopPosition2W$;
+    knight2W = this.gameService.knightPosition2W$;
+    rook2W = this.gameService.rookPosition2W$;
+    pawn1W = this.gameService.pawnPosition1W$;
+    pawn2W = this.gameService.pawnPosition2W$;
+    pawn3W = this.gameService.pawnPosition3W$;
+    pawn4W = this.gameService.pawnPosition4W$;
+    pawn5W = this.gameService.pawnPosition5W$;
+    pawn6W = this.gameService.pawnPosition6W$;
+    pawn7W = this.gameService.pawnPosition7W$;
+    pawn8W = this.gameService.pawnPosition8W$;
 
-    rookPosition1B$ = this.gameService.rookPosition1B$;
-    knightPosition1B$ = this.gameService.knightPosition1B$;
-    bishopPosition1B$ = this.gameService.bishopPosition1B$;
-    queenPositionB$ = this.gameService.queenPositionB$;
-    kingPositionB$ = this.gameService.kingPositionB$;
-    bishopPosition2B$ = this.gameService.bishopPosition2B$;
-    knightPosition2B$ = this.gameService.knightPosition2B$;
-    rookPosition2B$ = this.gameService.rookPosition2B$;
-    pawnPosition1B$ = this.gameService.pawnPosition1B$;
-    pawnPosition2B$ = this.gameService.pawnPosition2B$;
-    pawnPosition3B$ = this.gameService.pawnPosition3B$;
-    pawnPosition4B$ = this.gameService.pawnPosition4B$;
-    pawnPosition5B$ = this.gameService.pawnPosition5B$;
-    pawnPosition6B$ = this.gameService.pawnPosition6B$;
-    pawnPosition7B$ = this.gameService.pawnPosition7B$;
-    pawnPosition8B$ = this.gameService.pawnPosition8B$;
+    rook1B = this.gameService.rookPosition1B$;
+    knight1B = this.gameService.knightPosition1B$;
+    bishop1B = this.gameService.bishopPosition1B$;
+    queenB = this.gameService.queenPositionB$;
+    kingB = this.gameService.kingPositionB$;
+    bishop2B = this.gameService.bishopPosition2B$;
+    knight2B = this.gameService.knightPosition2B$;
+    rook2B = this.gameService.rookPosition2B$;
+    pawn1B = this.gameService.pawnPosition1B$;
+    pawn2B = this.gameService.pawnPosition2B$;
+    pawn3B = this.gameService.pawnPosition3B$;
+    pawn4B = this.gameService.pawnPosition4B$;
+    pawn5B = this.gameService.pawnPosition5B$;
+    pawn6B = this.gameService.pawnPosition6B$;
+    pawn7B = this.gameService.pawnPosition7B$;
+    pawn8B = this.gameService.pawnPosition8B$;
 
     selectedPosition: Coord | undefined;
 
@@ -91,19 +91,30 @@ export class ChessBoardComponent implements OnInit {
     game: Game = new Game();
 
     ngOnInit(): void {
+        this.gameService.webSocketService.connect();
         this.gameService.webSocketService.getMessage().subscribe((message: any) => {
-//             console.log("la refreshhh", this.gameService.getCurrentPosition());
             const actualMessage = message.message;
             const gameid = actualMessage.gameid;
             const playerid = actualMessage.playerid;
             const moves = actualMessage.moves;
-           console.log("parsare jsoon JSON", JSON.parse(moves));
-//             localStorage.setItem('positions', moves);
-//             const positions = localStorage.getItem('positions');
-//             if (positions !== null) {
-//               Object.assign(this.gameService.currentPosition, JSON.parse(positions));
-//             }
+
+            localStorage.setItem('currentPositions', moves);
+            // save to move player
+
+            const pieces = JSON.parse(moves);
+            for (const key in pieces) {
+              (this as any)[key].next(pieces[key]);
+            }
         });
+
+        const positions = localStorage.getItem('currentPositions');
+        if (positions !== null) {
+            const pieces = JSON.parse(positions);
+            for (const key in pieces) {
+              (this as any)[key].next(pieces[key]);
+            }
+        }
+
         this.updateIsValidMoves();
         this.popupSubject.subscribe((showPopup) => {
             const popup = this.popup?.nativeElement;
@@ -123,7 +134,7 @@ export class ChessBoardComponent implements OnInit {
         const messageToSend = {
             message,
             gameid,
-            playerid
+            playerid,
         };
 
         this.gameService.webSocketService.sendMessage(messageToSend);

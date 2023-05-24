@@ -62,6 +62,10 @@ export class WebSocketsService {
   }
 
   public connect(): void {
+    if (this.webSocket) {
+      return;
+    }
+
     this.webSocket = new WebSocket(this.socketUrl);
     this.webSocket.addEventListener('open', (event) => {
       console.log('WebSocket connection established');
@@ -84,8 +88,10 @@ export class WebSocketsService {
   }
 
   public sendMessage(message: any): void {
-    if (this.webSocket.readyState === WebSocket.OPEN) {
+    if (this.webSocket && this.webSocket.readyState === WebSocket.OPEN) {
       this.webSocket.send(JSON.stringify(message));
+    } else {
+      console.log('socket closed!');
     }
   }
 
