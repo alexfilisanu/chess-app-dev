@@ -18,6 +18,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(webSocketHandler, "/websocket-endpoint")
-				.setAllowedOrigins("*"); // Adjust the allowed origins as per your requirements
+				.setAllowedOrigins("*");
 	}
 }

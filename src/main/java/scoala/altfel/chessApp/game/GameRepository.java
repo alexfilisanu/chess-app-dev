@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface GameRepository extends JpaRepository<Game, Long> {
-	@Query("SELECT g FROM Game g WHERE g.playerId1 = :playerId1 AND g.playerId2 = :playerId2 AND g.result = 'still playing'")
+	@Query("SELECT g FROM Game g WHERE g.playerId1 = :playerId1 AND g.playerId2 = :playerId2 AND g.result = 'Still playing'")
 	Optional<Game> findCurrentGame(@Param("playerId1") Long playerId1,
 									 @Param("playerId2") Long playerId2);
 }

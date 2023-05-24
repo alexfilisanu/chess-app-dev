@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Coord } from '../chess-board/coord';
 import { HttpClient } from '@angular/common/http';
@@ -8,6 +8,7 @@ import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Player } from '../player';
 import { Game } from '../game';
+import { WebSocketsService } from '../websockets-service/websockets.service';
 
 enum Color {
     White = 'white',
@@ -105,8 +106,11 @@ export class GameService {
             pawn8B: { x: 7, y: 6 }
         };
 
-    constructor(private http: HttpClient) {
+    public webSocketService: WebSocketsService;
+
+    constructor(private http: HttpClient, webSocketService: WebSocketsService) {
         this.baseUrl = 'http://localhost:8090/api/v1/chess-app/local-game';
+        this.webSocketService = webSocketService;
 
         this.knightPosition1W$.subscribe(np => {
             this.currentPosition.knight1W = np;
@@ -216,6 +220,15 @@ export class GameService {
     isFirstMoveKingB: boolean = true;
     isFirstMoveRook1B: boolean = true;
     isFirstMoveRook2B: boolean = true;
+
+    getCurrentPosition() {
+        const positions = localStorage.getItem('currentPositions');
+        console.log("inainte de parse: ", localStorage.getItem('currentPositions'));
+
+        return positions !== null
+            ? JSON.parse(positions)
+            : this.currentPosition;
+    }
 
     isColorKingInCheck(color: string): boolean {
         return color === Color.White
@@ -1042,10 +1055,9 @@ export class GameService {
         );
     }
 
-
-    public startLocalGame(newGame: Game) {
+    public startLocalGame() {
         const url = `${this.baseUrl}/new`;
-    	return this.http.post<Game>(url, newGame).pipe(
+    	return this.http.post<Game>(url, this.game).pipe(
             catchError((error: HttpErrorResponse, caught: Observable<any>) => {
                 if (!(error.error instanceof ErrorEvent)) {
     			    return throwError(error.error);
@@ -1065,5 +1077,4 @@ export class GameService {
             return caught;
         }));
     }
-
 }
