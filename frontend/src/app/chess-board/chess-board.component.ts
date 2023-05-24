@@ -3,7 +3,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Coord } from './coord'
 import { GameService } from '../game-service/game.service';
 import { PlayerServiceService } from '../player-service/player-service.service';
-// import { WebSocketsService } from '../websockets-service/websockets.service';
 import { Subject } from 'rxjs';
 import { Game } from '../game';
 
@@ -86,7 +85,7 @@ export class ChessBoardComponent implements OnInit {
 
     @ViewChild('popup') popup!: ElementRef;
 
-    constructor(private router: Router, public gameService: GameService) { }
+    constructor(private route: ActivatedRoute, private router: Router, public gameService: GameService) { }
 
     game: Game = new Game();
 
@@ -136,6 +135,7 @@ export class ChessBoardComponent implements OnInit {
             gameid,
             playerid,
         };
+        // sa punem tag pt joc online
 
         this.gameService.webSocketService.sendMessage(messageToSend);
     }

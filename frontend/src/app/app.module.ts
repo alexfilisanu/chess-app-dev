@@ -23,6 +23,7 @@ import { BishopComponent } from './bishop/bishop.component';
 import { QueenComponent } from './queen/queen.component';
 import { KingComponent } from './king/king.component';
 import { WebSocketsService } from './websockets-service/websockets.service';
+import { AppConfig } from './app.config';
 
 @NgModule({
     declarations: [
@@ -53,7 +54,8 @@ import { WebSocketsService } from './websockets-service/websockets.service';
     providers: [
         PlayerServiceService,
         GameService,
-        WebSocketsService
+        WebSocketsService,
+        AppConfig
         ],
     bootstrap: [AppComponent]
 })

@@ -9,7 +9,7 @@ import scoala.altfel.chessApp.moves.MovesMapper;
 import scoala.altfel.chessApp.player.PlayerMapper;
 
 @SpringBootApplication
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${frontend.origin}")
 public class ChessAppApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ChessAppApplication.class, args);

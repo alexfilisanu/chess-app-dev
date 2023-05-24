@@ -8,6 +8,7 @@ import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Player } from '../player';
 import { Game } from '../game';
+import { AppConfig } from '../app.config';
 import { WebSocketsService } from '../websockets-service/websockets.service';
 
 enum Color {
@@ -108,8 +109,8 @@ export class GameService {
 
     public webSocketService: WebSocketsService;
 
-    constructor(private http: HttpClient, webSocketService: WebSocketsService) {
-        this.baseUrl = 'http://localhost:8090/api/v1/chess-app/local-game';
+    constructor(private http: HttpClient, webSocketService: WebSocketsService, private appConfig: AppConfig) {
+        this.baseUrl = `http://${appConfig.backendIpAddress}/api/v1/chess-app/local-game`;
         this.webSocketService = webSocketService;
 
         this.knightPosition1W$.subscribe(np => {
