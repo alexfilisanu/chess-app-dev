@@ -127,6 +127,14 @@ export class ChessBoardComponent implements OnInit {
         });
     }
 
+    leaveGame(): void {
+        this.showPopup = true;
+        this.popupSubject.next(true);
+
+        this.isWinForWhite = this.isColorToMove(Color.Black);
+        this.isWinForBlack = !this.isWinForWhite;
+    }
+
     sendMessage(message: any): void {
         const gameid = Number(localStorage.getItem('currentGameId')) || 0;
         const playerid = Number(localStorage.getItem('currentPlayerId')) || 0;
