@@ -87,11 +87,13 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 			Map<String, Object> messageData = (Map<String, Object>) payload.get("message");
 			Long gameId = Long.valueOf(payload.get("gameid").toString());
 			Long playerId = Long.valueOf(payload.get("playerid").toString());
+			Long playerTurn = Long.valueOf(payload.get("playerturn").toString());
 			String positions = objectMapper.writeValueAsString(messageData);
 
 			Moves moves = Moves.builder()
 					.gameid(gameId)
 					.playerid(playerId)
+					.playerturn(playerTurn)
 					.moves(positions)
 					.build();
 			System.out.println(moves);

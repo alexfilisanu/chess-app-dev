@@ -95,10 +95,15 @@ export class ChessBoardComponent implements OnInit {
             const actualMessage = message.message;
             const gameid = actualMessage.gameid;
             const playerid = actualMessage.playerid;
+            const playerturn = actualMessage.playerturn;
             const moves = actualMessage.moves;
 
+            const playerTurn = playerturn !== playerid
+                ? playerid
+                : '0';
+
             localStorage.setItem('currentPositions', moves);
-            // save to move player
+            localStorage.setItem('playerTurn', playerTurn);
 
             const pieces = JSON.parse(moves);
             for (const key in pieces) {
@@ -113,6 +118,10 @@ export class ChessBoardComponent implements OnInit {
               (this as any)[key].next(pieces[key]);
             }
         }
+
+        this.colorToMove = localStorage.getItem('playerTurn') === '0'
+            ? Color.Black
+            : Color.White;
 
         this.updateIsValidMoves();
         this.popupSubject.subscribe((showPopup) => {
@@ -138,10 +147,12 @@ export class ChessBoardComponent implements OnInit {
     sendMessage(message: any): void {
         const gameid = Number(localStorage.getItem('currentGameId')) || 0;
         const playerid = Number(localStorage.getItem('currentPlayerId')) || 0;
+        const playerturn = Number(localStorage.getItem('playerTurn')) || 0;
         const messageToSend = {
             message,
             gameid,
             playerid,
+            playerturn,
         };
         // sa punem tag pt joc online
 
@@ -435,6 +446,7 @@ export class ChessBoardComponent implements OnInit {
         localStorage.removeItem('currentGameId');
         localStorage.removeItem('currentPayerId');
         localStorage.removeItem('currentPositions');
+        localStorage.removeItem('playerTurn');
         this.gameService.webSocketService.disconnect();
       });
     }
