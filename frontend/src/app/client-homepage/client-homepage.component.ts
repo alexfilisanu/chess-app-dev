@@ -253,7 +253,7 @@ export class ClientHomepageComponent implements OnInit {
     this.gameService.game.type = GameType.Local;
     this.gameService.game.result = ResultMessage.StillPlaying;
     this.gameService.game.playerId1 = this.player.id ?? 0;
-    this.gameService.game.playerId2 = this.player.id ?? 0;
+    this.gameService.game.playerId2 = 0;
     this.gameService.startLocalGame().subscribe(
         result => {
             this.getCurrentLocalGame();
@@ -265,12 +265,13 @@ export class ClientHomepageComponent implements OnInit {
 
   getCurrentLocalGame(): void {
     const playerId = this.player.id ?? 0;
-    this.gameService.getCurrentLocalGame(playerId, playerId).subscribe(
+    this.gameService.getCurrentLocalGame(playerId, 0).subscribe(
       result => {
         this.gameService.game = result;
         localStorage.setItem('currentGameId', this.gameService.game.id?.toString() ?? '0');
         localStorage.setItem('currentPlayerId', this.gameService.game.playerId1?.toString() ?? '0');
         localStorage.setItem('currentPositions', JSON.stringify(this.gameService.currentPosition));
+        localStorage.setItem('playerTurn', this.gameService.game.playerId1?.toString() ?? '0');
       }
     );
   }

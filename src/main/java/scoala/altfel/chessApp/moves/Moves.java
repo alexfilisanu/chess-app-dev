@@ -25,6 +25,9 @@ public class Moves {
 	@Column(name = "playerid")
 	private Long playerid;
 
+	@Column(name = "playerturn")
+	private Long playerturn;
+
 	@Column(name = "moves")
 	private String moves;
 }
