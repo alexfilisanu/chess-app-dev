@@ -27,6 +27,9 @@ public class Game {
 	@Column(name = "playerid2")
 	private Long playerId2;
 
+	@Column(name = "randomcode")
+	private String randomCode;
+
 	@Column(name = "result")
 	private String result;
 }

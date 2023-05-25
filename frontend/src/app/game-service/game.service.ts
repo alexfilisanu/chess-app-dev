@@ -110,7 +110,7 @@ export class GameService {
     public webSocketService: WebSocketsService;
 
     constructor(private http: HttpClient, webSocketService: WebSocketsService, private appConfig: AppConfig) {
-        this.baseUrl = `http://${appConfig.backendIpAddress}/api/v1/chess-app/local-game`;
+        this.baseUrl = `http://${appConfig.backendIpAddress}/api/v1/chess-app`;
         this.webSocketService = webSocketService;
 
         this.knightPosition1W$.subscribe(np => {
@@ -1044,32 +1044,80 @@ export class GameService {
     // local game stored in DB
     game: Game = {};
 
+    public startLocalGame() {
+        const url = `${this.baseUrl}/local-game/new`;
+        return this.http.post<Game>(url, this.game).pipe(
+            catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                if (!(error.error instanceof ErrorEvent)) {
+        	        return throwError(error.error);
+        	    }
+            return caught;
+        	})
+        );
+    }
+
     public getCurrentLocalGame(playerId1: number, playerId2: number): Observable<Game> {
-        const url = `${this.baseUrl}/game-by-player-id/${playerId1}/${playerId2}`;
+        const url = `${this.baseUrl}/local-game/game-by-player-id/${playerId1}/${playerId2}`;
         return this.http.get<Game>(url).pipe(
             catchError((error: HttpErrorResponse, caught: Observable<any>) => {
                 if (!(error.error instanceof ErrorEvent)) {
                     return throwError(error.error);
                 }
-                return caught;
+            return caught;
             })
         );
     }
 
-    public startLocalGame() {
-        const url = `${this.baseUrl}/new`;
-    	return this.http.post<Game>(url, this.game).pipe(
+    public endLocalGame(result: string, gameId: number) {
+        const url = `${this.baseUrl}/local-game/${gameId}/result?result=${result}`;
+        return this.http.put<Game>(url, result).pipe(
             catchError((error: HttpErrorResponse, caught: Observable<any>) => {
                 if (!(error.error instanceof ErrorEvent)) {
-    			    return throwError(error.error);
-    			}
-    		    return caught;
-    	    })
+                    return throwError(error.error);
+                }
+            return caught;
+        }));
+    }
+
+    public startOnlineGame(randomCode: string) {
+//         const url = `${this.baseUrl}/online-game/new/${randomCode}`;
+        const url = `${this.baseUrl}/online-game/new/123456`;
+        return this.http.post<Game>(url, this.game).pipe(
+            catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                if (!(error.error instanceof ErrorEvent)) {
+        	        return throwError(error.error);
+        	    }
+            return caught;
+        	})
         );
     }
 
-    public endLocalGame(result: string, gameId: number) {
-        const url = `${this.baseUrl}/${gameId}/result?result=${result}`;
+    public joinOnlineGame(randomCode: string, playerId2: number) {
+        const url = `${this.baseUrl}/online-game/join/${randomCode}/${playerId2}`;
+        return this.http.put<Game>(url, this.game).pipe(
+            catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                if (!(error.error instanceof ErrorEvent)) {
+            	    return throwError(error.error);
+                }
+            return caught;
+            })
+        );
+    }
+
+    public getCurrentOnlineGame(playerId1: number, playerId2: number): Observable<Game> {
+            const url = `${this.baseUrl}/online-game/game-by-player-id/${playerId1}/${playerId2}`;
+            return this.http.get<Game>(url).pipe(
+                catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                    if (!(error.error instanceof ErrorEvent)) {
+                        return throwError(error.error);
+                    }
+                    return caught;
+                })
+            );
+        }
+
+    public endOnlineGame(result: string, gameId: number) {
+        const url = `${this.baseUrl}/online-game/${gameId}/result?result=${result}`;
         return this.http.put<Game>(url, result).pipe(
             catchError((error: HttpErrorResponse, caught: Observable<any>) => {
                 if (!(error.error instanceof ErrorEvent)) {

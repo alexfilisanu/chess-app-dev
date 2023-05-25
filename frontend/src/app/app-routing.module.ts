@@ -14,6 +14,7 @@ const routes: Routes = [
     { path: 'register-successful', component: RegisterSuccessfulComponent },
     { path: 'client-homepage', component: ClientHomepageComponent},
     { path: 'chess-board', component: ChessBoardComponent},
+    { path: 'chess-board/:randomCode', component: ChessBoardComponent },
 ];
 
 @NgModule({
