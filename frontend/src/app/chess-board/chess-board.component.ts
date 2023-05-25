@@ -148,11 +148,13 @@ export class ChessBoardComponent implements OnInit {
         const gameid = Number(localStorage.getItem('currentGameId')) || 0;
         const playerid = Number(localStorage.getItem('currentPlayerId')) || 0;
         const playerturn = Number(localStorage.getItem('playerTurn')) || 0;
+        const gametype = this.gameService.game.type || '';
         const messageToSend = {
             message,
             gameid,
             playerid,
             playerturn,
+            gametype
         };
         // sa punem tag pt joc online
 
@@ -446,6 +448,7 @@ export class ChessBoardComponent implements OnInit {
         localStorage.removeItem('currentGameId');
         localStorage.removeItem('currentPayerId');
         localStorage.removeItem('currentPositions');
+        localStorage.removeItem('currentGameType');
         localStorage.removeItem('playerTurn');
         this.gameService.webSocketService.disconnect();
       });

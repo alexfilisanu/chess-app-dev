@@ -42,7 +42,16 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 		String receivedMessage = message.getPayload();
 		System.out.println(receivedMessage);
 		Long gameid = processMessageAndUpdateGameState(receivedMessage);
-		broadcastGameState(gameid);
+
+		// Check if the gametype is 'local' before broadcasting the game state
+		ObjectMapper objectMapper = new ObjectMapper();
+		Map<String, Object> payload = objectMapper.readValue(receivedMessage, new TypeReference<>() {});
+		String gameType = (String) payload.get("gametype");
+		System.out.println("type " + gameType);
+		if ("Local".equals(gameType)) {
+			broadcastGameState(gameid, session);
+		}
+//		broadcastGameState(gameid);
 	}
 
 	@Override
@@ -50,9 +59,13 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 		sessions.remove(session);
 	}
 
-	private void broadcastGameState(Long gameid) {
+	private void broadcastGameState(Long gameid, WebSocketSession senderSession) {
 		String gameState = getCurrentGameState(gameid);
 		for (WebSocketSession session : sessions) {
+			if (session != senderSession) {
+				// Skip broadcasting to other sessions
+				continue;
+			}
 			try {
 				session.sendMessage(new TextMessage(gameState));
 			} catch (IOException e) {
@@ -60,6 +73,18 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 			}
 		}
 	}
+
+
+//	private void broadcastGameState(Long gameid) {
+//		String gameState = getCurrentGameState(gameid);
+//		for (WebSocketSession session : sessions) {
+//			try {
+//				session.sendMessage(new TextMessage(gameState));
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 
 	private String getCurrentGameState(Long gameid) {
 		Map<String, Object> gameState = new HashMap<>();
