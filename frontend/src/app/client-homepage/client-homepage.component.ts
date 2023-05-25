@@ -269,6 +269,7 @@ export class ClientHomepageComponent implements OnInit {
       result => {
         this.gameService.game = result;
         localStorage.setItem('currentGameId', this.gameService.game.id?.toString() ?? '0');
+        localStorage.setItem('currentGameType', this.gameService.game.type?.toString() ?? '');
         localStorage.setItem('currentPlayerId', this.gameService.game.playerId1?.toString() ?? '0');
         localStorage.setItem('currentPositions', JSON.stringify(this.gameService.currentPosition));
         localStorage.setItem('playerTurn', this.gameService.game.playerId1?.toString() ?? '0');
