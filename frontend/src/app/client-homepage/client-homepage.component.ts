@@ -236,6 +236,19 @@ export class ClientHomepageComponent implements OnInit {
     });
   }
 
+  generateRandomCode(): string {
+    const code = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    return code;
+  }
+
+  startOnlineGame(): void {
+    const randomCode = this.generateRandomCode();
+    console.log(randomCode);
+  }
+
+  joinOnlineGame(): void {
+  }
+
   startLocalGame(): void {
     this.gameService.game.type = GameType.Local;
     this.gameService.game.result = ResultMessage.StillPlaying;
