@@ -148,7 +148,7 @@ export class ChessBoardComponent implements OnInit {
         const gameid = Number(localStorage.getItem('currentGameId')) || 0;
         const playerid = Number(localStorage.getItem('currentPlayerId')) || 0;
         const playerturn = Number(localStorage.getItem('playerTurn')) || 0;
-        const gametype = this.gameService.game.type || '';
+        const gametype = localStorage.getItem('currentGameType') || '';
         const messageToSend = {
             message,
             gameid,
@@ -156,7 +156,6 @@ export class ChessBoardComponent implements OnInit {
             playerturn,
             gametype
         };
-        // sa punem tag pt joc online
 
         this.gameService.webSocketService.sendMessage(messageToSend);
     }
@@ -446,7 +445,7 @@ export class ChessBoardComponent implements OnInit {
       this.gameService.endLocalGame(result, gameId).subscribe(data => {
         this.game = data;
         localStorage.removeItem('currentGameId');
-        localStorage.removeItem('currentPayerId');
+        localStorage.removeItem('currentPlayerId');
         localStorage.removeItem('currentPositions');
         localStorage.removeItem('currentGameType');
         localStorage.removeItem('playerTurn');
