@@ -124,3 +124,9 @@ a {
   visibility: visible;
   opacity: 1;
 }
+
+.background-rectangle {
+  background-image: url('/assets/images/backgrounds/scoalaaltfel.jpg');
+  width: 100%;
+  height: 100%;
+}
