@@ -61,6 +61,8 @@ export class ClientHomepageComponent implements OnInit {
   isEditPasswordBtnClicked = false;
   isDeleteAccountBtnClicked = false;
   displaySearchedPlayer = false;
+  showJoinOnlineGamePopup: Boolean = false;
+  joinOnlineGameCode: string = '';
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -194,7 +196,6 @@ export class ClientHomepageComponent implements OnInit {
     });
   }
 
-
   updatePassword(): void {
     const playerId = this.player.id ?? 0;
     const newPassword = this.newPassword ?? '';
@@ -259,6 +260,8 @@ export class ClientHomepageComponent implements OnInit {
   }
 
   joinOnlineGame(randomCode: string): void {
+    this.showJoinOnlineGamePopup = false;
+    console.log(this.joinOnlineGameCode);
     this.gameService.game.playerId2 = this.player.id ?? 0;
     this.gameService.game.result = ResultMessage.StillPlaying;
     const gameId = this.gameService.game.id ?? 0;
@@ -268,6 +271,10 @@ export class ClientHomepageComponent implements OnInit {
             this.getCurrentOnlineGameAfterMatchmaking();
             this.router.navigate(['/chess-board/123456']);
     });
+  }
+
+  showJoinPopup(): void {
+    this.showJoinOnlineGamePopup = true;
   }
 
   getCurrentOnlineGame(): void {
@@ -326,4 +333,8 @@ export class ClientHomepageComponent implements OnInit {
       }
     );
   }
+
+    closePopup() {
+        this.showJoinOnlineGamePopup = false;
+    }
 }

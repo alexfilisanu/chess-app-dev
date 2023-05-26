@@ -99,10 +99,47 @@
 
     <ng-container *ngIf="isHomeBtnClicked">
       <h2 class="text-center mb-4 p-t-100">What do you want to play today?</h2>
+      <div [ngClass]="{'overlay': true, 'show': showJoinOnlineGamePopup}" *ngIf="showJoinOnlineGamePopup" id="popup" class="overlay" #popup>
+        <div class="popup">
+          <a class="close" href="/client-homepage" (click)="closePopup()">&times;</a>
+          <h2> Enter the code to join the room </h2>
+          <div class="text-center">
+            <form class="login100-form validate-form p-t-50"
+                  (ngSubmit)="joinOnlineGame('123456')" #joinForm="ngForm">
+              <div class="form-row">
+                <div class="input-group" style="width: 200%;">
+                  <input class="input--style-5"
+                         name="joinOnlineGameCode"
+                         [(ngModel)]="joinOnlineGameCode"
+                         required>
+                </div>
+              </div>
+
+              <div class="container-login100-form-btn">
+                <a>
+                  <button class="login100-form-btn"
+                          type="submit"
+                          [disabled]="joinForm.invalid">
+                    Join Online Game
+                  </button>
+                </a>
+              </div>
+
+              <div class="error-container p-t-50">
+                <div *ngIf="backendErrorDelete" class="alert alert-danger text-center">
+                  {{ backendErrorDelete }}
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
       <div class="text-center p-t-100">
         <button (click)="startLocalGame()" type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg">Local game</button>
         <button (click)="startOnlineGame()" type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg">Start online game</button>
-        <button (click)="joinOnlineGame('123456')" type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg">Join online game</button>
+        <button (click)="showJoinPopup()" type="button" class="btn mr-md-2 mb-md-0 mb-2 btn-outline-primary btn-lg">Join online game</button>
       </div>
 
     </ng-container>
