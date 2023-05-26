@@ -244,7 +244,6 @@ export class ClientHomepageComponent implements OnInit {
 
   startOnlineGame(): void {
     const randomCode = this.generateRandomCode();
-    console.log(randomCode);
     this.gameService.game.type = GameType.Online;
     this.gameService.game.result = ResultMessage.WaitingOpponent;
     this.gameService.game.playerId1 = this.player.id ?? 0;
@@ -252,7 +251,7 @@ export class ClientHomepageComponent implements OnInit {
     this.gameService.startOnlineGame(randomCode).subscribe(
         result => {
             this.getCurrentOnlineGame();
-            this.gameService.webSocketService.connect();
+            this.gameService.webSocketService.connect('123456');
 //             this.router.navigate([`/chess-board/${randomCode}`]);
             this.router.navigate(['/chess-board/123456']);
         }
@@ -263,10 +262,10 @@ export class ClientHomepageComponent implements OnInit {
     this.gameService.game.playerId2 = this.player.id ?? 0;
     this.gameService.game.result = ResultMessage.StillPlaying;
     const gameId = this.gameService.game.id ?? 0;
-    console.log(this.gameService.game.playerId2);
     this.gameService.joinOnlineGame(randomCode, this.gameService.game.playerId2).subscribe(
         result => {
 //             this.router.navigate([`/chess-board/${randomCode}`]);
+            this.getCurrentOnlineGameAfterMatchmaking();
             this.router.navigate(['/chess-board/123456']);
     });
   }
@@ -278,10 +277,24 @@ export class ClientHomepageComponent implements OnInit {
           this.gameService.game = result;
           localStorage.setItem('currentGameId', this.gameService.game.id?.toString() ?? '0');
           localStorage.setItem('currentGameType', this.gameService.game.type?.toString() ?? '');
-          localStorage.setItem('currentPlayerId', this.gameService.game.playerId1?.toString() ?? '0');
+          localStorage.setItem('currentPlayerId1', this.gameService.game.playerId1?.toString() ?? '0');
           localStorage.setItem('currentPositions', JSON.stringify(this.gameService.currentPosition));
           localStorage.setItem('playerTurn', this.gameService.game.playerId1?.toString() ?? '0');
         }
+    );
+  }
+
+  getCurrentOnlineGameAfterMatchmaking(): void {
+      const playerId = this.player.id ?? 0;
+      this.gameService.getCurrentOnlineGameAfterMatchmaking(playerId, '123456').subscribe(
+          result => {
+            this.gameService.game = result;
+            localStorage.setItem('currentGameId', this.gameService.game.id?.toString() ?? '0');
+            localStorage.setItem('currentGameType', this.gameService.game.type?.toString() ?? '');
+            localStorage.setItem('currentPlayerId2', this.gameService.game.playerId2?.toString() ?? '0');
+            localStorage.setItem('currentPositions', JSON.stringify(this.gameService.currentPosition));
+            localStorage.setItem('playerTurn', this.gameService.game.playerId1?.toString() ?? '0');
+          }
       );
     }
 
@@ -294,7 +307,7 @@ export class ClientHomepageComponent implements OnInit {
     this.gameService.startLocalGame().subscribe(
         result => {
             this.getCurrentLocalGame();
-            this.gameService.webSocketService.connect();
+            this.gameService.webSocketService.connect('');
             this.router.navigate(['/chess-board']);
         }
     );

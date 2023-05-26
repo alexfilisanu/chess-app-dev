@@ -18,9 +18,11 @@ import scoala.altfel.chessApp.moves.MovesMapper;
 import scoala.altfel.chessApp.moves.MovesRepository;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Component
 @AllArgsConstructor
@@ -35,25 +37,25 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		sessions.add(session);
+		String uriPath = session.getUri().getPath();
+		String randomCode = uriPath.substring(uriPath.lastIndexOf("/") + 1);
+		session.getAttributes().put("randomCode", randomCode);
 	}
 
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
 		String receivedMessage = message.getPayload();
-		System.out.println(receivedMessage);
 		Long gameid = processMessageAndUpdateGameState(receivedMessage);
 
-		// Check if the gametype is 'local' before broadcasting the game state
 		ObjectMapper objectMapper = new ObjectMapper();
 		Map<String, Object> payload = objectMapper.readValue(receivedMessage, new TypeReference<>() {});
 		String gameType = (String) payload.get("gametype");
-		System.out.println("type " + gameType);
+
 		if ("Local".equals(gameType)) {
 			broadcastLocalGameState(gameid, session);
 		} else if ("Online".equals(gameType)) {
 			broadcastOnlineGameState(gameid, session);
 		}
-//		broadcastGameState(gameid);
 	}
 
 	@Override
@@ -65,7 +67,6 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 		String gameState = getCurrentGameState(gameid);
 		for (WebSocketSession session : sessions) {
 			if (session != senderSession) {
-				// Skip broadcasting to other sessions
 				continue;
 			}
 			try {
@@ -77,17 +78,23 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 	}
 
 	private void broadcastOnlineGameState(Long gameid, WebSocketSession senderSession) {
+		String randomCode = (String) senderSession.getAttributes().get("randomCode");
+
+		List<WebSocketSession> gameSessions = sessions.stream()
+				.filter(session -> {
+					String sessionRandomCode = (String) session.getAttributes().get("randomCode");
+					return randomCode.equals(sessionRandomCode);
+				})
+				.collect(Collectors.toList());
+
 		String gameState = getCurrentGameState(gameid);
-		for (WebSocketSession session : sessions) {
-			if (session != senderSession) {
-				// Skip broadcasting to other sessions
-				continue;
-			}
-			try {
-				session.sendMessage(new TextMessage(gameState));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+
+		for (WebSocketSession session : gameSessions) {
+				try {
+					session.sendMessage(new TextMessage(gameState));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 	}
 
@@ -126,7 +133,7 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 					.playerturn(playerTurn)
 					.moves(positions)
 					.build();
-			System.out.println(moves);
+
 			movesRepository.save(moves);
 			return gameId;
 

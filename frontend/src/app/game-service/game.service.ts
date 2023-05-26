@@ -1105,16 +1105,28 @@ export class GameService {
     }
 
     public getCurrentOnlineGame(playerId1: number, playerId2: number): Observable<Game> {
-            const url = `${this.baseUrl}/online-game/game-by-player-id/${playerId1}/${playerId2}`;
-            return this.http.get<Game>(url).pipe(
-                catchError((error: HttpErrorResponse, caught: Observable<any>) => {
-                    if (!(error.error instanceof ErrorEvent)) {
-                        return throwError(error.error);
-                    }
-                    return caught;
-                })
-            );
-        }
+        const url = `${this.baseUrl}/online-game/game-by-player-id/${playerId1}/${playerId2}`;
+        return this.http.get<Game>(url).pipe(
+            catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                if (!(error.error instanceof ErrorEvent)) {
+                    return throwError(error.error);
+                }
+            return caught;
+            })
+        );
+    }
+
+    public getCurrentOnlineGameAfterMatchmaking(playerId2: number, randomCode: string): Observable<Game> {
+        const url = `${this.baseUrl}/online-game/game-after-matchmaking/${playerId2}/${randomCode}`;
+        return this.http.get<Game>(url).pipe(
+            catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                if (!(error.error instanceof ErrorEvent)) {
+                    return throwError(error.error);
+                }
+            return caught;
+            })
+        );
+    }
 
     public endOnlineGame(result: string, gameId: number) {
         const url = `${this.baseUrl}/online-game/${gameId}/result?result=${result}`;
