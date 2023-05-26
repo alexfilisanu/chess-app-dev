@@ -12,6 +12,9 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import scoala.altfel.chessApp.game.GameDTO;
+import scoala.altfel.chessApp.game.GameMapper;
+import scoala.altfel.chessApp.game.GameRepository;
 import scoala.altfel.chessApp.moves.Moves;
 import scoala.altfel.chessApp.moves.MovesDTO;
 import scoala.altfel.chessApp.moves.MovesMapper;
@@ -33,6 +36,8 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 	private Set<WebSocketSession> sessions = ConcurrentHashMap.newKeySet();
 	private MovesRepository movesRepository;
 	private MovesMapper movesMapper;
+	private GameRepository gameRepository;
+	private GameMapper gameMapper;
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -88,13 +93,23 @@ public class ChessWebSocketHandler extends TextWebSocketHandler {
 				.collect(Collectors.toList());
 
 		String gameState = getCurrentGameState(gameid);
+		GameDTO game = gameRepository
+				.findById(gameid)
+				.map(gameMapper::apply)
+				.orElseThrow(() -> new IllegalStateException("Game not found for id: " + gameid));
+		String gameResult = game.result();
+		boolean gameEnded = "Win player1".equals(gameResult) || "Win player2".equals(gameResult);
 
 		for (WebSocketSession session : gameSessions) {
+			if (!gameEnded) {
 				try {
 					session.sendMessage(new TextMessage(gameState));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			} else {
+				sessions.remove(session);
+			}
 		}
 	}
 

@@ -56,4 +56,9 @@ public class GameController {
 									    @PathVariable("playerId2") Long playerId2) {
 		return gameService.getCurrentOnlineGame(playerId1, playerId2);
 	}
+
+	@GetMapping("/online-game/game-by-id/{gameId}")
+	public GameDTO getGameResult(@PathVariable("gameId") Long gameId) {
+		return gameService.getGameResult(gameId);
+	}
 }
