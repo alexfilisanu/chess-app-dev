@@ -90,7 +90,7 @@ export class ChessBoardComponent implements OnInit {
     game: Game = new Game();
 
     ngOnInit(): void {
-        this.gameService.webSocketService.connect();
+        this.gameService.webSocketService.connect('123456');
         this.gameService.webSocketService.getMessage().subscribe((message: any) => {
             const actualMessage = message.message;
             const gameid = actualMessage.gameid;
@@ -446,6 +446,8 @@ export class ChessBoardComponent implements OnInit {
         this.game = data;
         localStorage.removeItem('currentGameId');
         localStorage.removeItem('currentPlayerId');
+        localStorage.removeItem('currentPlayerId1');
+        localStorage.removeItem('currentPlayerId2');
         localStorage.removeItem('currentPositions');
         localStorage.removeItem('currentGameType');
         localStorage.removeItem('playerTurn');

@@ -18,4 +18,8 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
 	@Query("SELECT g FROM Game g WHERE g.randomCode = :randomCode AND g.result = 'Waiting opponent'")
 	Optional<Game> findByTag(@Param("randomCode") String randomCode);
+
+	@Query("SELECT g FROM Game g WHERE g.playerId2 = :playerId2 AND g.randomCode = :randomCode AND g.result = 'Still playing'")
+	Optional<Game> findCurrentOnlineGameAfterMatchmaking(@Param("playerId2")Long playerId2,
+														 @Param("randomCode")String randomCode);
 }

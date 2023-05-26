@@ -14,12 +14,12 @@ export class WebSocketsService {
     this.socketUrl = `ws://${appConfig.backendIpAddress}/websocket-endpoint`
   }
 
-  public connect(): void {
+  public connect(randomCode: string): void {
     if (this.webSocket) {
       return;
     }
 
-    this.webSocket = new WebSocket(this.socketUrl);
+    this.webSocket = new WebSocket(`${this.socketUrl}/${randomCode}`);
     this.webSocket.addEventListener('open', (event) => {
       console.log('WebSocket connection established');
     });

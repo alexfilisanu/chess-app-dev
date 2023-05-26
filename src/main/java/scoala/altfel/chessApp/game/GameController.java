@@ -26,6 +26,7 @@ public class GameController {
 									   @PathVariable("playerId2") Long playerId2) {
 		return gameService.getCurrentLocalGame(playerId1, playerId2);
 	}
+
 	@PostMapping(value = "/online-game/new/{randomCode}")
 	public void startOnlineGame(@RequestBody GameDTO gameDTO,
 								@PathVariable("randomCode") String randomCode) {
@@ -42,6 +43,12 @@ public class GameController {
 	public void joinOnlineGame(@PathVariable("randomCode") String randomCode,
 							   @PathVariable("playerId2") Long playerId2) {
 		gameService.joinOnlineGame(randomCode, playerId2);
+	}
+
+	@GetMapping("/online-game/game-after-matchmaking/{playerId2}/{randomCode}")
+	public GameDTO getCurrentOnlineGameAfterMatchmaking(@PathVariable("playerId2") Long playerId2,
+									   					@PathVariable("randomCode") String randomCode) {
+		return gameService.getCurrentOnlineGameAfterMatchmaking(playerId2, randomCode);
 	}
 
 	@GetMapping("/online-game/game-by-player-id/{playerId1}/{playerId2}")

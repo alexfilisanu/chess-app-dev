@@ -81,4 +81,15 @@ public class GameService {
 		game.setPlayerId2(playerId2);
 		game.setResult("Still playing");
 	}
+
+	public GameDTO getCurrentOnlineGameAfterMatchmaking(Long playerId2, String randomCode) {
+		return gameRepository
+				.findCurrentOnlineGameAfterMatchmaking(playerId2, randomCode)
+				.map(p -> gameMapper.apply(p))
+				.orElseThrow(
+						() -> new IllegalStateException(
+								"Game not found for player: " + playerId2 + " and tag " + randomCode
+						)
+				);
+	}
 }
