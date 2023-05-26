@@ -27,6 +27,11 @@ enum ResultMessage {
     StillPlaying = 'Still playing'
 }
 
+enum GameType {
+    Local = 'Local',
+    Online = 'Online'
+}
+
 @Component({
     selector: 'app-chess-board',
     templateUrl: './chess-board.component.html',
@@ -98,9 +103,17 @@ export class ChessBoardComponent implements OnInit {
             const playerturn = actualMessage.playerturn;
             const moves = actualMessage.moves;
 
-            const playerTurn = playerturn !== playerid
-                ? playerid
-                : '0';
+            let playerTurn = '';
+
+            if (localStorage.getItem('currentGameType') === GameType.Local) {
+                playerTurn = playerturn !== playerid
+                    ? playerid
+                    : '0';
+            } else {
+                playerTurn = localStorage.getItem('playerTurn') !== localStorage.getItem('currentPlayerId1')
+                    ? localStorage.getItem('currentPlayerId1') || ''
+                    : localStorage.getItem('currentPlayerId2') || '';
+            }
 
             localStorage.setItem('currentPositions', moves);
             localStorage.setItem('playerTurn', playerTurn);
@@ -119,9 +132,15 @@ export class ChessBoardComponent implements OnInit {
             }
         }
 
-        this.colorToMove = localStorage.getItem('playerTurn') === '0'
-            ? Color.Black
-            : Color.White;
+        if (localStorage.getItem('currentGameType') === GameType.Local) {
+            this.colorToMove = localStorage.getItem('playerTurn') === '0'
+                ? Color.Black
+                : Color.White;
+        } else {
+            this.colorToMove = localStorage.getItem('currentPlayerId1') === localStorage.getItem('playerTurn')
+                ? Color.White
+                : Color.Black;
+        }
 
         this.updateIsValidMoves();
         this.popupSubject.subscribe((showPopup) => {
