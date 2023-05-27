@@ -105,12 +105,12 @@
           <h2> Enter the code to join the room </h2>
           <div class="text-center">
             <form class="login100-form validate-form p-t-50"
-                  (ngSubmit)="joinOnlineGame('123456')" #joinForm="ngForm">
+                  (ngSubmit)="joinOnlineGame(gameService.randomCode)" #joinForm="ngForm">
               <div class="form-row">
                 <div class="input-group" style="width: 200%;">
                   <input class="input--style-5"
                          name="joinOnlineGameCode"
-                         [(ngModel)]="joinOnlineGameCode"
+                         [(ngModel)]="gameService.randomCode"
                          required>
                 </div>
               </div>
