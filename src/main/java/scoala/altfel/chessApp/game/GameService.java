@@ -4,6 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 @AllArgsConstructor
 @Service
 public class GameService {
@@ -99,4 +103,31 @@ public class GameService {
 				.map(gameMapper::apply)
 				.orElseThrow(() -> new IllegalStateException("Game not found for id: " + gameId));
 	}
+
+	public History getHistoryMatches(Long playerId) {
+		List<Game> matchesAsHost = gameRepository.findMatchesByPlayerIdAsHost(playerId);
+
+		Long victories = matchesAsHost.stream()
+				.filter(game -> game.getResult().equals("Win player1"))
+				.count();
+
+		Long defeats = matchesAsHost.stream()
+				.filter(game -> game.getResult().equals("Win player2"))
+				.count();
+
+		List<Game> matchesAsGuest = gameRepository.findMatchesByPlayerIdAsGuest(playerId);
+
+		victories += matchesAsGuest.stream()
+				.filter(game -> game.getResult().equals("Win player2"))
+				.count();
+
+		defeats += matchesAsGuest.stream()
+				.filter(game -> game.getResult().equals("Win player1"))
+				.count();
+
+		Long score = victories * 100 - defeats * 50;
+
+		return new History(victories, defeats, score);
+	}
+
 }

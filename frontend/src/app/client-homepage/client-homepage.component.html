@@ -23,7 +23,7 @@
           <a (click)="toogleScoalaAltfel()">About Scoala Altfel</a>
         </li>
         <li>
-          <a (click)="toogleViewAccountDetails()">View account details</a>
+          <a (click)="toogleViewAccountDetails()" (click)="getHistory(player.id || 0)">View account details</a>
         </li>
         <li>
           <a (click)="toogleEditAccountDetails()">Edit account details</a>
@@ -74,19 +74,11 @@
                   <div class="row pt-1">
                     <div class="col-6 mb-3">
                       <h6>Victory</h6>
-                      <p class="text-muted">Lorem ipsum</p>
-                    </div>
-                    <div class="col-6 mb-3">
-                      <h6>Draw</h6>
-                      <p class="text-muted">Dolor sit amet</p>
+                      <p class="text-muted">{{ victory }}</p>
                     </div>
                     <div class="col-6 mb-3">
                       <h6>Defeat</h6>
-                      <p class="text-muted">Dolor sit amet</p>
-                    </div>
-                    <div class="col-6 mb-3">
-                      <h6>Id</h6>
-                      <p class="text-muted">{{ player.id }}</p>
+                      <p class="text-muted">{{ defeat }}</p>
                     </div>
                   </div>
                 </div>
@@ -422,29 +414,21 @@
                       <h6>Email</h6>
                       <p class="text-muted">{{ searchedPlayer.email }}</p>
                     </div>
-                    <div class="col-6 mb-3">
-                      <h6>Score</h6>
-                      <p class="text-muted">{{ searchedPlayer.score }}</p>
-                    </div>
                   </div>
-                  <h6>Matches History</h6>
+                  <button (click)="toggleViewMoreDetails()" (click)="getHistory(searchedPlayer.id || 0)">View more</button>
                   <hr class="mt-0 mb-4">
-                  <div class="row pt-1">
+                  <div *ngIf="isViewMoreInfoBtnClicked" class="row pt-1">
                     <div class="col-6 mb-3">
                       <h6>Victory</h6>
-                      <p class="text-muted">Lorem ipsum</p>
-                    </div>
-                    <div class="col-6 mb-3">
-                      <h6>Draw</h6>
-                      <p class="text-muted">Dolor sit amet</p>
+                      <p class="text-muted">{{ victory }}</p>
                     </div>
                     <div class="col-6 mb-3">
                       <h6>Defeat</h6>
-                      <p class="text-muted">Dolor sit amet</p>
+                      <p class="text-muted">{{ defeat }}</p>
                     </div>
                     <div class="col-6 mb-3">
-                      <h6>Id</h6>
-                      <p class="text-muted">{{ searchedPlayer.id }}</p>
+                      <h6>Score</h6>
+                      <p class="text-muted">{{ searchedPlayer.score }}</p>
                     </div>
                   </div>
                 </div>

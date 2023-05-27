@@ -112,7 +112,7 @@ public class PlayerService {
 				.email(playerConfidentialDTO.email())
 				.password(playerConfidentialDTO.password())
 				.confirmPassword(playerConfidentialDTO.confirmPassword())
-				.score(0)
+				.score(2000)
 				.deleted(Boolean.FALSE)
 				.build();
 

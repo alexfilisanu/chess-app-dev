@@ -61,4 +61,9 @@ public class GameController {
 	public GameDTO getGameResult(@PathVariable("gameId") Long gameId) {
 		return gameService.getGameResult(gameId);
 	}
+
+	@GetMapping("/matches/{playerId}")
+	public History getHistoryMatches(@PathVariable("playerId") Long playerId) {
+		return gameService.getHistoryMatches(playerId);
+	}
 }
