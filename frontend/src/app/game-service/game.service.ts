@@ -30,6 +30,8 @@ enum PieceType {
 })
 export class GameService {
     baseUrl: string;
+    randomCode: string = '';
+    showOnlineCode: boolean = false;
 
     rookPosition1W$ = new BehaviorSubject<Coord>({ x: 0, y: 0 });
     knightPosition1W$ = new BehaviorSubject<Coord>({ x: 1, y: 0 });
@@ -1081,6 +1083,7 @@ export class GameService {
 
     public startOnlineGame(randomCode: string) {
 //         const url = `${this.baseUrl}/online-game/new/${randomCode}`;
+        this.randomCode = randomCode;
         const url = `${this.baseUrl}/online-game/new/123456`;
         return this.http.post<Game>(url, this.game).pipe(
             catchError((error: HttpErrorResponse, caught: Observable<any>) => {
@@ -1139,7 +1142,6 @@ export class GameService {
             })
         );
     }
-
 
     public endOnlineGame(result: string, gameId: number) {
         const url = `${this.baseUrl}/online-game/${gameId}/result?result=${result}`;

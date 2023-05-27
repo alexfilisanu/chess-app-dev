@@ -245,6 +245,7 @@ export class ClientHomepageComponent implements OnInit {
 
   startOnlineGame(): void {
     const randomCode = this.generateRandomCode();
+    this.gameService.showOnlineCode = true;
     this.gameService.game.type = GameType.Online;
     this.gameService.game.result = ResultMessage.WaitingOpponent;
     this.gameService.game.playerId1 = this.player.id ?? 0;
@@ -303,8 +304,7 @@ export class ClientHomepageComponent implements OnInit {
             localStorage.setItem('playerTurn', this.gameService.game.playerId1?.toString() ?? '0');
           }
       );
-    }
-
+  }
 
   startLocalGame(): void {
     this.gameService.game.type = GameType.Local;
@@ -334,7 +334,7 @@ export class ClientHomepageComponent implements OnInit {
     );
   }
 
-    closePopup() {
-        this.showJoinOnlineGamePopup = false;
-    }
+  closePopup() {
+    this.showJoinOnlineGamePopup = false;
+  }
 }
