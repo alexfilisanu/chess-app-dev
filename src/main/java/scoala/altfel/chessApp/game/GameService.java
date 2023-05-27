@@ -92,4 +92,11 @@ public class GameService {
 						)
 				);
 	}
+
+	public GameDTO getGameResult(Long gameId) {
+		return gameRepository
+				.findById(gameId)
+				.map(gameMapper::apply)
+				.orElseThrow(() -> new IllegalStateException("Game not found for id: " + gameId));
+	}
 }

@@ -1128,6 +1128,19 @@ export class GameService {
         );
     }
 
+    public getGameResult(gameId: number): Observable<any> {
+        const url = `${this.baseUrl}/online-game/game-by-id/${gameId}`;
+        return this.http.get<Game>(url).pipe(
+            catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                if (!(error.error instanceof ErrorEvent)) {
+                    return throwError(error.error);
+                }
+            return caught;
+            })
+        );
+    }
+
+
     public endOnlineGame(result: string, gameId: number) {
         const url = `${this.baseUrl}/online-game/${gameId}/result?result=${result}`;
         return this.http.put<Game>(url, result).pipe(

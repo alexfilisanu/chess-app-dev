@@ -243,6 +243,18 @@ export class ChessBoardComponent implements OnInit {
     }
 
     handleSquareClick(pos: Coord) {
+        // verific in cazul Online Game daca oponentul a apasat ABANDON si jocul s a terminat,
+        // caz in care jocul se va incheia si pentru jucator
+        const gameid = Number(localStorage.getItem('currentGameId')) || 0;
+        this.gameService.getGameResult(gameid).subscribe(
+            result => {
+                this.gameService.game = result;
+            }
+        );
+        if (this.gameService.game.result === ResultMessage.WinPlayer1 || this.gameService.game.result === ResultMessage.WinPlayer2) {
+            this.leaveGame();
+        }
+
         if (this.selectedPosition) {
             const type = this.gameService.getPieceInfo(this.selectedPosition).type;
             const index = this.gameService.getPieceInfo(this.selectedPosition).index;
