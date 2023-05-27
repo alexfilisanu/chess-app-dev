@@ -40,6 +40,7 @@ export class ClientHomepageComponent implements OnInit {
   isVisibleNewPassword: Boolean = false;
   isVisibleConfirmNewPassword: Boolean = false;
   isVisibleDeletePassword: Boolean = false;
+  isViewMoreInfoBtnClicked = false;
   backendErrorUsername: string = '';
   backendErrorEmail: string = '';
   backendErrorPassword: string = '';
@@ -63,6 +64,8 @@ export class ClientHomepageComponent implements OnInit {
   displaySearchedPlayer = false;
   showJoinOnlineGamePopup: Boolean = false;
   joinOnlineGameCode: string = '';
+  victory: number = 0;
+  defeat: number = 0;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -80,6 +83,13 @@ export class ClientHomepageComponent implements OnInit {
     }
 
     this.playerService.getPlayerByName(this.usernameAuthenticated).subscribe(data => this.player = data);
+    this.gameService.getMatchesHistory(this.player.id || 0).subscribe(
+        result => {
+            this.victory = result.victories;
+            this.defeat = result.defeats;
+            this.player.score = result.score;
+        }
+    );
   }
 
   logout(): void {
@@ -161,6 +171,10 @@ export class ClientHomepageComponent implements OnInit {
 
   toggleDeletePassword(): void {
     this.isVisibleDeletePassword = !this.isVisibleDeletePassword;
+  }
+
+  toggleViewMoreDetails(): void {
+    this.isViewMoreInfoBtnClicked = !this.isViewMoreInfoBtnClicked;
   }
 
   updateUsername(): void {
@@ -329,6 +343,20 @@ export class ClientHomepageComponent implements OnInit {
         localStorage.setItem('currentPositions', JSON.stringify(this.gameService.currentPosition));
         localStorage.setItem('playerTurn', this.gameService.game.playerId1?.toString() ?? '0');
       }
+    );
+  }
+
+  getHistory(playerId: number) {
+    console.log(playerId);
+    this.gameService.getMatchesHistory(playerId).subscribe(
+        result => {
+            console.log("victpry", result.victories);
+            this.victory = result.victories;
+            this.defeat = result.defeats;
+            console.log("defeats", result.defeats);
+            this.player.score = result.score;
+            this.searchedPlayer.score = result.score;
+        }
     );
   }
 

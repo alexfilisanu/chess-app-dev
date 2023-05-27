@@ -1152,4 +1152,15 @@ export class GameService {
             return caught;
         }));
     }
+
+    public getMatchesHistory(playerId: number) {
+        const url = `${this.baseUrl}/matches/${playerId}`;
+        return this.http.get<History>(url).pipe(
+            catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+                if (!(error.error instanceof ErrorEvent)) {
+                    return throwError(error.error);
+                }
+            return caught;
+        }));
+    }
 }
