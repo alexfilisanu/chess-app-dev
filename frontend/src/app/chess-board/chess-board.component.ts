@@ -95,7 +95,7 @@ export class ChessBoardComponent implements OnInit {
     game: Game = new Game();
 
     ngOnInit(): void {
-        this.gameService.webSocketService.connect('123456');
+        this.gameService.webSocketService.connect(this.gameService.randomCode);
         this.gameService.webSocketService.getMessage().subscribe((message: any) => {
             const actualMessage = message.message;
             const gameid = actualMessage.gameid;

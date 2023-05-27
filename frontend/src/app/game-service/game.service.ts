@@ -1082,9 +1082,8 @@ export class GameService {
     }
 
     public startOnlineGame(randomCode: string) {
-//         const url = `${this.baseUrl}/online-game/new/${randomCode}`;
         this.randomCode = randomCode;
-        const url = `${this.baseUrl}/online-game/new/123456`;
+        const url = `${this.baseUrl}/online-game/new/${randomCode}`;
         return this.http.post<Game>(url, this.game).pipe(
             catchError((error: HttpErrorResponse, caught: Observable<any>) => {
                 if (!(error.error instanceof ErrorEvent)) {

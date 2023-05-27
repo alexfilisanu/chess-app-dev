@@ -67,7 +67,7 @@ export class ClientHomepageComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private playerService: PlayerServiceService,
-              private gameService: GameService) {
+              public gameService: GameService) {
   }
 
   ngOnInit(): void {
@@ -253,9 +253,8 @@ export class ClientHomepageComponent implements OnInit {
     this.gameService.startOnlineGame(randomCode).subscribe(
         result => {
             this.getCurrentOnlineGame();
-            this.gameService.webSocketService.connect('123456');
-//             this.router.navigate([`/chess-board/${randomCode}`]);
-            this.router.navigate(['/chess-board/123456']);
+            this.gameService.webSocketService.connect(randomCode);
+            this.router.navigate([`/chess-board/${randomCode}`]);
         }
     );
   }
@@ -268,9 +267,8 @@ export class ClientHomepageComponent implements OnInit {
     const gameId = this.gameService.game.id ?? 0;
     this.gameService.joinOnlineGame(randomCode, this.gameService.game.playerId2).subscribe(
         result => {
-//             this.router.navigate([`/chess-board/${randomCode}`]);
             this.getCurrentOnlineGameAfterMatchmaking();
-            this.router.navigate(['/chess-board/123456']);
+            this.router.navigate([`/chess-board/${randomCode}`]);
     });
   }
 
@@ -294,7 +292,7 @@ export class ClientHomepageComponent implements OnInit {
 
   getCurrentOnlineGameAfterMatchmaking(): void {
       const playerId = this.player.id ?? 0;
-      this.gameService.getCurrentOnlineGameAfterMatchmaking(playerId, '123456').subscribe(
+      this.gameService.getCurrentOnlineGameAfterMatchmaking(playerId, this.gameService.randomCode).subscribe(
           result => {
             this.gameService.game = result;
             localStorage.setItem('currentGameId', this.gameService.game.id?.toString() ?? '0');
