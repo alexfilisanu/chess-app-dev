@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PlayerLoginFormComponent } from './player-login-form/player-login-form.component';
 import { PlayerRegisterFormComponent } from './player-register-form/player-register-form.component';
-import { PlayerListComponent } from './player-list/player-list.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PlayerServiceService } from './player-service/player-service.service';
@@ -30,7 +29,6 @@ import { AppConfig } from './app.config';
         AppComponent,
         PlayerLoginFormComponent,
         PlayerRegisterFormComponent,
-        PlayerListComponent,
         RegisterSuccessfulComponent,
         ClientHomepageComponent,
         ChessBoardComponent,
