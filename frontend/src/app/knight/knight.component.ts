@@ -1,17 +1,18 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector: 'app-knight',
-    template: `<span [style.font-family]="fontFamily">{{ isWhite ? '♘' : '♞' }}</span>`,
-    styles: [`
-        span {
-            font-weight: 400;
-            font-size: 54px;
-            line-height: 70px;
-        }
-    `]
+  selector: 'app-knight',
+  template: `<img [src]="isWhite ? whiteKnightImagePath : blackKnightImagePath" [style.width.px]="imageSize">`,
+  styles: [`
+    img {
+      width: 100%;
+      max-width: 38px;
+    }
+  `]
 })
 export class KnightComponent {
-    @Input() isWhite !: boolean;
-    @Input() fontFamily = 'Arial';
+  @Input() isWhite !: boolean;
+  @Input() imageSize = 45;
+  whiteKnightImagePath = 'assets/chess-pieces/white-knight.png';
+  blackKnightImagePath = 'assets/chess-pieces/black-knight.png';
 }

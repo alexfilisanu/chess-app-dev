@@ -1,17 +1,18 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-    selector: 'app-rook',
-    template: `<span [style.font-family]="fontFamily">{{ isWhite ? '♖' : '♜' }}</span>`,
-    styles: [`
-        span {
-            font-weight: 400;
-            font-size: 54px;
-            line-height: 70px;
-        }
-    `]
+  selector: 'app-rook',
+  template: `<img [src]="isWhite ? whiteRookImagePath : blackRookImagePath" [style.width.px]="imageSize">`,
+  styles: [`
+    img {
+      width: 100%;
+      max-width: 45px;
+    }
+  `]
 })
 export class RookComponent {
-    @Input() isWhite !: boolean;
-    @Input() fontFamily = 'Arial';
+  @Input() isWhite !: boolean;
+  @Input() imageSize = 45;
+  whiteRookImagePath = 'assets/chess-pieces/white-rook.png';
+  blackRookImagePath = 'assets/chess-pieces/black-rook.png';
 }
