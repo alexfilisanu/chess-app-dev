@@ -56,38 +56,38 @@
           [isValid]="isValidMoves[i]"
           (click)="handleSquareClick(pos)"
         >
-          <app-knight *ngIf="pos.x === np1w.x && pos.y === np1w.y" [isWhite]="true"></app-knight>
-          <app-knight *ngIf="pos.x === np2w.x && pos.y === np2w.y" [isWhite]="true"></app-knight>
-          <app-pawn *ngIf="pos.x === pp1w.x && pos.y === pp1w.y" [isWhite]="true"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp2w.x && pos.y === pp2w.y" [isWhite]="true"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp3w.x && pos.y === pp3w.y" [isWhite]="true"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp4w.x && pos.y === pp4w.y" [isWhite]="true"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp5w.x && pos.y === pp5w.y" [isWhite]="true"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp6w.x && pos.y === pp6w.y" [isWhite]="true"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp7w.x && pos.y === pp7w.y" [isWhite]="true"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp8w.x && pos.y === pp8w.y" [isWhite]="true"></app-pawn>
-          <app-rook *ngIf="pos.x === rp1w.x && pos.y === rp1w.y" [isWhite]="true"></app-rook>
-          <app-rook *ngIf="pos.x === rp2w.x && pos.y === rp2w.y" [isWhite]="true"></app-rook>
-          <app-bishop *ngIf="pos.x === bp1w.x && pos.y === bp1w.y" [isWhite]="true"></app-bishop>
-          <app-bishop *ngIf="pos.x === bp2w.x && pos.y === bp2w.y" [isWhite]="true"></app-bishop>
-          <app-queen *ngIf="pos.x === qpw.x && pos.y === qpw.y" [isWhite]="true"></app-queen>
-          <app-king *ngIf="pos.x === kpw.x && pos.y === kpw.y" [isWhite]="true"></app-king>
-          <app-knight *ngIf="pos.x === np1b.x && pos.y === np1b.y" [isWhite]="false"></app-knight>
-          <app-knight *ngIf="pos.x === np2b.x && pos.y === np2b.y" [isWhite]="false"></app-knight>
-          <app-pawn *ngIf="pos.x === pp1b.x && pos.y === pp1b.y" [isWhite]="false"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp2b.x && pos.y === pp2b.y" [isWhite]="false"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp3b.x && pos.y === pp3b.y" [isWhite]="false"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp4b.x && pos.y === pp4b.y" [isWhite]="false"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp5b.x && pos.y === pp5b.y" [isWhite]="false"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp6b.x && pos.y === pp6b.y" [isWhite]="false"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp7b.x && pos.y === pp7b.y" [isWhite]="false"></app-pawn>
-          <app-pawn *ngIf="pos.x === pp8b.x && pos.y === pp8b.y" [isWhite]="false"></app-pawn>
-          <app-rook *ngIf="pos.x === rp1b.x && pos.y === rp1b.y" [isWhite]="false"></app-rook>
-          <app-rook *ngIf="pos.x === rp2b.x && pos.y === rp2b.y" [isWhite]="false"></app-rook>
-          <app-bishop *ngIf="pos.x === bp1b.x && pos.y === bp1b.y" [isWhite]="false"></app-bishop>
-          <app-bishop *ngIf="pos.x === bp2b.x && pos.y === bp2b.y" [isWhite]="false"></app-bishop>
-          <app-queen *ngIf="pos.x === qpb.x && pos.y === qpb.y" [isWhite]="false"></app-queen>
-          <app-king *ngIf="pos.x === kpb.x && pos.y === kpb.y" [isWhite]="false"></app-king>
+          <app-knight *ngIf="pos.x === np1w.x && pos.y === np1w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-knight>
+          <app-knight *ngIf="pos.x === np2w.x && pos.y === np2w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-knight>
+          <app-pawn *ngIf="pos.x === pp1w.x && pos.y === pp1w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp2w.x && pos.y === pp2w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp3w.x && pos.y === pp3w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp4w.x && pos.y === pp4w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp5w.x && pos.y === pp5w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp6w.x && pos.y === pp6w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp7w.x && pos.y === pp7w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp8w.x && pos.y === pp8w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-rook *ngIf="pos.x === rp1w.x && pos.y === rp1w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-rook>
+          <app-rook *ngIf="pos.x === rp2w.x && pos.y === rp2w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-rook>
+          <app-bishop *ngIf="pos.x === bp1w.x && pos.y === bp1w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-bishop>
+          <app-bishop *ngIf="pos.x === bp2w.x && pos.y === bp2w.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-bishop>
+          <app-queen *ngIf="pos.x === qpw.x && pos.y === qpw.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-queen>
+          <app-king *ngIf="pos.x === kpw.x && pos.y === kpw.y" [isWhite]="true" [isOnlineGame]="isOnlineGame()"></app-king>
+          <app-knight *ngIf="pos.x === np1b.x && pos.y === np1b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-knight>
+          <app-knight *ngIf="pos.x === np2b.x && pos.y === np2b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-knight>
+          <app-pawn *ngIf="pos.x === pp1b.x && pos.y === pp1b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp2b.x && pos.y === pp2b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp3b.x && pos.y === pp3b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp4b.x && pos.y === pp4b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp5b.x && pos.y === pp5b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp6b.x && pos.y === pp6b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp7b.x && pos.y === pp7b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-pawn *ngIf="pos.x === pp8b.x && pos.y === pp8b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-pawn>
+          <app-rook *ngIf="pos.x === rp1b.x && pos.y === rp1b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-rook>
+          <app-rook *ngIf="pos.x === rp2b.x && pos.y === rp2b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-rook>
+          <app-bishop *ngIf="pos.x === bp1b.x && pos.y === bp1b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-bishop>
+          <app-bishop *ngIf="pos.x === bp2b.x && pos.y === bp2b.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-bishop>
+          <app-queen *ngIf="pos.x === qpb.x && pos.y === qpb.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-queen>
+          <app-king *ngIf="pos.x === kpb.x && pos.y === kpb.y" [isWhite]="false" [isOnlineGame]="isOnlineGame()"></app-king>
         </app-square>
       </div>
     </ng-container>

@@ -485,4 +485,8 @@ export class ChessBoardComponent implements OnInit {
         this.gameService.webSocketService.disconnect();
       });
     }
+
+    isOnlineGame(): boolean {
+        return this.gameService.game.type === GameType.Online;
+    }
 }
