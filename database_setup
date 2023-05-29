@@ -1,0 +1,32 @@
+GRANT TEMP ON DATABASE chess_app TO postgres
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO postgres;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO postgres;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA public TO postgres;
+
+CREATE TABLE player (
+  id SERIAL PRIMARY KEY,
+  username VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  score INTEGER,
+  deleted BOOLEAN,
+  confirm_password VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE moves (
+  id SERIAL PRIMARY KEY,
+  gameid BIGINT,
+  playerid BIGINT,
+  moves TEXT,
+  playerturn BIGINT,
+  FOREIGN KEY (gameid) REFERENCES game(id)
+);
+
+CREATE TABLE game (
+  id SERIAL PRIMARY KEY,
+  type VARCHAR(255),
+  playerid1 BIGINT,
+  playerid2 BIGINT,
+  result VARCHAR(255),
+  randomcode VARCHAR(255)
+);
