@@ -275,7 +275,6 @@ export class ClientHomepageComponent implements OnInit {
 
   joinOnlineGame(randomCode: string): void {
     this.showJoinOnlineGamePopup = false;
-    console.log(this.joinOnlineGameCode);
     this.gameService.game.playerId2 = this.player.id ?? 0;
     this.gameService.game.result = ResultMessage.StillPlaying;
     const gameId = this.gameService.game.id ?? 0;
@@ -347,13 +346,10 @@ export class ClientHomepageComponent implements OnInit {
   }
 
   getHistory(playerId: number) {
-    console.log(playerId);
     this.gameService.getMatchesHistory(playerId).subscribe(
         result => {
-            console.log("victpry", result.victories);
             this.victory = result.victories;
             this.defeat = result.defeats;
-            console.log("defeats", result.defeats);
             this.player.score = result.score;
             this.searchedPlayer.score = result.score;
         }

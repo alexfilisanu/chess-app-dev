@@ -25,7 +25,6 @@ export class WebSocketsService {
     });
 
     this.webSocket.addEventListener('message', (event) => {
-      console.log('Received message from server:', event.data);
       const message = JSON.parse(event.data);
       this.messageSubject.next(message);
     });
